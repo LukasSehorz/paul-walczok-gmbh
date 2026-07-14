@@ -1,0 +1,11 @@
+# Rohmaterial (nicht auf der Seite verlinkt)
+Bilder & Videos/
+
+# System
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
