@@ -1069,6 +1069,15 @@ a { color: inherit; text-decoration: none; }
   color: var(--text-dim);
 }
 
+.footer-meta .footer-ai {
+  margin-top: .6rem;
+  font-family: inherit;
+  font-size: .75rem;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--text-dim);
+}
+
 /* ============================================================
    REVEAL-ANIMATIONEN (nur beim Erscheinen, einmalig)
    ============================================================ */
