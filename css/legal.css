@@ -1,0 +1,80 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Paul Walczok GmbH — Rechtsseiten (Impressum, Datenschutz)
+   Ergänzt css/styles.css; nutzt dieselben Tokens.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.legal-hdr{
+  position:sticky; top:0; z-index:50;
+  background:rgba(8,9,11,.88);
+  border-bottom:1px solid var(--line);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+}
+.legal-hdr__in{
+  width:100%; max-width:var(--maxw); margin-inline:auto;
+  padding:0 var(--pad);
+  min-height:var(--hdr-h);
+  display:flex; align-items:center; justify-content:space-between; gap:1.5rem;
+}
+
+.legal-main{ padding-block:clamp(3.5rem,7vw,6.5rem) clamp(4rem,8vw,8rem); }
+
+.legal-back{
+  display:inline-flex; align-items:center; gap:.6rem;
+  font:400 .74rem/1 var(--f-mono);
+  letter-spacing:.16em; text-transform:uppercase;
+  color:var(--muted);
+  transition:color .3s var(--ease-o);
+}
+.legal-back:hover{ color:var(--accent-hi); }
+.legal-back svg{ width:1em; height:1em; }
+.legal-back:hover svg{ transform:translateX(-4px); }
+.legal-back svg{ transition:transform .35s var(--ease-o); }
+
+.legal-title{
+  margin:2.2rem 0 .8rem;
+  font-size:clamp(2.4rem,6vw,4.6rem);
+  text-transform:uppercase;
+}
+.legal-sub{
+  color:var(--muted);
+  font:400 .78rem/1.5 var(--f-mono);
+  letter-spacing:.14em; text-transform:uppercase;
+  padding-bottom:clamp(2.5rem,5vw,4rem);
+  border-bottom:1px solid var(--line);
+}
+
+.legal-body{ max-width:70ch; padding-top:clamp(2.5rem,5vw,4rem); }
+.legal-body section + section{ margin-top:clamp(2.2rem,4vw,3.4rem); }
+.legal-body h2{
+  font-size:clamp(1.05rem,1.7vw,1.4rem);
+  text-transform:uppercase; letter-spacing:-.01em;
+  margin-bottom:.9rem;
+  display:flex; align-items:baseline; gap:.85rem;
+}
+.legal-body h2::before{
+  content:attr(data-idx);
+  font:400 .72rem/1 var(--f-mono);
+  letter-spacing:.1em; color:var(--accent); flex:none;
+}
+.legal-body p{ margin:0 0 1rem; color:var(--fg-dim); }
+.legal-body p:last-child{ margin-bottom:0; }
+.legal-body ul{ margin:0 0 1rem; padding-left:1.1rem; color:var(--fg-dim); }
+.legal-body li{ margin-bottom:.4rem; }
+.legal-body a{ color:var(--accent-hi); text-underline-offset:.22em; text-decoration:underline; }
+.legal-body a:hover{ color:var(--fg); }
+.legal-body strong{ color:var(--fg); font-weight:700; }
+
+.legal-note{
+  margin-top:clamp(2.5rem,5vw,4rem);
+  padding:1.4rem 1.6rem;
+  border:1px solid var(--line);
+  background:var(--surface);
+  color:var(--muted);
+  font-size:.92rem;
+}
+
+@media (max-width:640px){
+  .legal-hdr__in{ min-height:68px; }
+  .legal-body h2{ flex-direction:column; gap:.35rem; }
+}

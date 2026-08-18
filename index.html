@@ -1,529 +1,1150 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Paul Walczok GmbH — CNC-Zerspanung & Präzisionsteile aus Essenbach</title>
-  <meta name="description" content="Präzisions-Dreh- und Frästeile, Werkzeug- und Vorrichtungsbau sowie Zugproben nach DIN 50 125. CNC-Zerspanung auf Hermle 3- und 5-Achs-Zentren — seit 1984 in Essenbach bei Landshut.">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Paul Walczok GmbH — CNC-Präzisionsteile aus Essenbach bei Landshut</title>
+<meta name="description" content="Paul Walczok GmbH: Drehen, Fräsen, Laserschweißen, Rund- und Flachschleifen, Zugproben nach DIN 50125 und Konstruktion. Einzelteile, Prototypen und Kleinserien aus Essenbach bei Landshut — seit 1984.">
+<meta name="theme-color" content="#08090B">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://www.walczok-gmbh.de/">
 
-  <meta property="og:title" content="Paul Walczok GmbH — Präzision ist unsere Leidenschaft">
-  <meta property="og:description" content="CNC-Zerspanung für höchste Ansprüche: Prototypen, Einzelteile und Kleinserien. Seit 1984 in Essenbach.">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="assets/img/hero-poster.jpg">
+<!-- Open Graph / Social -->
+<meta property="og:type" content="website">
+<meta property="og:locale" content="de_DE">
+<meta property="og:site_name" content="Paul Walczok GmbH">
+<meta property="og:title" content="Paul Walczok GmbH — Präzision ist unsere Leidenschaft">
+<meta property="og:description" content="Einzelteile, Prototypen und Kleinserien im Herzen Niederbayerns. Drehen, Fräsen, Laserschweißen, Schleifen, Zugproben, Konstruktion.">
+<meta property="og:url" content="https://www.walczok-gmbh.de/">
+<meta property="og:image" content="https://www.walczok-gmbh.de/assets/img/hero-poster.jpg">
+<meta property="og:image:width" content="1920">
+<meta property="og:image:height" content="1080">
+<meta name="twitter:card" content="summary_large_image">
 
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='27' fill='none' stroke='%232E5BFF' stroke-width='5'/%3E%3Ccircle cx='32' cy='32' r='7' fill='%232E5BFF'/%3E%3Crect x='28.5' y='4' width='7' height='15' fill='%232E5BFF'/%3E%3Crect x='28.5' y='4' width='7' height='15' fill='%232E5BFF' transform='rotate(120 32 32)'/%3E%3Crect x='28.5' y='4' width='7' height='15' fill='%232E5BFF' transform='rotate(240 32 32)'/%3E%3C/svg%3E">
+<!-- Favicons -->
+<link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+<link rel="icon" type="image/png" sizes="64x64" href="assets/img/favicon-64.png">
+<link rel="apple-touch-icon" href="assets/img/favicon-180.png">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Michroma&family=Manrope:wght@300;400;500;600;700;800&family=Fragment+Mono&display=swap" rel="stylesheet">
+<!-- Fonts: Archivo (Display) · Manrope (Body) · Fragment Mono (Labels/Indizes)
+     Lokal eingebunden — kein Google-Fonts-Aufruf, daher keine Drittanbieter-Verbindung. -->
+<link rel="preload" as="font" type="font/woff2" href="fonts/k3kQo8UDI-1M0wlSfdnoLg.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="fonts/xn7gYHE41ni1AdIRggexSg.woff2" crossorigin>
+<link rel="stylesheet" href="fonts/fonts.css">
 
-  <link rel="stylesheet" href="css/styles.css">
+<link rel="preload" as="image" href="assets/img/hero-poster.jpg" fetchpriority="high">
+<link rel="stylesheet" href="css/styles.css">
 
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    "name": "Paul Walczok GmbH",
-    "description": "CNC-Zerspanungsbetrieb — Präzisions-Dreh- und Frästeile, Werkzeug- und Vorrichtungsbau, Zugproben nach DIN 50 125.",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "Ahrainer Str. 12",
-      "postalCode": "84051",
-      "addressLocality": "Essenbach",
-      "addressCountry": "DE"
-    },
-    "telephone": "+49 8703 9331-0",
-    "email": "info@walczok-gmbh.de",
-    "foundingDate": "1984",
-    "openingHours": ["Mo-Th 07:00-16:15", "Fr 07:00-12:00"]
-  }
-  </script>
+<!-- Markiert die Seite als JS-fähig. WICHTIG: Die versteckten Startzustände der
+     Reveal-Animationen hängen NICHT an dieser Klasse, sondern an `.gsap` — die wird
+     erst gesetzt, wenn der GSAP-Stack nachweislich geladen ist (siehe unten vor
+     </body>). Fällt eine Vendor-Datei aus (CSP, 404, Offline), bleibt die Seite
+     dadurch vollständig sichtbar.
+     Zusätzliches Sicherheitsnetz: Meldet sich main.js nicht binnen 2 s mit
+     `anim-ready`, werden sämtliche Startzustände hart abgeschaltet. -->
+<script>
+(function (d) {
+  var r = d.documentElement;
+  r.classList.add('js');
+  setTimeout(function () {
+    if (!r.classList.contains('anim-ready')) r.classList.add('no-anim');
+  }, 2000);
+}(document));
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "@id": "https://www.walczok-gmbh.de/#business",
+  "name": "Paul Walczok GmbH",
+  "alternateName": "Walczok GmbH",
+  "description": "Zerspanungstechnik für Einzelteile, Prototypen und Kleinserien: Drehen, Fräsen, Laserschweißen, Rund- und Flachschleifen, Zugproben nach DIN 50125, Konstruktion und Entwicklung.",
+  "url": "https://www.walczok-gmbh.de/",
+  "image": "https://www.walczok-gmbh.de/assets/img/hero-poster.jpg",
+  "logo": "https://www.walczok-gmbh.de/assets/img/logo-full.png",
+  "telephone": "+49 8703 9331-0",
+  "faxNumber": "+49 8703 9331-90",
+  "email": "info@walczok-gmbh.de",
+  "foundingDate": "1984",
+  "founder": { "@type": "Person", "name": "Paul Walczok" },
+  "employee": { "@type": "Person", "name": "Georg Fleischmann", "jobTitle": "Geschäftsführer" },
+  "numberOfEmployees": { "@type": "QuantitativeValue", "value": 5 },
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Ahrainer Str. 12",
+    "postalCode": "84051",
+    "addressLocality": "Essenbach",
+    "addressRegion": "Bayern",
+    "addressCountry": "DE"
+  },
+  "areaServed": "DE",
+  "sameAs": ["https://www.facebook.com/paulwalczokgmbh"],
+  "openingHoursSpecification": [
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday"], "opens": "07:00", "closes": "16:15" },
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Friday", "opens": "07:00", "closes": "12:00" }
+  ],
+  "makesOffer": [
+    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "CNC-Drehen und konventionelles Drehen" } },
+    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Fräsen 3-Achs und 5-Achs simultan" } },
+    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Laserschweißen" } },
+    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Rund- und Flachschleifen" } },
+    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Zugproben nach DIN 50125" } },
+    { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Konstruktion und Entwicklung" } }
+  ]
+}
+</script>
 </head>
-<body>
 
-  <!-- ================= HEADER ================= -->
-  <header class="site-header" id="top">
-    <div class="header-inner">
-      <a href="#top" class="brand" aria-label="Paul Walczok GmbH — zur Startseite">
-        <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true">
-          <circle cx="32" cy="32" r="27" fill="none" stroke="currentColor" stroke-width="4.5"/>
-          <circle cx="32" cy="32" r="6.5" fill="currentColor"/>
-          <g fill="currentColor">
-            <rect x="28.7" y="5" width="6.6" height="14"/>
-            <rect x="28.7" y="5" width="6.6" height="14" transform="rotate(120 32 32)"/>
-            <rect x="28.7" y="5" width="6.6" height="14" transform="rotate(240 32 32)"/>
-          </g>
-        </svg>
-        <span class="brand-text">
-          <span class="brand-name">Paul&nbsp;Walczok</span>
-          <span class="brand-sub">CNC-Zerspanung</span>
-        </span>
+<body id="top">
+<a class="skip-link" href="#main">Zum Inhalt springen</a>
+
+<!-- ══════════════════════════════ HEADER ══════════════════════════════ -->
+<header class="hdr" id="hdr">
+  <div class="hdr__in">
+
+    <a class="brand" href="#top" aria-label="Paul Walczok GmbH — zum Seitenanfang">
+      <span class="brand__mark">
+        <!-- Rotierende Bildmarke: dreht sich endlos, Tempo folgt der Scroll-Geschwindigkeit -->
+        <img id="spinMark" src="assets/img/logo-mark.png" width="512" height="512" alt="" aria-hidden="true" decoding="async">
+      </span>
+      <span class="brand__txt">
+        <b>Paul Walczok</b>
+        <i>GmbH · Zerspanungstechnik</i>
+      </span>
+    </a>
+
+    <nav class="nav" aria-label="Hauptnavigation">
+      <a href="#leistungen">Leistungen</a>
+      <a href="#laser">Laserschweißen</a>
+      <a href="#referenzen">Referenzen</a>
+      <a href="#betrieb">Betrieb</a>
+      <a href="#karriere">Karriere</a>
+    </nav>
+
+    <!-- Bleibt in jeder Breite sichtbar; unter 900 px als kompaktes Icon-Pill. -->
+    <a class="btn btn--accent hdr__cta" href="#kontakt" aria-label="Anfrage senden">
+      <span>Anfrage</span>
+      <svg class="hdr__cta-ico hdr__cta-ico--arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12h15M13 6l6 6-6 6"/></svg>
+      <svg class="hdr__cta-ico hdr__cta-ico--mail" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 6.5h18v11H3zM3 7l9 6.5L21 7"/></svg>
+    </a>
+
+    <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="mobilenav">
+      <span class="u-sr">Menü öffnen</span>
+      <span class="burger__b" aria-hidden="true"></span>
+      <span class="burger__b" aria-hidden="true"></span>
+    </button>
+
+  </div>
+  <span class="hdr__line" aria-hidden="true"></span>
+</header>
+
+<!-- Mobile-Overlay-Menü -->
+<div class="mnav" id="mobilenav" hidden>
+  <nav class="mnav__in" aria-label="Mobile Navigation">
+    <a href="#leistungen"><i>01</i> Leistungen</a>
+    <a href="#laser"><i>02</i> Laserschweißen</a>
+    <a href="#referenzen"><i>03</i> Referenzen</a>
+    <a href="#eigen"><i>04</i> Eigenentwicklung</a>
+    <a href="#betrieb"><i>05</i> Betrieb</a>
+    <a href="#karriere"><i>06</i> Karriere</a>
+    <a href="#kontakt"><i>07</i> Kontakt</a>
+  </nav>
+  <div class="mnav__foot">
+    <a href="tel:+49870393310">0 87 03 / 93 31 - 0</a>
+    <a href="mailto:info@walczok-gmbh.de">info@walczok-gmbh.de</a>
+  </div>
+</div>
+
+<main id="main">
+
+<!-- ══════════════════════════════ 01 · HERO ══════════════════════════════ -->
+<section class="hero" aria-labelledby="hero-title">
+
+  <div class="hero__media">
+    <!-- Rein dekorativ: der Inhalt steht im Text daneben, deshalb aria-hidden statt Label. -->
+    <video class="hero__video" id="heroVideo"
+           autoplay muted loop playsinline preload="metadata"
+           poster="assets/img/hero-poster.jpg"
+           aria-hidden="true" tabindex="-1">
+      <source src="assets/video/hero-mobile.mp4" type="video/mp4" media="(max-width: 780px)">
+      <source src="assets/video/hero.mp4" type="video/mp4">
+    </video>
+    <span class="hero__scrim" aria-hidden="true"></span>
+    <span class="hero__grain" aria-hidden="true"></span>
+  </div>
+
+  <div class="hero__body container">
+    <p class="kicker hero__kicker">
+      <span class="dot" aria-hidden="true"></span>
+      <span class="hero__kicker-wide">Zerspanungstechnik · </span>Essenbach · seit 1984
+    </p>
+
+    <!-- Akzent liegt bewusst nur auf dem Schlusswort, nicht auf einer ganzen Zeile. -->
+    <h1 class="hero__title" id="hero-title" data-split>
+      <span class="l">Präzision ist unsere</span>
+      <span class="l ac">Leidenschaft.</span>
+    </h1>
+
+    <p class="hero__sub">
+      Einzelteile, Prototypen und Kleinserien im Herzen Niederbayerns.
+      Wir fangen da an, wo andere aufhören.
+    </p>
+
+    <div class="hero__cta">
+      <a class="btn btn--accent btn--lg" href="#kontakt" data-magnet>
+        <span>Anfrage senden</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12h15M13 6l6 6-6 6"/></svg>
       </a>
-
-      <nav class="main-nav" id="mainNav" aria-label="Hauptnavigation">
-        <a href="#leistungen">Leistungen</a>
-        <a href="#maschinenpark">Maschinenpark</a>
-        <a href="#vorteile">Vorteile</a>
-        <a href="#karriere">Karriere</a>
-      </nav>
-
-      <a href="#kontakt" class="btn btn-accent header-cta">
-        Kontakt
-        <svg class="btn-arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+      <a class="btn btn--ghost btn--lg" href="#leistungen" data-magnet>
+        <span>Leistungen ansehen</span>
       </a>
-
-      <button class="nav-toggle" id="navToggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="mainNav">
-        <span></span><span></span>
-      </button>
     </div>
-  </header>
+  </div>
 
-  <main>
+  <div class="hero__foot">
+    <div class="container hero__foot-in">
+      <a class="scrollcue" href="#anspruch">
+        <span class="scrollcue__bar" aria-hidden="true"><i></i></span>
+        <span>Scrollen</span>
+      </a>
+      <ul class="hero__tags">
+        <li>Drehen</li><li>Fräsen</li><li>Laserschweißen</li>
+        <li>Schleifen</li><li>Zugproben</li><li>Konstruktion</li>
+      </ul>
+    </div>
+  </div>
+</section>
 
-    <!-- ================= HERO ================= -->
-    <section class="hero">
-      <div class="hero-media" aria-hidden="true">
-        <video autoplay muted loop playsinline poster="assets/img/hero-poster.jpg">
-          <source src="assets/video/hero.mp4" type="video/mp4">
-        </video>
-        <div class="hero-shade"></div>
+
+<!-- ══════════════════════ 02 · ANSPRUCH + KENNZAHLEN ══════════════════════ -->
+<section class="sec sec--anspruch" id="anspruch" aria-labelledby="anspruch-title">
+  <div class="container">
+
+    <p class="kicker" data-reveal><span class="kicker__no">01</span> Anspruch</p>
+
+    <!-- Bewusster Bruch im Typo-Rhythmus: als einzige Sektion gemischte Groß-/
+         Kleinschreibung, leichteres Gewicht, ruhiger Satz — ein gesprochener Satz
+         statt eines Plakats. Akzent nur auf dem Schlüsselwort. -->
+    <h2 class="h-quote anspruch__title" id="anspruch-title" data-split>
+      <span class="l">Wir fangen da an,</span>
+      <span class="l">wo andere <em class="ac">aufhören.</em></span>
+    </h2>
+
+    <div class="anspruch__grid">
+      <div class="anspruch__text" data-reveal-group>
+        <p class="lead" data-reveal>
+          1984 von Paul Walczok gegründet, seit 2023 von Geschäftsführer Georg Fleischmann
+          weitergeführt: ein Betrieb, in dem fünf hochqualifizierte Mitarbeiter jeden Tag
+          aufs Neue das beste Teil fertigen wollen.
+        </p>
+        <p data-reveal>
+          Wir sind bewusst klein geblieben — das macht uns schnell. Kurze Entscheidungswege,
+          ein gut sortiertes Materiallager und Kapazität für Eilaufträge sorgen dafür, dass
+          aus einer Zeichnung zügig ein Teil wird. Jedes Teil geht durch die Chefkontrolle,
+          Messprotokolle liefern wir auf Wunsch mit.
+        </p>
+        <!-- Die Jahreszahl steht in den Kennzahlen darunter — hier nur der Gründer,
+             damit sich beide Blöcke nicht doppeln. -->
+        <ul class="signature" data-reveal>
+          <li><b>Gegründet von</b><span>Paul Walczok</span></li>
+          <li><b>Geführt von</b><span>Georg Fleischmann, seit 2023</span></li>
+          <li><b>Standort</b><span>Essenbach bei Landshut</span></li>
+        </ul>
       </div>
 
-      <div class="hero-content">
-        <p class="badge hero-el" style="--d:.1s">
-          <svg viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="4"/></svg>
-          CNC-Zerspanung · Essenbach · seit 1984
-        </p>
-        <h1>
-          <span class="hero-el h1-line" style="--d:.25s">Präzision ist</span>
-          <span class="hero-el h1-line accent" style="--d:.4s">unsere Leidenschaft.</span>
-        </h1>
-        <p class="hero-sub hero-el" style="--d:.55s">
-          Präzisions-Dreh- und Frästeile aus Essenbach bei Landshut. Vom Prototyp
-          über Einzelteile nach Zeichnung bis zur Kleinserie — wir fangen da an,
-          wo andere aufhören.
-        </p>
-        <div class="hero-actions hero-el" style="--d:.7s">
-          <a href="#kontakt" class="btn btn-accent btn-lg">
-            Projekt anfragen
-            <svg class="btn-arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+      <figure class="anspruch__fig frame" data-reveal>
+        <img src="assets/img/detail-spaene.jpg" width="1200" height="1200" loading="lazy" decoding="async"
+             data-parallax alt="Blau angelaufene Späne aus der Zerspanung in einer Hand">
+        <figcaption>Späne sind nur das Nebenprodukt. Uns interessiert, was übrig bleibt.</figcaption>
+      </figure>
+    </div>
+
+    <dl class="stats" data-reveal-group>
+      <!-- Jahreszahl steht statisch: hochzählen erzeugt erfundene Zwischenjahre. -->
+      <div class="stat" data-reveal>
+        <dt>Gegründet</dt>
+        <dd><span class="num">1984</span></dd>
+      </div>
+      <div class="stat" data-reveal>
+        <dt>Jahre Erfahrung</dt>
+        <dd><span class="num" data-count="40">0</span><em>+</em></dd>
+      </div>
+      <div class="stat" data-reveal>
+        <dt>Mitarbeiter</dt>
+        <dd><span class="num" data-count="5">0</span></dd>
+      </div>
+      <div class="stat" data-reveal>
+        <dt>Branchen</dt>
+        <dd><span class="num" data-count="6">0</span></dd>
+      </div>
+    </dl>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════════ 03 · LEISTUNGEN ══════════════════════════ -->
+<section class="sec sec--leistungen" id="leistungen" aria-labelledby="leistungen-title">
+  <div class="container">
+
+    <header class="sechead">
+      <p class="kicker" data-reveal><span class="kicker__no">02</span> Leistungen</p>
+      <!-- Schmaler Schnitt (wdth 78): die Leistungsliste ist der technischste
+           Abschnitt der Seite und klingt hier bewusst anders als der Hero. -->
+      <h2 class="h-display h-display--narrow" id="leistungen-title" data-split>
+        <span class="l">Sechs Wege zum</span>
+        <span class="l">fertigen <em class="ac">Teil.</em></span>
+      </h2>
+      <p class="sechead__note" data-reveal>
+        Von der Zeichnung bis zur montierten Baugruppe — alles unter einem Dach,
+        in einer Hand, mit einem Ansprechpartner.
+      </p>
+    </header>
+
+    <div class="svc" id="svcList">
+
+      <article class="svc__row" data-reveal>
+        <span class="svc__no">01</span>
+        <h3 class="svc__title">Drehen</h3>
+        <div class="svc__body">
+          <p>CNC und konventionell. Wellen, Buchsen, Flansche und Rotationsteile — vom Einzelstück bis zur Kleinserie.</p>
+          <p class="svc__spec">bis Ø 250 mm · max. Länge 800 mm</p>
+        </div>
+        <figure class="svc__thumb">
+          <img src="assets/img/leistung-drehen.jpg" width="1440" height="1080" loading="lazy" decoding="async"
+               alt="Großer gedrehter Zahnkranz aus Stahl auf der Werkbank">
+        </figure>
+      </article>
+
+      <article class="svc__row" data-reveal>
+        <span class="svc__no">02</span>
+        <h3 class="svc__title">Fräsen</h3>
+        <div class="svc__body">
+          <p>3-Achs und 5-Achs simultan. Komplexe Geometrien, Freiformflächen und Gehäuseteile in Alu, Stahl, Messing und Kunststoff.</p>
+          <p class="svc__spec">max. 800 × 600 × 400 mm</p>
+        </div>
+        <figure class="svc__thumb">
+          <img src="assets/img/leistung-fraesen.jpg" width="1440" height="1080" loading="lazy" decoding="async"
+               alt="Gefräste Aluminiumkonsole mit Taschen und Bohrungen">
+        </figure>
+      </article>
+
+      <article class="svc__row is-new" data-reveal>
+        <span class="svc__no">03</span>
+        <h3 class="svc__title">Laserschweißen <b class="tag">Neu</b></h3>
+        <div class="svc__body">
+          <p>Seit Anfang 2026 im Portfolio: Gehäuseteile werden laserverschweißt, verschlissene Sitze durch Materialauftrag wieder aufgebaut.</p>
+          <p class="svc__spec">Fügen · Reparatur · Materialauftrag</p>
+        </div>
+        <figure class="svc__thumb">
+          <img src="assets/img/leistung-laser.jpg" width="457" height="343" loading="lazy" decoding="async"
+               alt="Laserschweißanlage im Betrieb der Paul Walczok GmbH">
+        </figure>
+      </article>
+
+      <article class="svc__row" data-reveal>
+        <span class="svc__no">04</span>
+        <h3 class="svc__title">Rund- und Flachschleifen</h3>
+        <div class="svc__body">
+          <p>Wenn es auf absolute Ebenheit und Genauigkeit ankommt — dort, wo die Drehmaschine an ihre Grenze kommt.</p>
+          <p class="svc__spec">Oberfläche · Ebenheit · Passung</p>
+        </div>
+        <figure class="svc__thumb">
+          <img src="assets/img/leistung-schleifen.jpg" width="1040" height="780" loading="lazy" decoding="async"
+               alt="Reihe geschliffener Bolzen mit spiegelnder Oberfläche">
+        </figure>
+      </article>
+
+      <article class="svc__row" data-reveal>
+        <span class="svc__no">05</span>
+        <h3 class="svc__title">Zugproben nach DIN 50125</h3>
+        <div class="svc__body">
+          <p>Probenvorbereitung für Prüfinstitute. Normgerecht gefertigt, sauber dokumentiert, termintreu geliefert.</p>
+          <p class="svc__spec">DIN 50125 · Probenvorbereitung</p>
+        </div>
+        <figure class="svc__thumb">
+          <img src="assets/img/leistung-zugproben.jpg" width="864" height="1152" loading="lazy" decoding="async"
+               alt="Gefertigte Zugproben nach DIN 50125 nebeneinander gelegt">
+        </figure>
+      </article>
+
+      <article class="svc__row" data-reveal>
+        <span class="svc__no">06</span>
+        <h3 class="svc__title">Konstruktion &amp; Entwicklung</h3>
+        <div class="svc__body">
+          <p>CAD/CAM und Reverse Engineering. Aus Muster, Skizze oder Funktionsdummy entsteht ein fertigungsgerechtes Bauteil.</p>
+          <p class="svc__spec">CAD/CAM · Reverse Engineering</p>
+        </div>
+        <figure class="svc__thumb">
+          <img src="assets/img/leistung-cad.jpg" width="1200" height="887" loading="lazy" decoding="async"
+               alt="CAD-Modell einer Schweißtisch-Baugruppe">
+        </figure>
+      </article>
+
+    </div>
+
+    <ul class="addons" data-reveal-group>
+      <li data-reveal><b>Sägen</b><span>bis Ø 600 mm bzw. 500 × 400 mm</span></li>
+      <li data-reveal><b>Oberfläche</b><span>Gleitschleifen · Strahlen mit Glasperlen und Edelkorund</span></li>
+      <li data-reveal><b>Messen</b><span>bildgeführte 3D-Koordinatenmessung</span></li>
+    </ul>
+
+  </div>
+</section>
+
+
+<!-- ═════════════════════ 04 · LASERSCHWEISSEN (FEATURE) ═════════════════════ -->
+<section class="sec sec--laser" id="laser" aria-labelledby="laser-title">
+  <div class="container laser__grid">
+
+    <div class="laser__text">
+      <p class="kicker" data-reveal><span class="kicker__no">03</span> <b class="kicker__badge">Neu</b> im Portfolio · 2026</p>
+      <!-- Breiter Schnitt (wdth 120), eine Zeile, ohne Farbakzent: der Akzent
+           liegt hier auf dem "Neu"-Marker im Kicker, nicht in der Headline. -->
+      <h2 class="h-display h-display--wide h-display--single" id="laser-title" data-split>
+        <span class="l">Laser&shy;schweißen.</span>
+      </h2>
+      <p class="lead" data-reveal>
+        Seit Anfang 2026 fügen wir Bauteile per Laser — präzise, verzugsarm und mit
+        minimaler Wärmeeinbringung direkt neben empfindlichen Passungen.
+      </p>
+      <ul class="ticks" data-reveal-group>
+        <li data-reveal><b>Gehäuseteile laserverschweißt</b><span>dünnwandige Bauteile fügen, ohne sie zu verziehen</span></li>
+        <li data-reveal><b>Materialauftrag zur Reparatur</b><span>ausgelaufene Lagersitze wieder aufbauen statt Bauteil ersetzen</span></li>
+        <li data-reveal><b>Nachbearbeitung im Haus</b><span>aufgetragen, gedreht, geschliffen, gemessen — ohne Fremdvergabe</span></li>
+      </ul>
+    </div>
+
+    <div class="laser__side">
+    <figure class="laser__demo" data-reveal>
+      <!-- Vorher/Nachher-Vergleich: ziehen oder Pfeiltasten -->
+      <div class="cmp" data-cmp style="--pos:50%">
+        <img class="cmp__img" src="assets/img/laser-vorher.jpg" width="800" height="800" loading="lazy" decoding="async"
+             alt="Lagersitz vor der Instandsetzung: ausgelaufen und stark verrostet">
+        <div class="cmp__after">
+          <img class="cmp__img" src="assets/img/laser-nachher.jpg" width="800" height="800" loading="lazy" decoding="async"
+               alt="Derselbe Lagersitz nach Materialauftrag und Nachbearbeitung: blank und maßhaltig">
+        </div>
+        <span class="cmp__label cmp__label--a" aria-hidden="true">Vorher</span>
+        <span class="cmp__label cmp__label--b" aria-hidden="true">Nachher</span>
+        <div class="cmp__handle" data-cmp-handle role="slider" tabindex="0"
+             aria-label="Vergleich Lagersitz vorher und nachher"
+             aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="50 % Nachher">
+          <span class="cmp__grip" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false"><path d="M10 7l-5 5 5 5M14 7l5 5-5 5"/></svg>
+          </span>
+        </div>
+      </div>
+      <figcaption>
+        <b>Lagersitz-Reparatur.</b> Verschlissener Sitz, per Laser aufgetragen und
+        anschließend auf Maß bearbeitet. Ziehen Sie den Regler.
+      </figcaption>
+    </figure>
+
+    <!-- Steht bewusst unter dem Vergleich: schließt das Loch rechts unten
+         und liefert den Maschinenbeleg zur Behauptung darüber. -->
+    <figure class="laser__inset frame" data-reveal>
+      <img src="assets/img/leistung-laser.jpg" width="457" height="343" loading="lazy" decoding="async"
+           alt="Laserschweißanlage mit Schutzscheibe und Handstück im Betrieb">
+      <figcaption>Die Laserschweißanlage in unserer Fertigung.</figcaption>
+    </figure>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ════════════════════════ 05 · AKZENTBAND · MESSEN ════════════════════════ -->
+<section class="band" aria-labelledby="band-title">
+  <span class="band__pattern" aria-hidden="true"></span>
+  <div class="container band__in">
+    <p class="kicker kicker--ink" data-reveal><span class="kicker__no">04</span> Qualität</p>
+    <!-- Breitenkontrast innerhalb einer Headline: weit gesetzte erste Zeile,
+         schmal gesetzte zweite. Einzige Sektion ohne Blau-Akzent im Text. -->
+    <h2 class="band__title" id="band-title" data-split>
+      <span class="l band__title-a">Präzision</span>
+      <span class="l band__title-b">ist messbar.</span>
+    </h2>
+    <div class="band__cols" data-reveal-group>
+      <div data-reveal>
+        <h3>3D-Koordinatenmessung</h3>
+        <p>Bildgeführt und im eigenen Haus. Wir messen Muster ein, prüfen Fertigteile und
+           bringen auch beigestellte Bauteile in ein sauberes Maß.</p>
+      </div>
+      <div data-reveal>
+        <h3>Messprotokoll auf Wunsch</h3>
+        <p>Auf Anfrage liefern wir das Protokoll zum Teil. Nachvollziehbar dokumentiert,
+           damit Ihre Eingangsprüfung nichts nacharbeiten muss.</p>
+      </div>
+      <div data-reveal>
+        <h3>Chefkontrolle</h3>
+        <p>Bevor ein Teil das Haus verlässt, geht es über den Tisch der Geschäftsführung.
+           Kurze Wege heißt bei uns auch: kurze Kontrollwege.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════ 06 · REFERENZPROJEKTE ═══════════════════════ -->
+<section class="sec sec--ref" id="referenzen" aria-labelledby="ref-title">
+  <div class="container">
+
+    <header class="sechead">
+      <p class="kicker" data-reveal><span class="kicker__no">05</span> Referenzprojekte</p>
+      <h2 class="h-display" id="ref-title" data-split>
+        <span class="l">Was bei uns</span>
+        <span class="l"><em class="ac">entstanden</em> ist.</span>
+      </h2>
+      <p class="sechead__note" data-reveal>
+        Ausgewählte Bauteile aus der eigenen Fertigung — aus Rücksicht auf unsere
+        Auftraggeber ohne Namensnennung.
+      </p>
+    </header>
+
+    <!-- Case: Lichtmaschinenhalter -->
+    <article class="case" data-reveal>
+      <!-- Zwei-Panel-Diptychon statt Wipe: die beiden Aufnahmen zeigen dasselbe
+           Bauteil, aber in völlig verschiedenem Maßstab und Umfeld. Ein Wipe
+           würde hier Deckungsgleichheit behaupten, die es nicht gibt. -->
+      <div class="case__demo dip">
+        <figure class="dip__panel">
+          <img src="assets/img/ref-lima-vorher.jpg" width="644" height="859" loading="lazy" decoding="async"
+               alt="Beigestellter Funktionsdummy des Lichtmaschinenhalters, roh geschweißt">
+          <figcaption><i>01</i>Beigestellter Funktionsdummy</figcaption>
+        </figure>
+        <figure class="dip__panel dip__panel--b">
+          <img src="assets/img/ref-lima-nachher.jpg" width="644" height="644" loading="lazy" decoding="async"
+               alt="Gefertigter Lichtmaschinenhalter, form- und gewichtsoptimiert gefräst">
+          <figcaption><i>02</i>Gefertigtes Teil</figcaption>
+        </figure>
+      </div>
+      <div class="case__text">
+        <p class="kicker"><span class="kicker__no">Case</span> Reverse Engineering</p>
+        <h3>Lichtmaschinenhalter</h3>
+        <p>Der Kunde stellte einen geschweißten Funktionsdummy bei. Wir haben ihn im Haus
+           mit der 3D-Koordinatenmessmaschine vermessen, Form und Gewicht optimiert und
+           das Bauteil anschließend aus dem Vollen gefertigt.</p>
+        <ol class="steps">
+          <li><i>01</i>Dummy einmessen</li>
+          <li><i>02</i>Form &amp; Gewicht optimieren</li>
+          <li><i>03</i>Fertigen &amp; prüfen</li>
+        </ol>
+      </div>
+    </article>
+
+    <!-- Mosaik -->
+    <div class="mosaic" data-reveal-group>
+
+      <!-- Reihe 1 -->
+      <figure class="tile tile--7" data-reveal>
+        <img src="assets/img/ref-baugruppe.jpg" width="1600" height="1067" loading="lazy" decoding="async"
+             data-parallax alt="Komplettbaugruppe aus mehreren gefrästen Aluminiumteilen, fertig montiert">
+        <figcaption><b>Komplettbaugruppen</b><span>gefertigt, montiert und komplett geliefert</span></figcaption>
+      </figure>
+
+      <figure class="tile tile--5" data-reveal>
+        <img src="assets/img/ref-maschinenbau.jpg" width="1200" height="1200" loading="lazy" decoding="async"
+             data-parallax alt="Gefrästes Flanschbauteil mit Bohrbild aus dem Maschinenbau">
+        <figcaption><b>Maschinenbau-Bauteil</b><span>gefrästes Flanschbauteil</span></figcaption>
+      </figure>
+
+      <!-- Reihe 2 -->
+      <figure class="tile" data-reveal>
+        <img src="assets/img/ref-bremsscheibe-2.jpg" width="1200" height="1200" loading="lazy" decoding="async"
+             alt="Gefertigter Bremsscheibentopf aus Aluminium mit Speichenstruktur">
+        <figcaption><b>Bremsscheibentöpfe</b><span>nach beigestelltem Muster konstruiert</span></figcaption>
+      </figure>
+
+      <figure class="tile" data-reveal>
+        <img src="assets/img/ref-titan.jpg" width="1028" height="771" loading="lazy" decoding="async"
+             alt="Mitnehmerbolzen und Gabeln aus Titan Grade 5, teils DLC-beschichtet">
+        <figcaption><b>Titan Grade 5</b><span>Mitnehmerbolzen mit DLC-Beschichtung, Gabel</span></figcaption>
+      </figure>
+
+      <figure class="tile" data-reveal>
+        <img src="assets/img/ref-turbo.jpg" width="1200" height="1200" loading="lazy" decoding="async"
+             alt="Bearbeitetes Turbolader-Gehäuse mit Anschlussflansch">
+        <figcaption><b>Turbolader</b><span>Gehäusebearbeitung und Anpassteile</span></figcaption>
+      </figure>
+
+      <!-- Reihe 3 -->
+      <figure class="tile tile--3" data-reveal>
+        <img src="assets/img/ref-riemenscheibe.jpg" width="571" height="571" loading="lazy" decoding="async"
+             alt="Zweiteilige Riemenscheibe mit Rillenprofil">
+        <figcaption><b>Riemenrad</b><span>zweiteilig</span></figcaption>
+      </figure>
+
+      <figure class="tile tile--3" data-reveal>
+        <img src="assets/img/ref-motorsport.jpg" width="1200" height="1200" loading="lazy" decoding="async"
+             alt="Gefrästes Fahrwerksteil aus Aluminium für den Motorsport">
+        <figcaption><b>Fahrwerksteile</b><span>Motor- und Rennsport</span></figcaption>
+      </figure>
+
+      <figure class="tile tile--3" data-reveal>
+        <img src="assets/img/ref-zahnrad.jpg" width="1080" height="1080" loading="lazy" decoding="async"
+             alt="Großes Zahnrad mit gefräster Verzahnung">
+        <figcaption><b>Zahnrad</b><span>gefräste Verzahnung</span></figcaption>
+      </figure>
+
+      <figure class="tile tile--3" data-reveal>
+        <img src="assets/img/ref-kaefig.jpg" width="1200" height="1200" loading="lazy" decoding="async"
+             alt="Zylindrisches Drehteil mit umlaufenden Durchbrüchen">
+        <figcaption><b>Dreh-Fräs-Teil</b><span>Durchbrüche im Rundteil</span></figcaption>
+      </figure>
+
+      <!-- Reihe 4 -->
+      <figure class="tile tile--7" data-reveal>
+        <img src="assets/img/ref-serie.jpg" width="1200" height="1200" loading="lazy" decoding="async"
+             data-parallax alt="Kiste voller identischer Drehteile aus einer Kleinserie">
+        <figcaption><b>Kleinserie</b><span>reproduzierbar — Teil für Teil im gleichen Maß</span></figcaption>
+      </figure>
+
+      <figure class="tile tile--5" data-reveal>
+        <img src="assets/img/ref-hebel.jpg" width="1200" height="1200" loading="lazy" decoding="async"
+             data-parallax alt="Satz gefräster Hebel, in Reihe nebeneinander gelegt">
+        <figcaption><b>Hebel</b><span>Kleinserie</span></figcaption>
+      </figure>
+
+      <!-- Reihe 5 -->
+      <figure class="tile tile--4" data-reveal>
+        <img src="assets/img/ref-bremstopf.jpg" width="420" height="420" loading="lazy" decoding="async"
+             alt="Gedrehter Bremsscheibentopf aus Aluminium">
+        <figcaption><b>Bremsscheibentopf</b><span>gedreht und gefräst</span></figcaption>
+      </figure>
+
+      <figure class="tile tile--4" data-reveal>
+        <img src="assets/img/ref-bremsscheibe.jpg" width="449" height="449" loading="lazy" decoding="async"
+             alt="Bremsscheibe mit montiertem Topf">
+        <figcaption><b>Bremsscheibe</b><span>nach beigestelltem Muster</span></figcaption>
+      </figure>
+
+      <figure class="tile tile--4" data-reveal>
+        <img src="assets/img/ref-motorsport-2.jpg" width="1200" height="1200" loading="lazy" decoding="async"
+             alt="Gefrästes Aluminiumbauteil aus dem Motorsport">
+        <figcaption><b>Motorsport</b><span>gefrästes Aluminiumbauteil</span></figcaption>
+      </figure>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════ 07 · BRANCHEN-MARQUEE ══════════════════════════ -->
+<section class="marquee-sec" aria-labelledby="branchen-title">
+  <div class="container">
+    <p class="kicker" data-reveal><span class="kicker__no">06</span> Branchen</p>
+    <h2 class="u-sr" id="branchen-title">Branchen, für die wir fertigen</h2>
+  </div>
+  <div class="marquee" data-marquee aria-hidden="true">
+    <div class="marquee__track">
+      <span>Automobil</span><i>✳</i><span>Luft- und Raumfahrt</span><i>✳</i><span>Medizintechnik</span><i>✳</i>
+      <span>Maschinenbau</span><i>✳</i><span>Motor- und Rennsport</span><i>✳</i><span>Prüfinstitute</span><i>✳</i>
+    </div>
+  </div>
+  <div class="marquee marquee--rev" data-marquee data-dir="-1" aria-hidden="true">
+    <div class="marquee__track">
+      <span>Einzelteile</span><i>✳</i><span>Prototypen</span><i>✳</i><span>Kleinserien</span><i>✳</i>
+      <span>Baugruppen</span><i>✳</i><span>Reparatur</span><i>✳</i><span>Reverse Engineering</span><i>✳</i>
+    </div>
+  </div>
+  <p class="u-sr">Wir fertigen für Automobil, Luft- und Raumfahrt, Medizintechnik, allgemeinen Maschinenbau, Motor- und Rennsporttechnik sowie für Prüfinstitute.</p>
+</section>
+
+
+<!-- ═══════════════════════ 08 · EIGENENTWICKLUNGEN ═══════════════════════ -->
+<section class="sec sec--eigen" id="eigen" aria-labelledby="eigen-title">
+  <div class="container">
+
+    <header class="sechead">
+      <p class="kicker" data-reveal><span class="kicker__no">07</span> Eigenentwicklungen</p>
+      <h2 class="h-display" id="eigen-title" data-split>
+        <span class="l">Nicht nur nach</span>
+        <span class="l ac">Zeichnung.</span>
+      </h2>
+      <p class="sechead__note" data-reveal>
+        Zwei Produkte, die bei uns von der ersten Skizze bis zum fertigen Gerät
+        im Haus entstanden sind.
+      </p>
+    </header>
+
+    <article class="dev" data-reveal>
+      <div class="dev__text">
+        <p class="kicker"><span class="kicker__no">01</span> Eigenentwicklung</p>
+        <h3>Schweißtisch</h3>
+        <p class="dev__sub">höhenverstellbar, mit Bedienpanel</p>
+        <p>Konstruiert, gefertigt und montiert im eigenen Haus: ein Schweißtisch mit
+           elektrischer Höhenverstellung und Bedienpanel. Von der
+           CAD-Baugruppe bis zur fertigen Platte ein durchgehender Prozess.</p>
+        <ul class="chips">
+          <li>CAD-Konstruktion</li><li>Höhenverstellung</li><li>Bedienpanel</li><li>Eigenfertigung</li>
+        </ul>
+      </div>
+      <div class="dev__media">
+        <figure class="frame dev__big">
+          <img src="assets/img/eigen-schweisstisch.jpg" width="1400" height="1050" loading="lazy" decoding="async"
+               data-parallax alt="Höhenverstellbarer Schweißtisch mit großer Stahlplatte in der Werkstatt">
+        </figure>
+        <figure class="frame dev__s1">
+          <img src="assets/img/eigen-schweisstisch-2.jpg" width="1200" height="900" loading="lazy" decoding="async"
+               alt="Bedienpanel des höhenverstellbaren Schweißtischs">
+        </figure>
+        <figure class="frame dev__s2">
+          <img src="assets/img/leistung-cad.jpg" width="731" height="548" loading="lazy" decoding="async"
+               alt="CAD-Modell der Schweißtisch-Baugruppe">
+        </figure>
+      </div>
+    </article>
+
+    <article class="dev dev--rev" data-reveal>
+      <div class="dev__text">
+        <p class="kicker"><span class="kicker__no">02</span> Eigenentwicklung</p>
+        <h3>Laborschraubstock</h3>
+        <p class="dev__sub">kompakt, komplett aus eigener Fertigung</p>
+        <p>Ein kompakter Schraubstock für den Laborplatz — kleine Serie, komplett aus
+           eigener Fertigung: gedreht, gefräst, geschliffen und montiert.</p>
+        <ul class="chips">
+          <li>Drehen</li><li>Fräsen</li><li>Montage</li>
+        </ul>
+      </div>
+      <div class="dev__media dev__media--single">
+        <figure class="frame dev__big">
+          <img src="assets/img/eigen-schraubstock.jpg" width="1200" height="900" loading="lazy" decoding="async"
+               data-parallax alt="Laborschraubstock aus eigener Fertigung mit runder Grundplatte">
+        </figure>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════ 09 · MASCHINENPARK & BETRIEB ══════════════════════ -->
+<section class="sec sec--betrieb" id="betrieb" aria-labelledby="betrieb-title">
+
+  <div class="stage" data-reveal>
+    <img class="stage__img" src="assets/img/halle-fraeserei.jpg" width="1400" height="569" loading="lazy" decoding="async"
+         data-parallax alt="Weitwinkelblick in die Fräserei mit den Bearbeitungszentren der Paul Walczok GmbH">
+    <span class="stage__scrim" aria-hidden="true"></span>
+    <div class="container stage__in">
+      <p class="kicker" data-reveal><span class="kicker__no">08</span> Betrieb</p>
+      <!-- Ohne Farbakzent: die Bühne lebt vom Bild, nicht von einer blauen Zeile. -->
+      <h2 class="h-display h-display--wide stage__title" id="betrieb-title" data-split>
+        <span class="l">Eine Halle,</span>
+        <span class="l">kurze Wege.</span>
+      </h2>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="park" data-reveal-group>
+
+      <figure class="park__item" data-reveal>
+        <div class="frame">
+          <img src="assets/img/mp-fraeszentrum.jpg" width="1400" height="1400" loading="lazy" decoding="async"
+               alt="Mitarbeiter rüstet ein Bearbeitungszentrum in der Fertigung">
+        </div>
+        <figcaption><b>Bearbeitungszentren</b><span>3-Achs und 5-Achs simultan bis 800 × 600 × 400 mm</span></figcaption>
+      </figure>
+
+      <figure class="park__item" data-reveal>
+        <div class="frame">
+          <img src="assets/img/mp-messtechnik.jpg" width="1400" height="1400" loading="lazy" decoding="async"
+               alt="Mitarbeiter an der 3D-Koordinatenmessmaschine im Messraum">
+        </div>
+        <figcaption><b>Messtechnik</b><span>bildgeführte 3D-Koordinatenmessung, Protokoll auf Wunsch</span></figcaption>
+      </figure>
+
+      <figure class="park__item" data-reveal>
+        <div class="frame">
+          <img src="assets/img/mp-voreinstellung.jpg" width="1400" height="1400" loading="lazy" decoding="async"
+               alt="Werkzeugvoreinstellgerät mit Bildschirm zur Vermessung von Fräswerkzeugen">
+        </div>
+        <figcaption><b>Werkzeugvoreinstellung</b><span>Werkzeuge sind vermessen, bevor die Maschine anläuft</span></figcaption>
+      </figure>
+
+      <figure class="park__item" data-reveal>
+        <div class="frame">
+          <img src="assets/img/mp-materiallager.jpg" width="1400" height="1400" loading="lazy" decoding="async"
+               alt="Rundmaterial und Platten im gut sortierten Materiallager">
+        </div>
+        <figcaption><b>Materiallager</b><span>gut sortiert — die Basis für kurzfristige Eilaufträge</span></figcaption>
+      </figure>
+
+    </div>
+
+    <!-- Zwei echte Weitwinkelaufnahmen im Breitformat: Dreherei und Messraum.
+         Schließt die Betriebs-Sektion mit dem Raum ab, in dem alles passiert. -->
+    <div class="halls" data-reveal-group>
+      <figure class="halls__item" data-reveal>
+        <div class="frame">
+          <img src="assets/img/halle-dreherei.jpg" width="1400" height="570" loading="lazy" decoding="async"
+               data-parallax alt="Drehmaschinen-Bereich in der Halle der Paul Walczok GmbH">
+        </div>
+        <figcaption><b>Dreherei</b><span>CNC und konventionell bis Ø 250 mm</span></figcaption>
+      </figure>
+      <figure class="halls__item" data-reveal>
+        <div class="frame">
+          <img src="assets/img/halle-messraum.jpg" width="1400" height="569" loading="lazy" decoding="async"
+               data-parallax alt="Messraum mit Koordinatenmessmaschine">
+        </div>
+        <figcaption><b>Messraum</b><span>3D-Koordinatenmessung, getrennt von der Fertigung</span></figcaption>
+      </figure>
+    </div>
+
+    <!-- Stärken -->
+    <div class="sechead sechead--tight">
+      <p class="kicker" data-reveal><span class="kicker__no">09</span> Warum Walczok</p>
+      <h2 class="h-display" data-split>
+        <span class="l">Klein genug für</span>
+        <span class="l">schnelle <em class="ac">Entscheidungen.</em></span>
+      </h2>
+    </div>
+
+    <ol class="usp" data-reveal-group>
+      <li data-reveal><i>01</i><b>Kurze Entscheidungswege</b><span>Sie sprechen direkt mit denen, die das Teil auch fertigen.</span></li>
+      <li data-reveal><i>02</i><b>Schnelle Reaktionszeiten</b><span>Anfragen werden nicht abgelegt, sondern beantwortet.</span></li>
+      <li data-reveal><i>03</i><b>Gut sortiertes Materiallager</b><span>Häufige Werkstoffe liegen da — das spart Beschaffungszeit.</span></li>
+      <li data-reveal><i>04</i><b>Chefkontrolle</b><span>Kein Teil verlässt das Haus ohne Kontrolle durch die Geschäftsführung.</span></li>
+      <li data-reveal><i>05</i><b>Messprotokolle auf Wunsch</b><span>Dokumentierte Maße für Ihre Eingangsprüfung.</span></li>
+      <li data-reveal><i>06</i><b>Kapazität für Eilaufträge</b><span>Wenn es brennt, schieben wir Ihr Teil dazwischen.</span></li>
+    </ol>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════ 10 · KARRIERE ═══════════════════════════ -->
+<section class="sec sec--karriere" id="karriere" aria-labelledby="karriere-title">
+  <div class="container karriere__grid">
+
+    <div class="karriere__left">
+      <p class="kicker" data-reveal><span class="kicker__no">10</span> Karriere</p>
+      <h2 class="h-display" id="karriere-title" data-split>
+        <span class="l">Handwerk mit</span>
+        <span class="l ac">Feierabend.</span>
+      </h2>
+      <p class="lead" data-reveal>
+        Fünf Leute, moderne Maschinen, keine Schichtarbeit. Wer bei uns anfängt, arbeitet
+        an Einzelteilen und Prototypen — jeden Tag an etwas anderem.
+      </p>
+
+      <ul class="perks" data-reveal-group>
+        <li data-reveal>Keine Schichtarbeit</li>
+        <li data-reveal>Moderne Räume</li>
+        <li data-reveal>Kurze Entscheidungswege</li>
+        <li data-reveal>Attraktives Gehalt</li>
+        <li data-reveal>Attraktive Arbeitszeiten</li>
+        <li data-reveal>Firmenevents</li>
+      </ul>
+
+      <!-- PLATZHALTER: Gruppenfoto Team, folgt vom Kunden -->
+      <figure class="frame karriere__fig" data-reveal>
+        <img src="assets/img/mp-fraeszentrum.jpg" width="1400" height="1400" loading="lazy" decoding="async"
+             data-parallax alt="Bearbeitungszentrum in der Fertigung in Essenbach">
+        <figcaption>Gearbeitet wird an modernen Bearbeitungszentren — im Tagbetrieb, ohne Schicht.</figcaption>
+      </figure>
+    </div>
+
+    <div class="karriere__right" data-reveal>
+      <p class="jobs__intro">Offene Stellen</p>
+
+      <div class="jobs">
+
+        <!-- Stelle ein-/ausblenden: dieses Element auskommentieren -->
+        <details class="job">
+          <summary>
+            <span class="job__title">CNC-Dreher <b>(m/w/d)</b></span>
+            <span class="job__meta">Vollzeit · Essenbach</span>
+            <span class="job__ico" aria-hidden="true"></span>
+          </summary>
+          <div class="job__body">
+            <p>Sie richten ein, programmieren an der Maschine und drehen Einzelteile,
+               Prototypen und Kleinserien bis Ø 250 mm und 800 mm Länge — CNC und
+               konventionell.</p>
+            <ul>
+              <li>Abgeschlossene Ausbildung als Zerspanungsmechaniker oder vergleichbar</li>
+              <li>Erfahrung im Rüsten und Programmieren an der Steuerung</li>
+              <li>Sorgfalt, Eigenverantwortung und Freude an wechselnden Teilen</li>
+            </ul>
+            <a class="btn btn--accent" href="#kontakt">
+              <span>Jetzt bewerben</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12h15M13 6l6 6-6 6"/></svg>
+            </a>
+          </div>
+        </details>
+
+        <!-- Stelle ein-/ausblenden: dieses Element auskommentieren -->
+        <details class="job">
+          <summary>
+            <span class="job__title">Fräser <b>(m/w/d)</b></span>
+            <span class="job__meta">Vollzeit · Essenbach</span>
+            <span class="job__ico" aria-hidden="true"></span>
+          </summary>
+          <div class="job__body">
+            <p>Sie fräsen 3-achsig und 5-achsig simultan bis 800 × 600 × 400 mm — in Alu,
+               Stahl, Messing und Kunststoff, vom Einzelteil bis zur Kleinserie.</p>
+            <ul>
+              <li>Abgeschlossene Ausbildung als Zerspanungsmechaniker oder vergleichbar</li>
+              <li>Erfahrung im 3- und idealerweise 5-Achs-Fräsen</li>
+              <li>Sicherer Umgang mit Zeichnung, Messmitteln und CAM von Vorteil</li>
+            </ul>
+            <a class="btn btn--accent" href="#kontakt">
+              <span>Jetzt bewerben</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12h15M13 6l6 6-6 6"/></svg>
+            </a>
+          </div>
+        </details>
+
+        <!-- Stelle ein-/ausblenden: dieses Element auskommentieren -->
+        <details class="job">
+          <summary>
+            <span class="job__title">Initiativbewerbung</span>
+            <span class="job__meta">jederzeit willkommen</span>
+            <span class="job__ico" aria-hidden="true"></span>
+          </summary>
+          <div class="job__body">
+            <p>Sie passen zu uns, aber keine Stelle passt zu Ihnen? Schreiben Sie uns
+               trotzdem. Bei fünf Mitarbeitern entscheidet der Mensch mehr als die
+               Stellenausschreibung.</p>
+            <a class="btn btn--accent" href="mailto:info@walczok-gmbh.de?subject=Initiativbewerbung">
+              <span>Bewerbung senden</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12h15M13 6l6 6-6 6"/></svg>
+            </a>
+          </div>
+        </details>
+
+      </div>
+
+      <div class="jobs__call">
+        <p class="jobs__call-k">Fragen zur Stelle?</p>
+        <p class="jobs__call-t">Rufen Sie einfach an — Sie sprechen direkt mit der Geschäftsführung.</p>
+        <div class="jobs__call-l">
+          <a href="tel:+49870393310">0 87 03 / 93 31 - 0</a>
+          <a href="mailto:info@walczok-gmbh.de">info@walczok-gmbh.de</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════ 11 · KONTAKT ═══════════════════════════ -->
+<section class="sec sec--kontakt" id="kontakt" aria-labelledby="kontakt-title">
+  <div class="kontakt__bg" aria-hidden="true">
+    <img src="assets/img/cta-bg.jpg" width="1440" height="617" loading="lazy" decoding="async" alt="">
+    <span></span>
+  </div>
+
+  <div class="container kontakt__head">
+    <p class="kicker" data-reveal><span class="kicker__no">11</span> Kontakt</p>
+    <h2 class="h-display" id="kontakt-title" data-split>
+      <span class="l">Schicken Sie uns</span>
+      <span class="l">Ihre <em class="ac">Zeichnung.</em></span>
+    </h2>
+    <p class="lead" data-reveal>
+      Einzelteil, Prototyp oder Kleinserie — beschreiben Sie kurz, worum es geht.
+      Wir melden uns zügig mit einer belastbaren Aussage zurück.
+    </p>
+  </div>
+
+  <div class="container kontakt__grid">
+
+    <div class="kontakt__left">
+      <ul class="contact" data-reveal-group>
+        <li data-reveal>
+          <b>Telefon</b>
+          <a href="tel:+49870393310">0 87 03 / 93 31 - 0</a>
+        </li>
+        <li data-reveal>
+          <b>Fax</b>
+          <span>0 87 03 / 93 31 - 90</span>
+        </li>
+        <li data-reveal>
+          <b>E-Mail</b>
+          <a href="mailto:info@walczok-gmbh.de">info@walczok-gmbh.de</a>
+        </li>
+        <li data-reveal>
+          <b>Adresse</b>
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=Ahrainer+Str.+12+84051+Essenbach" target="_blank" rel="noopener">
+            Ahrainer Str. 12<br>84051 Essenbach
           </a>
-          <a href="#leistungen" class="btn btn-ghost btn-lg">Unsere Leistungen</a>
-        </div>
-      </div>
+        </li>
+        <li data-reveal>
+          <b>Geschäftszeiten</b>
+          <span>Mo – Do 7.00 – 16.15 Uhr<br>Fr 7.00 – 12.00 Uhr</span>
+        </li>
+        <li data-reveal>
+          <b>Social</b>
+          <a href="https://www.facebook.com/paulwalczokgmbh" target="_blank" rel="noopener">Facebook</a>
+        </li>
+      </ul>
 
-      <div class="hero-foot hero-el" style="--d:.9s" aria-hidden="true">
-        <span class="hero-scroll"><span class="hero-scroll-dot"></span></span>
-        <span class="hero-foot-label">Scrollen</span>
-      </div>
-    </section>
-
-    <!-- ================= INTRO + STATS ================= -->
-    <section class="section intro" id="ueber-uns">
-      <div class="container intro-grid">
-        <div class="intro-copy">
-          <p class="badge" data-reveal>
-            <svg viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="4"/></svg>
-            Unser Anspruch
-          </p>
-          <h2 class="display" data-reveal style="--d:.08s">
-            Wir fangen an,<br>
-            <span class="accent">wo andere<br>aufhören.</span>
-          </h2>
-          <p class="lead" data-reveal style="--d:.16s">
-            Seit 1984 fertigt die Paul Walczok GmbH Präzisionsteile nach Zeichnung,
-            Muster oder Datensatz — auch aus schwer zerspanbaren Werkstoffen wie
-            Kovar, Molybdän oder Wolfram-Lanthan. Vom Einzelteil bis zur kompletten
-            Baugruppe inklusive Montage: kurze Wege, feste Ansprechpartner und
-            Chefkontrolle bei jedem Produkt.
-          </p>
-        </div>
-
-        <div class="stats-grid">
-          <div class="stat-card" data-reveal style="--d:.1s">
-            <span class="stat-value"><span data-count="40">0</span>+</span>
-            <span class="stat-label">Jahre Präzision<em>Gegründet 1984 als Meisterbetrieb</em></span>
-          </div>
-          <div class="stat-card" data-reveal style="--d:.2s">
-            <span class="stat-value"><span data-count="100">0</span>&thinsp;%</span>
-            <span class="stat-label">Chefkontrolle<em>Jedes Produkt persönlich geprüft</em></span>
-          </div>
-          <div class="stat-card" data-reveal style="--d:.3s">
-            <span class="stat-value"><span data-count="4">0</span>×</span>
-            <span class="stat-label">Hermle-Zentren<em>3- und 5-Achs-Bearbeitung</em></span>
-          </div>
-          <div class="stat-card" data-reveal style="--d:.4s">
-            <span class="stat-value"><span data-count="6">0</span></span>
-            <span class="stat-label">Kernbranchen<em>Von Medizintechnik bis Motorsport</em></span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= BLAUES QUALITÄTS-BAND ================= -->
-    <section class="quality-band">
-      <div class="container quality-inner">
-        <h2 class="display-sm" data-reveal>Präzision ist messbar.</h2>
-        <p data-reveal style="--d:.1s">
-          Keyence XM&nbsp;1000, Etalon 3D-Messtechnik und Härteprüfung — auf Wunsch
-          mit Messprotokoll zu jedem gefertigten Bauteil. Qualität, die Sie
-          schwarz auf weiß bekommen.
+      <!-- Schließt die linke Spalte nach unten ab, damit sie nicht 380 px vor
+           dem Formular endet. Nur belegte Angaben. -->
+      <div class="kontakt__aside" data-reveal>
+        <p class="kontakt__aside-k">Lieber direkt?</p>
+        <p class="kontakt__aside-t">
+          Rufen Sie an — Mo bis Do von 7.00 bis 16.15 Uhr, freitags bis 12.00 Uhr.
+          Sie sprechen ohne Umweg mit der Geschäftsführung.
         </p>
-        <a href="#kontakt" class="btn btn-dark" data-reveal style="--d:.2s">
-          Qualität anfragen
-          <svg class="btn-arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
-        </a>
-      </div>
-    </section>
-
-    <!-- ================= LEISTUNGS-KAPITEL ================= -->
-    <section id="leistungen" aria-label="Leistungen">
-
-      <article class="chapter">
-        <div class="chapter-media" aria-hidden="true">
-          <img src="assets/img/chapter-drehen.jpg" alt="" loading="lazy" decoding="async">
-        </div>
-        <div class="chapter-content container">
-          <p class="chapter-index" data-reveal>01</p>
-          <h2 class="chapter-title" data-reveal style="--d:.08s">Drehen</h2>
-          <p class="chapter-sub" data-reveal style="--d:.16s">CNC- und konventionelles Drehen bis Ø 250 × 450 mm</p>
-          <p class="chapter-text" data-reveal style="--d:.24s">
-            Zwei CNC-Drehmaschinen und zwei konventionelle Maschinen für
-            Prototypen, Einzelteile, Reparaturen und Kleinserien —
-            wirtschaftlich ab Stückzahl 1.
-          </p>
-        </div>
-      </article>
-
-      <article class="chapter">
-        <div class="chapter-media" aria-hidden="true">
-          <img src="assets/img/chapter-fraesen.jpg" alt="" loading="lazy" decoding="async">
-        </div>
-        <div class="chapter-content container">
-          <p class="chapter-index" data-reveal>02</p>
-          <h2 class="chapter-title" data-reveal style="--d:.08s">Fräsen</h2>
-          <p class="chapter-sub" data-reveal style="--d:.16s">3- und 5-Achs-Bearbeitung auf Hermle-Zentren</p>
-          <p class="chapter-text" data-reveal style="--d:.24s">
-            Vier Hermle-Bearbeitungszentren: zweimal 3-Achs bis 800 × 600 mm,
-            zweimal 5-Achs bis 600 × 400 mm — komplexe Geometrien präzise
-            in einer Aufspannung.
-          </p>
-        </div>
-      </article>
-
-      <article class="chapter">
-        <div class="chapter-media" aria-hidden="true">
-          <img src="assets/img/chapter-zugproben.jpg" alt="" loading="lazy" decoding="async">
-        </div>
-        <div class="chapter-content container">
-          <p class="chapter-index" data-reveal>03</p>
-          <h2 class="chapter-title" data-reveal style="--d:.08s">Zugproben</h2>
-          <p class="chapter-sub" data-reveal style="--d:.16s">Prüfkörper nach DIN 50 125</p>
-          <p class="chapter-text" data-reveal style="--d:.24s">
-            Rund-, Flach- und Kerbschlagbiegeproben für Prüfinstitute und
-            Materialprüfung — auch aus anspruchsvollen Werkstoffen wie Kovar,
-            Molybdän oder Wolfram-Lanthan.
-          </p>
-        </div>
-      </article>
-
-    </section>
-
-    <!-- ================= BRANCHEN-MARQUEE ================= -->
-    <section class="industries" aria-label="Branchen">
-      <p class="industries-label container">Zuhause in anspruchsvollen Branchen</p>
-      <div class="marquee" data-marquee>
-        <div class="marquee-track">
-          <span>Automobilindustrie</span><span class="dot" aria-hidden="true">✦</span>
-          <span>Prüfinstitute</span><span class="dot" aria-hidden="true">✦</span>
-          <span>Medizintechnik</span><span class="dot" aria-hidden="true">✦</span>
-          <span>Luft- &amp; Raumfahrt</span><span class="dot" aria-hidden="true">✦</span>
-          <span>Motorsport</span><span class="dot" aria-hidden="true">✦</span>
-          <span>Halbleiterindustrie</span><span class="dot" aria-hidden="true">✦</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= MASCHINENPARK ================= -->
-    <section class="section machinery" id="maschinenpark">
-      <div class="container">
-        <p class="badge" data-reveal>
-          <svg viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="4"/></svg>
-          Maschinenpark
-        </p>
-        <h2 class="display" data-reveal style="--d:.08s">
-          Modernste Technik für<br><span class="accent">höchste Ansprüche.</span>
-        </h2>
-        <p class="lead narrow" data-reveal style="--d:.16s">
-          Vom Zuschnitt bis zum Messprotokoll: Unsere Fertigung in der 2013
-          bezogenen Produktionshalle deckt die komplette Prozesskette ab.
-        </p>
-
-        <div class="machine-grid">
-          <article class="machine-card" data-reveal style="--d:.1s">
-            <div class="machine-media">
-              <img src="assets/img/mp-5achs.jpg" alt="5-Achs-Bearbeitung auf einem Hermle-Zentrum" loading="lazy" decoding="async">
-              <span class="chip">Fräsen</span>
-            </div>
-            <div class="machine-body">
-              <h3>5-Achs-Bearbeitungszentren</h3>
-              <p>2× Hermle 5-Achs mit 600 × 400 mm Verfahrweg — für komplexe Bauteile in einer Aufspannung.</p>
-            </div>
-          </article>
-
-          <article class="machine-card" data-reveal style="--d:.18s">
-            <div class="machine-media">
-              <img src="assets/img/mp-3achs.jpg" alt="Frisch gefrästes Aluminiumbauteil" loading="lazy" decoding="async">
-              <span class="chip">Fräsen</span>
-            </div>
-            <div class="machine-body">
-              <h3>3-Achs-Bearbeitungszentren</h3>
-              <p>2× Hermle 3-Achs mit 800 × 600 mm Verfahrweg — wirtschaftlich bei Platten- und Serienteilen.</p>
-            </div>
-          </article>
-
-          <article class="machine-card" data-reveal style="--d:.26s">
-            <div class="machine-media">
-              <img src="assets/img/mp-drehen.jpg" alt="Drehteil auf einer CNC-Drehmaschine" loading="lazy" decoding="async">
-              <span class="chip">Drehen</span>
-            </div>
-            <div class="machine-body">
-              <h3>CNC- &amp; Konventionell-Drehen</h3>
-              <p>2× CNC bis Ø 250 × 450 mm plus zwei konventionelle Maschinen für Einzelteile und Reparaturen.</p>
-            </div>
-          </article>
-
-          <article class="machine-card" data-reveal style="--d:.1s">
-            <div class="machine-media">
-              <img src="assets/img/mp-saegen.jpg" alt="Bandsäge beim Zuschnitt von Rundmaterial" loading="lazy" decoding="async">
-              <span class="chip">Sägen</span>
-            </div>
-            <div class="machine-body">
-              <h3>Bandsägen &amp; Alukreissäge</h3>
-              <p>Vier Bandsägen bis Ø 600 mm und Alukreissäge — präziser Zuschnitt als Basis jeder Fertigung.</p>
-            </div>
-          </article>
-
-          <article class="machine-card" data-reveal style="--d:.18s">
-            <div class="machine-media">
-              <img src="assets/img/mp-schleifen.jpg" alt="Flachschleifmaschine mit Funkenflug" loading="lazy" decoding="async">
-              <span class="chip">Oberfläche</span>
-            </div>
-            <div class="machine-body">
-              <h3>Schleifen &amp; Finish</h3>
-              <p>Rund- und Flachschleifen, Gleitschleifen und Strahlen — für Maßhaltigkeit und Oberflächengüte.</p>
-            </div>
-          </article>
-
-          <article class="machine-card" data-reveal style="--d:.26s">
-            <div class="machine-media">
-              <img src="assets/img/mp-messen.jpg" alt="Mitarbeiter an der Koordinatenmessmaschine" loading="lazy" decoding="async">
-              <span class="chip">Messen</span>
-            </div>
-            <div class="machine-body">
-              <h3>Messtechnik &amp; Prüfung</h3>
-              <p>Keyence XM 1000, Etalon 3D, Tesa, Mahr und Härteprüfung — dokumentiert im Messprotokoll.</p>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= CTA ================= -->
-    <section class="cta">
-      <div class="cta-media" aria-hidden="true">
-        <img src="assets/img/cta-bg.jpg" alt="" loading="lazy" decoding="async">
-      </div>
-      <div class="container cta-inner">
-        <h2 class="display-sm" data-reveal>Erzählen Sie uns von<br>Ihrem Projekt.</h2>
-        <p data-reveal style="--d:.1s">
-          Zeichnung, Muster oder Datensatz — wir melden uns kurzfristig
-          mit einer ehrlichen Einschätzung und einem klaren Angebot.
-        </p>
-        <a href="#kontakt" class="btn btn-accent btn-lg" data-reveal style="--d:.2s">
-          Jetzt anfragen
-          <svg class="btn-arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
-        </a>
-      </div>
-    </section>
-
-    <!-- ================= VORTEILE ================= -->
-    <section class="section benefits" id="vorteile">
-      <div class="container benefits-grid">
-        <div class="benefits-copy">
-          <p class="badge" data-reveal>
-            <svg viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="4"/></svg>
-            Ihre Vorteile
-          </p>
-          <h2 class="display" data-reveal style="--d:.08s">
-            Wir sind<br><span class="accent">für Sie da.</span>
-          </h2>
-          <p class="lead" data-reveal style="--d:.16s">
-            Kurze Wege, schnelle Entscheidungen und ein Qualitätsanspruch,
-            der keine Kompromisse kennt — dafür steht ein Familienbetrieb
-            in zweiter Generation.
-          </p>
-        </div>
-
-        <div class="benefit-cards">
-          <div class="benefit-card" data-reveal style="--d:.1s">
-            <h3>Kurze Durchlaufzeiten</h3>
-            <p>Schlanke Prozesse und direkte Kommunikation — vom Angebot bis zur Auslieferung.</p>
-          </div>
-          <div class="benefit-card" data-reveal style="--d:.2s">
-            <h3>Kapazität für Eilaufträge</h3>
-            <p>Reservierte Maschinenzeiten für dringende Projekte. Wenn es schnell gehen muss, sind wir bereit.</p>
-          </div>
-          <div class="benefit-card" data-reveal style="--d:.3s">
-            <h3>Chefkontrolle</h3>
-            <p>Jedes Produkt wird vor der Auslieferung persönlich geprüft — ohne Ausnahme.</p>
-          </div>
-          <div class="benefit-card" data-reveal style="--d:.4s">
-            <h3>Messprotokolle</h3>
-            <p>Dokumentierte Qualität auf Wunsch: Messprotokoll zu jedem gefertigten Bauteil.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= KARRIERE ================= -->
-    <section class="section karriere" id="karriere">
-      <div class="container karriere-grid">
-        <div class="karriere-card karriere-card--accent" data-reveal>
-          <p class="chip chip-dark">Karriere</p>
-          <h2>Werden Sie Teil<br>des Teams.</h2>
-          <p>
-            Keine Schichtarbeit, attraktives Gehalt und moderne Arbeitsräume —
-            ein Familienbetrieb mit Zukunft in Essenbach.
-          </p>
-          <a href="#kontakt" class="btn btn-dark">
-            Jetzt bewerben
-            <svg class="btn-arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+        <div class="kontakt__aside-l">
+          <a class="btn btn--ghost" href="tel:+49870393310">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3h4l2 5-2.5 1.5a12 12 0 005 5L16 12l5 2v4a2 2 0 01-2 2A16 16 0 014 5a2 2 0 012-2z"/></svg>
+            <span>0 87 03 / 93 31 - 0</span>
+          </a>
+          <a class="btn btn--ghost" href="https://www.facebook.com/paulwalczokgmbh" target="_blank" rel="noopener">
+            <span>Facebook</span>
           </a>
         </div>
-
-        <div class="karriere-card karriere-card--dark" data-reveal style="--d:.12s">
-          <h2>Offene Stellen</h2>
-          <ul class="job-list">
-            <li>
-              <span class="job-title">Fräser (m/w/d)</span>
-              <span class="job-meta">Vollzeit · Essenbach</span>
-            </li>
-            <li>
-              <span class="job-title">Initiativbewerbung</span>
-              <span class="job-meta">CNC-Talente willkommen</span>
-            </li>
-          </ul>
-        </div>
       </div>
-    </section>
+    </div>
 
-    <!-- ================= KONTAKT ================= -->
-    <section class="section kontakt" id="kontakt">
-      <div class="container">
-        <p class="chip chip-dark" data-reveal>Kontakt</p>
-        <h2 class="display-dark" data-reveal style="--d:.08s">Wie können wir helfen?</h2>
-        <p class="kontakt-lead" data-reveal style="--d:.16s">
-          Schildern Sie uns Ihre Anforderung — wir antworten kurzfristig
-          mit einer passgenauen Lösung.
-        </p>
-
-        <div class="kontakt-grid">
-          <form class="kontakt-form" id="contactForm" data-reveal style="--d:.2s">
-            <div class="form-row">
-              <div class="form-field">
-                <label for="f-name">Name *</label>
-                <input type="text" id="f-name" name="name" required autocomplete="name" placeholder="Vor- und Nachname">
-              </div>
-              <div class="form-field">
-                <label for="f-firma">Firma</label>
-                <input type="text" id="f-firma" name="firma" autocomplete="organization" placeholder="Ihr Unternehmen">
-              </div>
-            </div>
-            <div class="form-field">
-              <label for="f-mail">E-Mail *</label>
-              <input type="email" id="f-mail" name="email" required autocomplete="email" placeholder="ihre@mail.de">
-            </div>
-            <div class="form-field">
-              <label for="f-msg">Ihr Projekt *</label>
-              <textarea id="f-msg" name="nachricht" rows="5" required placeholder="Bauteil, Stückzahl, Werkstoff, Termin …"></textarea>
-            </div>
-            <button type="submit" class="btn btn-accent btn-lg">
-              Nachricht senden
-              <svg class="btn-arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
-            </button>
-            <p class="form-note" id="formNote" role="status"></p>
-          </form>
-
-          <aside class="kontakt-info" data-reveal style="--d:.3s">
-            <div class="info-block">
-              <h3>Adresse</h3>
-              <p>Paul Walczok GmbH<br>Ahrainer Str. 12<br>84051 Essenbach</p>
-            </div>
-            <div class="info-block">
-              <h3>Kontakt</h3>
-              <p>
-                <a href="tel:+49870393310">08703 / 9331-0</a><br>
-                <a href="mailto:info@walczok-gmbh.de">info@walczok-gmbh.de</a>
-              </p>
-            </div>
-            <div class="info-block">
-              <h3>Öffnungszeiten</h3>
-              <p>Mo – Do&ensp;7.00 – 16.15 Uhr<br>Fr&ensp;7.00 – 12.00 Uhr</p>
-            </div>
-          </aside>
+    <div class="kontakt__right" data-reveal>
+      <form class="form" id="kontaktForm" novalidate>
+        <div class="form__row">
+          <div class="field">
+            <label for="f-name">Name <span aria-hidden="true">*</span></label>
+            <input id="f-name" name="name" type="text" required autocomplete="name" placeholder="Vor- und Nachname" aria-describedby="e-name">
+            <p class="field__err" id="e-name"></p>
+          </div>
+          <div class="field">
+            <label for="f-firma">Firma</label>
+            <input id="f-firma" name="firma" type="text" autocomplete="organization" placeholder="optional">
+          </div>
         </div>
-      </div>
-    </section>
 
-  </main>
+        <div class="form__row">
+          <div class="field">
+            <label for="f-mail">E-Mail <span aria-hidden="true">*</span></label>
+            <input id="f-mail" name="email" type="email" required autocomplete="email" placeholder="name@firma.de" aria-describedby="e-mail">
+            <p class="field__err" id="e-mail"></p>
+          </div>
+          <div class="field">
+            <label for="f-tel">Telefon</label>
+            <input id="f-tel" name="telefon" type="tel" autocomplete="tel" placeholder="für Rückfragen">
+          </div>
+        </div>
 
-  <!-- ================= FOOTER ================= -->
-  <footer class="site-footer">
-    <div class="container footer-cols">
+        <div class="field">
+          <label for="f-thema">Worum geht es?</label>
+          <select id="f-thema" name="thema">
+            <option>Drehen</option>
+            <option>Fräsen</option>
+            <option>Laserschweißen</option>
+            <option>Rund- und Flachschleifen</option>
+            <option>Zugproben nach DIN 50125</option>
+            <option>Konstruktion und Entwicklung</option>
+            <option>Komplettbaugruppe</option>
+            <option selected>Allgemeine Anfrage</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="f-msg">Nachricht <span aria-hidden="true">*</span></label>
+          <textarea id="f-msg" name="nachricht" rows="5" required
+                    aria-describedby="e-msg"
+                    placeholder="Stückzahl, Werkstoff, Termin — und alles, was uns hilft."></textarea>
+          <p class="field__err" id="e-msg"></p>
+        </div>
+
+        <label class="check" for="f-dsg">
+          <input id="f-dsg" name="datenschutz" type="checkbox" required aria-describedby="e-dsg">
+          <span>Ich bin damit einverstanden, dass meine Angaben zur Bearbeitung der Anfrage
+                gespeichert werden. <a href="datenschutz.html">Datenschutz</a></span>
+        </label>
+        <p class="field__err field__err--check" id="e-dsg"></p>
+
+        <div class="form__foot">
+          <button class="btn btn--accent btn--lg" type="submit">
+            <span>Anfrage absenden</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12h15M13 6l6 6-6 6"/></svg>
+          </button>
+          <p class="form__hint">Zeichnungen bitte per E-Mail an <a href="mailto:info@walczok-gmbh.de">info@walczok-gmbh.de</a></p>
+        </div>
+
+        <p class="form__note" id="formNote" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<!-- ════════════════════════════ FOOTER ════════════════════════════ -->
+<footer class="ftr">
+  <div class="container">
+
+    <div class="ftr__top">
+      <a class="ftr__logo" href="#top" aria-label="Paul Walczok GmbH — zum Seitenanfang">
+        <img src="assets/img/logo-full.png" width="1443" height="241" loading="lazy" decoding="async"
+             alt="Logo der Paul Walczok GmbH — Präzisions-Dreh- und Frästeile, Werkzeug- und Vorrichtungsbau">
+      </a>
+      <p class="ftr__claim">Präzision ist unsere Leidenschaft —<br>wir fangen da an, wo andere aufhören.</p>
+    </div>
+
+    <h2 class="u-sr">Kontakt, Geschäftszeiten und rechtliche Hinweise</h2>
+    <div class="ftr__cols">
       <div>
-        <h3>Paul Walczok GmbH</h3>
-        <p>Ahrainer Str. 12<br>84051 Essenbach<br>Deutschland</p>
+        <h3>Adresse</h3>
+        <address>
+          Paul Walczok GmbH<br>
+          Ahrainer Str. 12<br>
+          84051 Essenbach
+        </address>
       </div>
       <div>
         <h3>Kontakt</h3>
-        <p>
-          <a href="tel:+49870393310">08703 / 9331-0</a><br>
-          <a href="mailto:info@walczok-gmbh.de">info@walczok-gmbh.de</a><br>
-          www.walczok-gmbh.de
-        </p>
+        <ul>
+          <li><a href="tel:+49870393310">0 87 03 / 93 31 - 0</a></li>
+          <li>Fax 0 87 03 / 93 31 - 90</li>
+          <li><a href="mailto:info@walczok-gmbh.de">info@walczok-gmbh.de</a></li>
+          <li><a href="https://www.facebook.com/paulwalczokgmbh" target="_blank" rel="noopener">Facebook</a></li>
+        </ul>
       </div>
       <div>
-        <h3>Rechtliches</h3>
-        <p>
-          <a href="#">Impressum</a><br>
-          <a href="#">Datenschutz</a>
-        </p>
+        <h3>Geschäftszeiten</h3>
+        <ul>
+          <li>Mo – Do 7.00 – 16.15 Uhr</li>
+          <li>Fr 7.00 – 12.00 Uhr</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Seite</h3>
+        <ul>
+          <li><a href="#leistungen">Leistungen</a></li>
+          <li><a href="#referenzen">Referenzen</a></li>
+          <li><a href="#karriere">Karriere</a></li>
+          <li><a href="#kontakt">Kontakt</a></li>
+        </ul>
       </div>
     </div>
 
-    <div class="container footer-brand">
-      <div class="footer-logo">
-        <svg class="brand-mark brand-mark--footer" viewBox="0 0 64 64" aria-hidden="true">
-          <circle cx="32" cy="32" r="27" fill="none" stroke="currentColor" stroke-width="4.5"/>
-          <circle cx="32" cy="32" r="6.5" fill="currentColor"/>
-          <g fill="currentColor">
-            <rect x="28.7" y="5" width="6.6" height="14"/>
-            <rect x="28.7" y="5" width="6.6" height="14" transform="rotate(120 32 32)"/>
-            <rect x="28.7" y="5" width="6.6" height="14" transform="rotate(240 32 32)"/>
-          </g>
-        </svg>
-        <span class="footer-wordmark">Walczok</span>
-      </div>
-      <p class="footer-claim">Präzision ist<br><span class="accent">unsere Leidenschaft.</span></p>
+    <div class="ftr__bar">
+      <p>© <span id="year">2026</span> Paul Walczok GmbH</p>
+      <nav class="ftr__legal" aria-label="Rechtliches">
+        <a href="impressum.html">Impressum</a>
+        <a href="datenschutz.html">Datenschutz</a>
+      </nav>
+      <p class="ftr__ai">Teile der Inhalte dieser Website wurden mit Unterstützung von KI erstellt.</p>
     </div>
 
-    <div class="container footer-meta">
-      <p>© 2026 Paul Walczok GmbH · Alle Rechte vorbehalten</p>
-      <p class="footer-ai">Teile der Inhalte dieser Website wurden mit Unterstützung von KI erstellt.</p>
-    </div>
-  </footer>
+  </div>
+</footer>
 
-  <script src="js/main.js"></script>
+<!-- GSAP-Stack lokal (kein CDN — die Seite läuft auch offline) -->
+<script src="js/vendor/gsap.min.js"></script>
+<script src="js/vendor/ScrollTrigger.min.js"></script>
+<script src="js/vendor/SplitText.min.js"></script>
+<script src="js/vendor/lenis.min.js"></script>
+
+<!-- Erst wenn GSAP und ScrollTrigger wirklich da sind, dürfen die versteckten
+     Startzustände der Reveals greifen. Ohne diese Klasse ist alles sichtbar. -->
+<script>
+if (window.gsap && window.ScrollTrigger) document.documentElement.classList.add('gsap');
+</script>
+
+<script src="js/main.js"></script>
 </body>
 </html>
