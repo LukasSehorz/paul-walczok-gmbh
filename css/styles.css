@@ -1,1302 +1,1230 @@
-/* ═══════════════════════════════════════════════════════════════════════════
-   Paul Walczok GmbH — Stylesheet
-   01 Tokens · 02 Reset/Base · 03 Typo-Primitive · 04 Buttons · 05 Header/Nav
-   06 Hero · 07 Anspruch/Stats · 08 Leistungen · 09 Laser + Vergleichs-Slider
-   10 Akzentband · 11 Referenzen · 12 Marquee · 13 Eigenentwicklungen
-   14 Betrieb/Stärken · 15 Karriere · 16 Kontakt · 17 Footer
-   18 Reveal-Startzustände · 19 Responsive · 20 Reduced Motion
-   ═══════════════════════════════════════════════════════════════════════════ */
+/* ==========================================================================
+   Paul Walczok GmbH — Swiss/International trifft Dark Industrial
+   Rasterdisziplin, sachlich, viel Negativraum. Sieben Sektionen, sonst nichts.
+   ========================================================================== */
 
-/* ─────────────────────────────── 01 · TOKENS ─────────────────────────────── */
-:root{
-  /* Farben */
-  --bg:          #08090B;
-  --bg-2:        #0A0C0F;
-  --surface:     #101216;
-  --surface-2:   #161A20;
-  --line:        rgba(255,255,255,.10);
-  --line-soft:   rgba(255,255,255,.055);
-  --line-strong: rgba(255,255,255,.24);
-  --fg:          #F3F5F8;
-  --fg-dim:      #B4BAC4;
-  --muted:       #7E8692;                 /* 5,4 : 1 auf --bg */
-  --placeholder: #767D88;                 /* 4,7 : 1 im Eingabefeld */
+/* --------------------------------------------------------------- 1 Tokens */
+:root {
+  --bg:        #08090B;
+  --surface:   #101216;
+  --surface-2: #15181D;
+  --fg:        #F3F5F8;
+  --fg-dim:    #B4BAC4;
+  --muted:     #7E8692;
+  --accent:    #2E5BFF;
+  --accent-hi: #7796FF;
+  --line:      #1C2028;
+  --line-2:    #262B34;
 
-  /* Zwei Rollen, bewusst getrennt:
-     --accent    Flächen, Linien, Buttons, große Displayziffern
-     --accent-hi ALLE kleinen Akzenttexte (Kicker, Labels, Indizes) — 7,2 : 1  */
-  --accent:      #2E5BFF;                 /* als Text nur 3,8 : 1 → nie klein */
-  --accent-hi:   #7796FF;
-  --accent-deep: #1903B2;
-  --band-bg:     #2550E8;                 /* Akzentband, Weiß darauf = 6,2 : 1 */
-  --ink:         #06070A;
+  --ff-dis: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --ff-txt: 'Manrope', 'Helvetica Neue', Arial, sans-serif;
+  --ff-mon: 'Fragment Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
 
-  /* Typografie */
-  --f-display: 'Archivo', 'Arial Black', system-ui, sans-serif;
-  --f-body:    'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --f-mono:    'Fragment Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --wrap: 1320px;
+  --gut:  clamp(20px, 4vw, 56px);
+  --sp:   clamp(84px, 10vw, 160px);
+  --hh:   112px;
 
-  --h1:    clamp(2.4rem, 7.4vw, 6.75rem);
-  --h2:    clamp(2rem, 5.4vw, 4.9rem);
-  --h3:    clamp(1.3rem, 2vw, 1.95rem);
-  /* Die fehlende Mitte zwischen Display und Fließtext: Sektions-Intros. */
-  --h-mid: clamp(1.3rem, 2.25vw, 2.15rem);
-  --body:  clamp(1rem, .94vw, 1.06rem);
-  --lead:  clamp(1.08rem, 1.3vw, 1.32rem);
-  --small: .82rem;
+  --ease: cubic-bezier(.22, .61, .36, 1);
 
-  /* Breitenachse von Archivo (wdth 62..125) — bisher fast ungenutzt.
-     Drei feste Stufen, sektionsweise eingesetzt, damit die Seite nicht
-     elfmal gleich klingt. */
-  --wd-narrow: 78;
-  --wd-norm:   110;
-  --wd-wide:   120;
-
-  /* Raster / Rhythmus */
-  --pad:   clamp(1.15rem, 4vw, 4rem);
-  --maxw:  1400px;
-  /* --sec-y-base ist der Grundwert; --sec-y wird pro Sektion variiert,
-     damit ein Spannungsbogen entsteht statt elfmal derselbe Abstand. */
-  --sec-y-base: clamp(5rem, 10vw, 10.5rem);
-  --sec-y: var(--sec-y-base);
-  --hdr-h: 84px;
-
-  --ease:   cubic-bezier(.22,.61,.36,1);
-  --ease-o: cubic-bezier(.16,1,.3,1);
+  /* 3D-Zylinder der Branchen-Sektion — Werte wie in der Vorlage */
+  --cyl-total:  14;
+  --cyl-angle:  calc((360 / var(--cyl-total)) * 1deg);
+  --cyl-w:      29.6875rem;                 /* 475 px Kartenbreite */
+  --cyl-radius: -1094.7px;                  /* Rueckfall, falls sin() fehlt */
+  --cyl-radius: calc((var(--cyl-w) / sin(var(--cyl-angle))) * -1);
 }
 
-/* ──────────────────────────── 02 · RESET / BASE ──────────────────────────── */
-*,*::before,*::after{ box-sizing:border-box; }
+/* ---------------------------------------------------------------- 2 Reset */
+*, *::before, *::after { box-sizing: border-box; }
 
-html{ -webkit-text-size-adjust:100%; }
-
-body{
-  margin:0;
-  background:var(--bg);
-  color:var(--fg);
-  font-family:var(--f-body);
-  font-size:var(--body);
-  line-height:1.62;
-  -webkit-font-smoothing:antialiased;
-  overflow-x:clip;
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--hh) + 16px);
 }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
-/* Lenis übernimmt das Scrollen; natives Smooth-Scroll ist deshalb bewusst aus. */
-html.lenis,html.lenis body{ height:auto; }
-.lenis.lenis-smooth{ scroll-behavior:auto !important; }
-body.is-locked{ overflow:hidden; }
-
-img,video{ display:block; max-width:100%; }
-img{ height:auto; }
-
-h1,h2,h3,h4{
-  margin:0;
-  font-family:var(--f-display);
-  font-weight:800;
-  line-height:1;
-  letter-spacing:-.025em;
-  font-variation-settings:'wdth' 110;
-  overflow-wrap:break-word;              /* lange deutsche Komposita brechen sauber */
-}
-p{ margin:0 0 1em; }
-p:last-child{ margin-bottom:0; }
-ul,ol,dl,dd{ margin:0; padding:0; list-style:none; }
-a{ color:inherit; text-decoration:none; }
-button,input,select,textarea{ font:inherit; color:inherit; }
-button{ background:none; border:0; padding:0; cursor:pointer; }
-svg{ width:100%; height:100%; fill:none; stroke:currentColor; stroke-width:1.8;
-     stroke-linecap:round; stroke-linejoin:round; }
-
-::selection{ background:var(--accent); color:#fff; }
-:focus-visible{ outline:2px solid var(--accent-hi); outline-offset:3px; border-radius:2px; }
-
-.container{ width:100%; max-width:var(--maxw); margin-inline:auto; padding-inline:var(--pad); }
-.sec{ padding-block:var(--sec-y); position:relative; }
-[id]{ scroll-margin-top:calc(var(--hdr-h) + 24px); }
-
-.u-sr{
-  position:absolute; width:1px; height:1px; padding:0; margin:-1px;
-  overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0;
-}
-.skip-link{
-  position:fixed; top:.5rem; left:.5rem; z-index:400;
-  background:var(--accent); color:#fff; padding:.7rem 1.2rem;
-  font:600 .85rem/1 var(--f-body); transform:translateY(-200%);
-}
-.skip-link:focus-visible{ transform:none; }
-
-/* ──────────────────────── 03 · TYPOGRAFISCHE PRIMITIVE ───────────────────── */
-/* Der Grundton: Versal, fett, eng. Drei Varianten brechen ihn bewusst auf. */
-.h-display{
-  font-size:var(--h2);
-  text-transform:uppercase;
-  line-height:.93;
-  font-variation-settings:'wdth' var(--wd-norm);
-}
-/* Schmal (wdth 78) — für die technischen, listenhaften Abschnitte.        */
-.h-display--narrow{
-  font-variation-settings:'wdth' var(--wd-narrow);
-  letter-spacing:-.012em;
-  font-size:clamp(2.1rem, 6.1vw, 5.6rem);
-}
-/* Weit (wdth 120) — für die beiden Bild-/Bühnenmomente.                    */
-.h-display--wide{
-  font-variation-settings:'wdth' var(--wd-wide);
-  letter-spacing:-.035em;
-  font-size:clamp(1.9rem, 4.6vw, 4.2rem);
-}
-.h-display--single{ hyphens:auto; }
-
-/* Der eine bewusste Bruch: gemischte Groß-/Kleinschreibung, leichteres
-   Gewicht, offener Satz. Ein gesprochener Satz statt eines Plakats.        */
-.h-quote{
-  font-family:var(--f-display);
-  font-size:clamp(1.85rem, 4.6vw, 4.15rem);
-  font-weight:500;
-  line-height:1.04;
-  letter-spacing:-.022em;
-  font-variation-settings:'wdth' 100;
-  text-transform:none;
-  text-wrap:balance;
-  max-width:20ch;
+body {
+  margin: 0;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--fg-dim);
+  font-family: var(--ff-txt);
+  font-size: clamp(15px, .55vw + 13.4px, 17px);
+  line-height: 1.62;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-.h-display .l,
-.h-quote .l,
-.hero__title .l,
-.band__title .l{ display:block; }
+img, video { display: block; max-width: 100%; height: auto; }
+ul, ol, dl, dd { margin: 0; padding: 0; list-style: none; }
+figure { margin: 0; }
+address { font-style: normal; }
 
-/* Akzent: entweder eine kurze Zeile (.l.ac) oder ein einzelnes Schlüsselwort
-   (em.ac) — nie mehr als eine Zeile pro Headline.                          */
-.h-display .ac,
-.h-quote .ac,
-.hero__title .ac,
-.band__title .ac{ color:var(--accent); font-style:normal; }
-
-.kicker{
-  display:flex; align-items:center; gap:.7rem;
-  margin:0 0 1.5rem;
-  font:400 var(--small)/1 var(--f-mono);
-  letter-spacing:.18em; text-transform:uppercase;
-  color:var(--fg-dim);
-}
-.kicker__no{
-  color:var(--accent-hi);                 /* 7,2 : 1 statt 3,8 : 1 */
-  padding-right:.7rem;
-  border-right:1px solid var(--line);
-}
-.kicker__badge{
-  padding:.25em .5em; margin-right:-.2rem;
-  background:var(--accent); color:#fff;   /* Weiß auf Akzent = 5,2 : 1 */
-  font-weight:400; letter-spacing:.14em;
-}
-.kicker .dot{
-  width:7px; height:7px; border-radius:50%; background:var(--accent);
-  box-shadow:0 0 0 4px rgba(46,91,255,.22);
+a { color: inherit; text-decoration: none; }
+a:focus-visible, button:focus-visible, input:focus-visible,
+textarea:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid var(--accent-hi);
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 
-.lead{
-  font-size:var(--lead); line-height:1.5; color:var(--fg-dim);
-  font-weight:500; letter-spacing:-.01em;
+::selection { background: var(--accent); color: #fff; }
+
+.sr {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
 }
 
-.sechead{ max-width:var(--maxw); margin-bottom:clamp(3rem,5.5vw,5.5rem); }
-.sechead--tight{ margin-top:clamp(4rem,8vw,8rem); }
-/* Die Zwischengröße: deutlich größer als der Fließtext, deutlich kleiner als
-   die Headline. Trägt die Sektions-Intros und schließt die Lücke 78 → 17 px. */
-.sechead__note{
-  max-width:30ch; margin-top:1.8rem;
-  color:var(--fg-dim);
-  font-size:var(--h-mid); font-weight:500;
-  line-height:1.28; letter-spacing:-.018em;
-  text-wrap:balance;
+.skip {
+  position: absolute; top: -100px; left: var(--gut); z-index: 200;
+  padding: 12px 18px; background: var(--accent); color: #fff;
+  font: 500 14px/1 var(--ff-txt);
+}
+.skip:focus { top: 14px; }
+
+/* ------------------------------------------------------------- 3 Bausteine */
+.wrap {
+  width: 100%;
+  max-width: calc(var(--wrap) + var(--gut) * 2);
+  margin-inline: auto;
+  padding-inline: var(--gut);
 }
 
-.frame{ position:relative; overflow:hidden; background:var(--surface); margin:0; }
-.frame img{ width:100%; height:100%; object-fit:cover; }
+.sec { padding-block: var(--sp); }
 
-/* Zeilenmaske für die SplitText-Headlines (wird per JS erzeugt).
-   Oben etwas Luft, damit Umlaute nicht abgeschnitten werden.            */
-.smask{ display:block; overflow:hidden; padding-top:.14em; margin-top:-.14em; }
-.sline{ display:block; will-change:transform; }
-
-/* Bilder mit Parallax werden leicht überskaliert, damit die Kanten nicht
-   ausreißen. 1.06 reicht für ±7 % Versatz — 1.14 hat die Motive unnötig
-   beschnitten und weichgezeichnet. `will-change` setzt JS nur solange das
-   Bild wirklich im Bild ist (siehe main.js). */
-[data-parallax]{ transform:scale(1.06); }
-
-/* ─────────────────────────────── 04 · BUTTONS ────────────────────────────── */
-.btn{
-  --btn-bg:transparent; --btn-fg:var(--fg); --btn-bd:var(--line-strong);
-  position:relative; display:inline-flex; align-items:center; gap:.7rem;
-  padding:.85rem 1.4rem;
-  background:var(--btn-bg); color:var(--btn-fg);
-  border:1px solid var(--btn-bd);
-  font:700 .8rem/1 var(--f-body);
-  letter-spacing:.11em; text-transform:uppercase;
-  transition:background .3s var(--ease), color .3s var(--ease),
-             border-color .3s var(--ease), transform .35s var(--ease-o);
-}
-.btn svg{ width:1.05em; height:1.05em; flex:none; transition:transform .35s var(--ease-o); }
-.btn:hover svg{ transform:translateX(5px); }
-.btn--lg{ padding:1.1rem 1.9rem; font-size:.85rem; }
-.btn--accent{ --btn-bg:var(--accent); --btn-fg:#fff; --btn-bd:var(--accent); }
-.btn--accent:hover{ --btn-bg:#1F49E6; --btn-bd:#1F49E6; }
-.btn--ghost:hover{ --btn-bg:rgba(255,255,255,.07); --btn-bd:var(--fg); }
-
-/* ────────────────────────── 05 · HEADER / NAVIGATION ─────────────────────── */
-.hdr{
-  position:fixed; inset:0 0 auto; z-index:200;
-  height:var(--hdr-h);
-  isolation:isolate;
-}
-/* Dezenter Verlauf, der IMMER trägt — auch über hellen Stellen des
-   Hero-Videos, wo die rechten Navigationslinks vorher untergingen. */
-.hdr::before{
-  content:''; position:absolute; inset:0 0 auto; z-index:-2;
-  height:calc(var(--hdr-h) + 52px);
-  background:linear-gradient(to bottom,
-    rgba(5,6,8,.86) 0%, rgba(5,6,8,.62) 42%, rgba(5,6,8,.24) 74%, transparent 100%);
-  pointer-events:none;
-  transition:opacity .4s var(--ease);
-}
-/* Gescrollter Zustand: halbopake Fläche, die per opacity eingeblendet wird.
-   Kein backdrop-filter — der lag über dem laufenden Hero-Video und wurde
-   zusätzlich noch animiert. */
-.hdr::after{
-  content:''; position:absolute; inset:0; z-index:-1;
-  background:rgba(9,10,13,.94);
-  opacity:0; transition:opacity .4s var(--ease);
-  pointer-events:none;
-}
-.hdr.is-stuck::after{ opacity:1; }
-.hdr.is-stuck::before{ opacity:0; }
-.hdr__in{
-  display:flex; align-items:center; gap:clamp(1rem,3vw,2.5rem);
-  height:100%; max-width:var(--maxw); margin-inline:auto;
-  padding-inline:var(--pad);
-}
-.hdr__line{
-  position:absolute; inset:auto 0 0; height:1px;
-  background:var(--line); opacity:0;
-  transition:opacity .4s var(--ease);
-}
-.hdr.is-stuck .hdr__line{ opacity:1; }
-
-/* Anfrage-Pill: Text + Pfeil ab 901 px, darunter kompaktes Icon-Pill. */
-.hdr__cta-ico{ width:1.05em; height:1.05em; flex:none; }
-.hdr__cta-ico--mail{ display:none; }
-
-.brand{ display:flex; align-items:center; gap:.9rem; margin-right:auto; }
-.brand__mark{
-  display:block; width:60px; height:60px; flex:none;
-}
-.brand__mark img{
-  width:100%; height:100%;
-  transform-origin:50% 50%;
-  will-change:transform;
-}
-.brand__txt{ display:flex; flex-direction:column; gap:.28rem; line-height:1; }
-.brand__txt b{
-  font:800 .95rem/1 var(--f-display);
-  text-transform:uppercase; letter-spacing:-.01em;
-  font-variation-settings:'wdth' 108;
-}
-.brand__txt i{
-  font:400 .62rem/1 var(--f-mono);
-  letter-spacing:.18em; text-transform:uppercase; color:var(--muted);
-  font-style:normal;
+.kicker {
+  margin: 0;
+  font-family: var(--ff-mon);
+  font-size: 12px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--accent-hi);
 }
 
-.nav{ display:flex; gap:clamp(1rem,2vw,2.1rem); }
-.nav a{
-  /* padding-block bringt die Trefferfläche auf ≥ 24 px (WCAG 2.2) */
-  position:relative; display:inline-block; padding-block:.72rem;
-  font:600 .78rem/1 var(--f-body);
-  letter-spacing:.13em; text-transform:uppercase; color:var(--fg-dim);
-  transition:color .25s var(--ease);
+/* Sektionsueberschrift bewusst zurueckgenommen: der Nutzen darunter soll die
+   Groessenordnung tragen, nicht das Etikett. Verhaeltnis ~1,7:1 wie teccad. */
+.h2 {
+  margin: 18px 0 0;
+  font-family: var(--ff-dis);
+  font-weight: 700;
+  font-size: clamp(2.1rem, 4vw, 3.6rem);
+  line-height: .98;
+  letter-spacing: -.028em;
+  color: var(--fg);
+  text-wrap: balance;
 }
-.nav a::after{
-  content:''; position:absolute; inset:auto 0 0; height:1px;
-  background:var(--accent); transform:scaleX(0); transform-origin:0 50%;
-  transition:transform .35s var(--ease-o);
-}
-.nav a:hover{ color:var(--fg); }
-.nav a:hover::after{ transform:scaleX(1); }
+.dot { color: var(--accent); }
 
-.burger{
-  display:none; width:44px; height:44px; margin-right:-8px;
-  align-items:center; justify-content:center; flex-direction:column; gap:6px;
+.lead {
+  margin: 22px 0 0;
+  max-width: 56ch;
+  font-size: clamp(1rem, .45vw + .92rem, 1.16rem);
+  line-height: 1.55;
+  color: var(--fg-dim);
 }
-.burger__b{
-  display:block; width:22px; height:2px; background:var(--fg);
-  transition:transform .35s var(--ease-o), opacity .2s;
-}
-/* nth-of-type, weil das erste Kind das visuell versteckte Label ist */
-.burger[aria-expanded="true"] .burger__b:nth-of-type(2){ transform:translateY(4px) rotate(45deg); }
-.burger[aria-expanded="true"] .burger__b:nth-of-type(3){ transform:translateY(-4px) rotate(-45deg); }
 
-/* Mobile-Overlay */
-.mnav{
-  position:fixed; inset:0; z-index:190;
-  display:flex; flex-direction:column; justify-content:center;
-  padding:calc(var(--hdr-h) + 2rem) var(--pad) 2rem;
-  background:var(--bg-2);
-}
-.mnav[hidden]{ display:none; }
-.mnav__in{ display:flex; flex-direction:column; gap:.2rem; }
-.mnav__in a{
-  display:flex; align-items:baseline; gap:1rem;
-  padding:.55rem 0; border-bottom:1px solid var(--line-soft);
-  font:800 clamp(1.45rem,6.4vw,2.4rem)/1.05 var(--f-display);
-  text-transform:uppercase; letter-spacing:-.02em;
-}
-.mnav__in a i{
-  font:400 .68rem/1 var(--f-mono); font-style:normal;
-  color:var(--accent-hi); letter-spacing:.1em;
-}
-.mnav__foot{
-  display:flex; flex-direction:column; align-items:flex-start; gap:.35rem;
-  margin-top:2.5rem;
-  font:400 .82rem/1.6 var(--f-mono); color:var(--muted);
-}
-.mnav__foot a{ display:inline-block; padding-block:.4rem; color:var(--fg-dim); }
+.head { margin-bottom: clamp(48px, 6vw, 84px); }
 
-/* ──────────────────────────────── 06 · HERO ──────────────────────────────── */
-.hero{
-  position:relative; isolation:isolate;
-  min-height:100svh; display:flex; flex-direction:column; justify-content:flex-end;
-  padding-top:calc(var(--hdr-h) + 2rem);
-  overflow:hidden;
+/* Massangaben duerfen nie mitten im Mass umbrechen. */
+.nb { white-space: nowrap; }
+
+.idx {
+  display: block;
+  font-family: var(--ff-mon);
+  font-size: 12px;
+  letter-spacing: .12em;
+  color: var(--muted);
 }
-.hero__media{ position:absolute; inset:0; z-index:-2; overflow:hidden; }
-.hero__video{
-  width:100%; height:100%; object-fit:cover;
-  transform:scale(1.08);
+
+/* Bildrahmen: fasst das Bild, damit die Reveal-Skalierung nicht ausbricht. */
+.frame { position: relative; overflow: hidden; background: var(--surface); }
+.frame > img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Buttons ------------------------------------------------------------------ */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 44px;
+  padding: 12px 24px;
+  font-family: var(--ff-txt);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: .01em;
+  line-height: 1.2;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color .28s var(--ease), color .28s var(--ease),
+              border-color .28s var(--ease), transform .28s var(--ease);
 }
-.hero__scrim{
-  position:absolute; inset:0;
+.btn--solid { background: var(--accent); color: #fff; }
+.btn--solid:hover { background: #1D48EA; }
+.btn--solid:active { transform: translateY(1px); }
+.btn--lg { min-height: 54px; padding: 16px 34px; font-size: 16px; }
+
+/* ------------------------------------------------------------ 4 Kopfzeile */
+.hdr {
+  position: fixed; inset: 0 0 auto; z-index: 100;
+  height: var(--hh);
+  border-bottom: 1px solid transparent;
+  transition: background-color .35s var(--ease), border-color .35s var(--ease);
+}
+.hdr.is-stuck {
+  background: rgba(8, 9, 11, .88);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border-bottom-color: var(--line);
+}
+/* Bei offenem Menue traegt die Kopfzeile denselben Grund wie das Menue —
+   sonst stehen Marke und Schriftzug ueber dem Video und verschwinden. */
+.hdr.is-navopen {
+  background: var(--bg);
+  border-bottom-color: transparent;
+}
+
+.hdr__in {
+  height: 100%;
+  max-width: calc(var(--wrap) + var(--gut) * 2);
+  margin-inline: auto;
+  padding-inline: var(--gut);
+  display: flex; align-items: center; gap: 24px;
+}
+
+.brand { display: flex; align-items: center; gap: 16px; margin-right: auto; }
+
+/* Bildmarke 1:1 wie die Kundendatei auf weissem, kreisrundem Grund
+   (Durchmesser 84 px in der 112-px-Kopfzeile). Beide Ebenen sind quadratisch,
+   das Drehzentrum (Schraubenachse = Mittelpunkt des inneren Bogens) liegt in
+   der Bildmitte, also im Kreismittelpunkt. Der Buegel dreht sich in der
+   Bildebene um dieses Zentrum; sein entferntester Punkt (rechte Spindel)
+   bleibt mit rund 1,7 px Luft im Kreis. Die Schraube liegt als eigene Ebene obenauf
+   und deckt den Buegel, wenn er hinter ihr vorbeilaeuft. clip-path haelt den
+   Kreis auch in Safari dicht, falls je ein Subpixel ueberstuende. */
+.brand__link { display: block; }
+.mark {
+  position: relative;
+  display: block;
+  width: 84px; height: 84px;
+  background: #fff;
+  border-radius: 50%;
+  overflow: hidden;
+  clip-path: circle(50% at 50% 50%);
+  isolation: isolate;
+}
+.mark__frame, .mark__bolt {
+  position: absolute; inset: 0;
+  display: block;
+  width: 100%; height: 100%;
+}
+.mark__frame {
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+.mark__bolt { z-index: 2; pointer-events: none; }
+
+.brand__word {
+  font-family: var(--ff-dis);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: .17em;
+  text-transform: uppercase;
+  color: var(--fg);
+  white-space: nowrap;
+}
+.brand__word span { color: var(--muted); }
+
+/* Sechs Eintraege plus Knopf brauchen mehr Platz als die frueheren vier, die
+   Abstaende sind deshalb enger gefasst. */
+.nav { display: flex; align-items: center; gap: clamp(15px, 1.7vw, 34px); }
+.nav > a:not(.nav__cta) {
+  position: relative;
+  padding: 10px 0;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  color: var(--fg);
+  white-space: nowrap;
+  transition: color .25s var(--ease);
+}
+.nav > a:not(.nav__cta)::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 2px;
+  height: 1px; background: var(--accent);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .32s var(--ease);
+}
+.nav > a:not(.nav__cta):hover { color: var(--accent-hi); }
+.nav > a:not(.nav__cta):hover::after { transform: scaleX(1); }
+.nav__cta { margin-left: 4px; padding-inline: 20px; white-space: nowrap; }
+
+.burger {
+  display: none;
+  width: 48px; height: 48px;
+  padding: 0;
+  background: none; border: 1px solid var(--line-2); color: var(--fg);
+  cursor: pointer;
+}
+.burger__bars { display: grid; gap: 6px; place-items: center; }
+.burger__bars i { display: block; width: 20px; height: 1.5px; background: currentColor;
+  transition: transform .3s var(--ease), opacity .3s var(--ease); }
+.burger[aria-expanded="true"] .burger__bars i:first-child { transform: translateY(3.75px) rotate(45deg); }
+.burger[aria-expanded="true"] .burger__bars i:last-child  { transform: translateY(-3.75px) rotate(-45deg); }
+
+/* ----------------------------------------------------------------- 5 Hero */
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex; align-items: flex-end;
+  padding-top: calc(var(--hh) + 40px);
+  padding-bottom: clamp(64px, 9vh, 120px);
+  overflow: hidden;
+}
+.hero__media { position: absolute; inset: 0; z-index: 0; }
+.hero__media video { width: 100%; height: 100%; object-fit: cover; }
+.hero__veil {
+  position: absolute; inset: 0; z-index: 1;
   background:
-    linear-gradient(96deg, rgba(8,9,11,.94) 0%, rgba(8,9,11,.78) 34%, rgba(8,9,11,.28) 66%, rgba(8,9,11,.6) 100%),
-    linear-gradient(to top, var(--bg) 2%, rgba(8,9,11,0) 42%);
+    linear-gradient(180deg, rgba(8,9,11,.86) 0%, rgba(8,9,11,.40) 34%, rgba(8,9,11,.78) 78%, var(--bg) 100%),
+    linear-gradient(90deg, rgba(8,9,11,.80) 0%, rgba(8,9,11,.24) 58%, rgba(8,9,11,.10) 100%);
 }
-.hero__grain{
-  position:absolute; inset:0; opacity:.5;
-  background:radial-gradient(120% 80% at 50% 40%, transparent 40%, rgba(0,0,0,.75) 100%);
+.hero__in { position: relative; z-index: 2; }
+
+.hero__h1 {
+  margin: 20px 0 0;
+  font-family: var(--ff-dis);
+  font-weight: 800;
+  font-size: clamp(2.85rem, 7.4vw, 6.4rem);
+  line-height: .94;
+  letter-spacing: -.035em;
+  color: var(--fg);
+}
+.hero__sub {
+  margin: 28px 0 0;
+  max-width: 46ch;
+  font-size: clamp(1.02rem, .5vw + .92rem, 1.22rem);
+  line-height: 1.55;
+  color: var(--fg-dim);
+}
+.hero__act { margin: 38px 0 0; }
+
+/* ------------------------------------------------------------- 6 Vorteile */
+.sec--adv { padding-bottom: clamp(64px, 7vw, 112px); }
+
+.adv {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(22px, 2.6vw, 44px);
+}
+.adv__i { position: relative; padding-top: 26px; }
+.adv__rule {
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 1px; background: var(--accent);
+  transform-origin: left center;
+}
+.adv__i .idx { margin-bottom: 20px; color: var(--accent-hi); }
+
+/* Das Herzstueck: der Nutzen steht in der zweitgroessten Schrift der Seite,
+   nicht in der kleinsten. min-height haelt die vier Fliesstexte auf einer Linie. */
+.adv__i h3 {
+  margin: 0 0 14px;
+  min-height: calc(2 * 1.12em);
+  font-family: var(--ff-dis);
+  font-weight: 600;
+  font-size: clamp(1.6rem, 1.1vw + 1.16rem, 2.125rem);
+  line-height: 1.12;
+  letter-spacing: -.018em;
+  color: var(--fg);
+  text-wrap: balance;
+}
+.adv__i p { margin: 0; font-size: 1rem; line-height: 1.62; color: var(--fg-dim); }
+
+/* ---------------------------------------------------------- 7 Bildbuehne */
+.band { padding-inline: var(--gut); }
+.frame--band {
+  max-width: var(--wrap);
+  margin-inline: auto;
+  aspect-ratio: 1400 / 569;
+}
+@media (max-width: 700px) { .frame--band { aspect-ratio: 4 / 3; } }
+
+/* ----------------------------------------------------------- 8 Leistungen
+   Karten nach der teccad-Prozessseite. Drei Spalten, zwei Reihen, alle Karten
+   gleich hoch. Das Foto sitzt im oberen Drittel und laeuft nach unten in den
+   Kartengrund aus, die versale Ueberschrift steht darueber. Die Akzentkarte
+   traegt dieselbe Kopfhoehe ohne Bild, damit alle Ueberschriften auf einer
+   Linie sitzen. */
+.svc {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(16px, 1.6vw, 26px);
+}
+.svc__i {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+  overflow: hidden;
+  transition: border-color .32s var(--ease), transform .32s var(--ease);
+}
+.svc__i:hover { border-color: var(--line-2); transform: translateY(-3px); }
+
+.svc__top {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  aspect-ratio: 16 / 9;
+  background: var(--surface-2);
+}
+.svc__top > img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  max-width: none;
+  object-fit: cover;
+}
+/* Die Abdeckung setzt erst unterhalb der Bildmitte ein. Der Auftraggeber wollte
+   die Verfahren sichtbar haben, und die Ueberschrift steht ohnehin ganz unten,
+   wo der Verlauf bereits voll im Kartengrund liegt. Oben bleibt das Motiv frei. */
+.svc__top::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(180deg,
+    rgba(8,9,11,0) 0%,
+    rgba(8,9,11,.08) 34%,
+    rgba(12,14,18,.44) 62%,
+    rgba(16,18,22,.86) 84%,
+    var(--surface) 100%);
+}
+.svc__h {
+  position: relative; z-index: 2;
+  margin: 0;
+  padding: 0 clamp(20px, 1.7vw, 28px) 16px;
+  font-family: var(--ff-dis);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 1.5vw + .7rem, 2.05rem);
+  line-height: 1.0;
+  letter-spacing: -.01em;
+  text-transform: uppercase;
+  color: var(--fg);
+}
+.svc__body {
+  flex: 1;
+  padding: 18px clamp(20px, 1.7vw, 28px) clamp(24px, 2vw, 30px);
+}
+.svc__body p { margin: 0; font-size: .96rem; line-height: 1.6; color: var(--fg-dim); }
+.svc__intro {
+  margin-bottom: 12px !important;
+  font-weight: 600;
+  color: var(--fg) !important;
 }
 
-.hero__body{ position:relative; padding-bottom:clamp(2.5rem,6vw,5rem); }
-.hero__kicker{ margin-bottom:clamp(1.3rem,2.4vw,2rem); color:var(--fg); }
+/* Die eine hervorgehobene Karte traegt das Laserschweissen, weil es seit Anfang
+   2026 neu im Portfolio steht. Sie liegt auf dem satten --accent mit weisser
+   Schrift: 5,18:1 und damit AA. Dunkle Schrift auf demselben Blau kaeme nur auf
+   3,85:1, der helle Ton --accent-hi ist im Rest der Seite die Farbe der Kicker
+   und Links und wuerde als Flaeche nichts mehr hervorheben. */
+.svc__i--hi { background: var(--accent); border-color: var(--accent); }
+.svc__i--hi:hover { border-color: var(--accent-hi); }
+.svc__i--hi .svc__top { background: var(--accent); justify-content: space-between; padding-top: clamp(20px, 1.7vw, 28px); }
+.svc__i--hi .svc__top::after { display: none; }
+.svc__i--hi .svc__h { color: #fff; }
+.svc__flag {
+  position: relative; z-index: 2;
+  margin: 0;
+  padding: 0 clamp(20px, 1.7vw, 28px);
+  font-family: var(--ff-mon);
+  font-size: 12px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  /* Volles Weiss. Bei 12 px versal auf dem satten Blau kommt schon .88 nur auf
+     4,36:1 und verfehlt AA. Weiss ergibt 5,18:1. */
+  color: #fff;
+}
+.svc__i--hi .svc__body p { color: rgba(255, 255, 255, .92); }
+.svc__i--hi .svc__intro { color: #fff !important; }
 
-/* Hero etwas schmaler als die Norm (wdth 94): die lange erste Zeile
-   „Präzision ist unsere" bekommt damit Platz, ohne kleiner zu werden — und
-   der Auftakt klingt eine Spur technischer. */
-.hero__title{
-  font-size:var(--h1); line-height:.88;
-  text-transform:uppercase; letter-spacing:-.032em;
-  font-variation-settings:'wdth' 94;
-  margin-bottom:clamp(1.6rem,2.8vw,2.4rem);
-}
-.hero__sub{
-  /* Umbruch macht der Browser — das harte <br> erzeugte die Waise
-     „Niederbayerns." auf eigener Zeile. */
-  max-width:44ch; margin-bottom:clamp(2rem,3.4vw,2.8rem);
-  font-size:var(--lead); line-height:1.5; color:var(--fg-dim); font-weight:500;
-  text-wrap:balance;
-}
-.hero__cta{ display:flex; flex-wrap:wrap; gap:.8rem; }
+/* ------------------------------------------------------- 8b Branchen (3D) */
+/* Grundzustand ist ein schlichtes Raster. Der Zylinder wird erst gebaut, wenn
+   GSAP geladen ist, die Bewegung erlaubt ist und die Breite >= 768 px liegt
+   (Klasse .gsap-cyl am <html>). Ohne das bleibt die Sektion ein Raster. */
+.sec--ind { padding-top: clamp(64px, 7vw, 112px); padding-bottom: clamp(36px, 3.6vw, 64px); }
 
-.hero__foot{ position:relative; border-top:1px solid var(--line); }
-.hero__foot-in{
-  display:flex; align-items:center; justify-content:space-between; gap:2rem;
-  padding-block:1.1rem;
-}
-.scrollcue{
-  display:inline-flex; align-items:center; gap:.85rem;
-  font:400 .7rem/1 var(--f-mono); letter-spacing:.22em; text-transform:uppercase;
-  color:var(--muted); transition:color .3s var(--ease);
-}
-.scrollcue:hover{ color:var(--fg); }
-.scrollcue__bar{
-  position:relative; display:block; width:1px; height:26px;
-  background:var(--line-strong); overflow:hidden;
-}
-.scrollcue__bar i{
-  position:absolute; inset:0; display:block; background:var(--accent);
-  transform:translateY(-100%);
-  animation:cue 2.2s var(--ease) infinite;
-}
-@keyframes cue{ 0%{transform:translateY(-100%)} 55%{transform:translateY(0)} 100%{transform:translateY(100%)} }
+.cyl-wrap { position: relative; width: 100%; perspective-origin: 50% center; transform-origin: 50% center; }
+.cyl-stage { position: relative; z-index: 1; padding-inline: var(--gut); }
 
-.hero__tags{
-  display:flex; flex-wrap:wrap; gap:clamp(.9rem,2.4vw,2.4rem);
-  font:400 .7rem/1 var(--f-mono); letter-spacing:.18em; text-transform:uppercase;
-  color:var(--muted);
+.cyl {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(14px, 1.8vw, 28px);
+  max-width: var(--wrap);
+  margin-inline: auto;
 }
-.hero__tags li{ position:relative; }
-.hero__tags li+li::before{
-  content:''; position:absolute; left:calc(clamp(.9rem,2.4vw,2.4rem) / -2);
-  top:50%; width:3px; height:3px; margin-top:-1.5px; border-radius:50%;
-  background:var(--accent); opacity:.7;
+.cyl__c {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1 / 1;
+  background: var(--surface);
 }
-
-/* ───────── SEKTIONSRHYTHMUS · --sec-y variiert bewusst pro Sektion ─────────
-   Nach dem lauten Akzentband darf es eng werden, vor dem Kontakt weit.       */
-.sec--laser   { --sec-y: calc(var(--sec-y-base) * 1.15); }
-.sec--ref     { padding-top: calc(var(--sec-y-base) * .6); }   /* dicht hinter dem Band */
-.sec--eigen   { --sec-y: calc(var(--sec-y-base) * .92); }
-.sec--karriere{ --sec-y: calc(var(--sec-y-base) * 1.2); }
-.sec--kontakt { padding-top: calc(var(--sec-y-base) * 1.45); }
-
-/* ──────────────────────── 07 · ANSPRUCH + KENNZAHLEN ─────────────────────── */
-.sec--anspruch{ background:var(--bg); }
-.anspruch__title{ margin-bottom:clamp(3rem,5vw,4.5rem); }
-
-.anspruch__grid{
-  display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);
-  gap:clamp(2rem,5vw,5rem); align-items:start;
+.cyl__c[data-empty] { display: none; }
+.cyl__img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; }
+.cyl__veil {
+  position: absolute; inset: 0; z-index: 2;
+  background-image: linear-gradient(rgba(6, 7, 10, 0) 62%, rgba(6, 7, 10, .72) 100%);
 }
-.anspruch__text p{ max-width:56ch; }
-.anspruch__text p+p{ margin-top:1.1rem; color:var(--muted); }
-
-.signature{
-  display:grid; gap:.1rem; margin-top:2.4rem;
-  border-top:1px solid var(--line-soft);
-}
-.signature li{
-  display:flex; flex-wrap:wrap; gap:.4rem 1.5rem;
-  padding:.85rem 0; border-bottom:1px solid var(--line-soft);
-}
-.signature b{
-  min-width:11ch;
-  font:400 .72rem/1.6 var(--f-mono); letter-spacing:.14em; text-transform:uppercase;
-  color:var(--muted);
-}
-.signature span{ font-weight:600; font-size:.95rem; }
-
-.anspruch__fig{ aspect-ratio:1/1; }
-.anspruch__fig figcaption,
-.laser__inset figcaption,
-.karriere__fig figcaption{
-  position:absolute; inset:auto 0 0; z-index:2;
-  padding:3.2rem 1.2rem 1.1rem;
-  background:linear-gradient(to top, rgba(6,7,10,.96) 18%, rgba(6,7,10,.7) 55%, transparent);
-  font:400 .74rem/1.5 var(--f-mono); color:#E7EAEF;
+.cyl__cap {
+  position: absolute; left: 0; bottom: 0; z-index: 3;
+  padding: 20px clamp(18px, 1.8vw, 28px);
+  font-family: var(--ff-dis);
+  font-weight: 600;
+  font-size: clamp(1.05rem, .8vw + .86rem, 1.45rem);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--fg);
 }
 
-.stats{
-  display:grid; grid-template-columns:repeat(4,1fr);
-  margin-top:clamp(3.5rem,6vw,6rem);
-  border-top:1px solid var(--line);
+/* --- Zylinderzustand ------------------------------------------------------ */
+/* Der Scrollweg ist doppelt so hoch wie der Ring — wie in der Vorlage, aber
+   ueber CSS, damit er beim Breitenwechsel nicht stehenbleibt. */
+/* overflow-x:clip statt hidden — clip erlaubt als einziger Wert weiterhin
+   overflow-y:visible, der Ring darf also oben und unten aus dem Rahmen ragen,
+   erzeugt seitlich aber keine Scrollbreite. */
+.gsap-cyl .cyl-wrap { height: calc(var(--cyl-w) * 2); overflow-x: clip; overflow-y: visible; }
+.gsap-cyl .cyl-stage {
+  padding-inline: 0;
+  perspective: 5000px;
+  display: flex; justify-content: center; align-items: center;
 }
-.stat{ padding:1.8rem 1.4rem 0 0; }
-.stat+.stat{ padding-left:1.4rem; border-left:1px solid var(--line-soft); }
-.stat dt{
-  font:400 .72rem/1 var(--f-mono); letter-spacing:.16em; text-transform:uppercase;
-  color:var(--muted); margin-bottom:.9rem;
+.gsap-cyl .cyl {
+  display: block;
+  position: relative;
+  width: var(--cyl-w); height: var(--cyl-w);
+  max-width: none; margin: 0;
+  transform-style: preserve-3d;
+  transform: translate3d(0, 0, var(--cyl-radius)) rotateY(-102deg);
 }
-.stat dd{
-  display:flex; align-items:baseline; gap:.05em;
-  font-family:var(--f-display); font-weight:800;
-  font-size:clamp(2.4rem,5.2vw,4.4rem); line-height:.9;
-  letter-spacing:-.045em; font-variant-numeric:tabular-nums;
+.gsap-cyl .cyl__c {
+  position: absolute; inset: 0;
+  width: var(--cyl-w); height: var(--cyl-w);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: rotateY(calc(var(--cyl-angle) * var(--index))) translate3d(0, 0, calc(var(--cyl-radius) * -1));
 }
-.stat dd em{ font-style:normal; color:var(--accent); }
-
-/* ───────────────────────────── 08 · LEISTUNGEN ───────────────────────────── */
-.sec--leistungen{ background:var(--bg-2); }
-
-.svc{ position:relative; border-top:1px solid var(--line); }
-
-/* Die Cursor-Vorschau ist entfallen. Statt einer Hover-Überraschung über
-   500 px Leere trägt jetzt jede Zeile ihr Bild dauerhaft rechts außen —
-   das schließt die tote Fläche UND vereinheitlicht die Zeilenhöhen, weil
-   die Bildkachel die Höhe vorgibt. */
-.svc__row{
-  position:relative;
-  display:grid; align-items:center;
-  grid-template-columns:3.2rem minmax(0,19rem) minmax(0,1fr) 11rem;
-  gap:1.5rem clamp(1.2rem,2.2vw,2.2rem);
-  padding:1.55rem 0;
-  border-bottom:1px solid var(--line);
-  transition:background .4s var(--ease);
-}
-.svc__row::before{
-  content:''; position:absolute; inset:0 -1rem;
-  background:linear-gradient(90deg, rgba(46,91,255,.14), transparent 62%);
-  opacity:0; transition:opacity .4s var(--ease);
-  pointer-events:none;
-}
-.svc__row:hover::before{ opacity:1; }
-
-.svc__no{
-  font:400 .78rem/1 var(--f-mono); letter-spacing:.1em;
-  color:var(--muted); transition:color .3s var(--ease);
-  align-self:center;
-}
-.svc__row:hover .svc__no{ color:var(--accent-hi); }
-
-/* Schmaler Schnitt wie die Sektionsheadline — die Liste klingt dadurch als
-   eigener Block, nicht wie eine Wiederholung des Hero. */
-.svc__title{
-  font-size:clamp(1.5rem,2.45vw,2.05rem); line-height:1.02;
-  text-transform:uppercase; letter-spacing:-.012em;
-  font-variation-settings:'wdth' 84;
-  display:flex; align-items:baseline; gap:.7rem; flex-wrap:wrap;
-  transition:transform .45s var(--ease-o);
-}
-.svc__row:hover .svc__title{ transform:translateX(8px); }
-.tag{
-  align-self:center; padding:.35em .6em;
-  background:var(--accent); color:#fff;
-  font:700 .58rem/1 var(--f-body); letter-spacing:.14em; text-transform:uppercase;
-  font-variation-settings:normal;
-}
-.svc__body p{ color:var(--fg-dim); font-size:.98rem; max-width:52ch; }
-.svc__spec{
-  margin-top:.7rem !important;
-  font:400 .74rem/1.5 var(--f-mono) !important; letter-spacing:.08em;
-  color:var(--muted) !important; text-transform:uppercase;
-}
-/* Feste Kachel: gibt allen sechs Zeilen dieselbe Höhe. */
-.svc__thumb{
-  margin:0; overflow:hidden; background:var(--surface);
-  aspect-ratio:4/3; align-self:center;
-}
-.svc__thumb img{
-  width:100%; height:100%; object-fit:cover;
-  transition:transform .7s var(--ease-o);
-}
-.svc__row:hover .svc__thumb img{ transform:scale(1.06); }
-
-.addons{
-  display:grid; grid-template-columns:repeat(3,1fr); gap:1px;
-  margin-top:clamp(2.5rem,4vw,4rem);
-  background:var(--line-soft);
-}
-.addons li{ background:var(--bg-2); padding:1.6rem 1.6rem 1.6rem 0; }
-.addons li+li{ padding-left:1.6rem; }
-.addons b{
-  display:block; margin-bottom:.5rem;
-  font:400 .72rem/1 var(--f-mono); letter-spacing:.16em; text-transform:uppercase;
-  color:var(--accent-hi);
-}
-.addons span{ color:var(--fg-dim); font-size:.95rem; }
-
-/* ──────────────────── 09 · LASERSCHWEISSEN + VERGLEICHS-SLIDER ───────────── */
-.sec--laser{
-  background:
-    radial-gradient(90% 60% at 88% 12%, rgba(46,91,255,.16), transparent 62%),
-    var(--bg);
-}
-.laser__grid{
-  display:grid; grid-template-columns:minmax(0,1fr) minmax(0,.92fr);
-  gap:clamp(2.5rem,5vw,5.5rem); align-items:start;
-}
-.laser__text .lead{ margin-top:2rem; max-width:44ch; }
-.laser__side{ display:grid; align-content:start; }
-
-.ticks{ display:grid; gap:.1rem; margin-top:2.4rem; }
-.ticks li{
-  display:grid; grid-template-columns:auto 1fr; gap:.15rem 1rem;
-  padding:1.1rem 0; border-top:1px solid var(--line-soft);
-}
-.ticks li::before{
-  content:''; grid-row:1/3; width:13px; height:7px; margin-top:.45rem;
-  border-left:1.5px solid var(--accent); border-bottom:1.5px solid var(--accent);
-  transform:rotate(-45deg);
-}
-.ticks b{ font-size:1rem; letter-spacing:-.01em; }
-.ticks span{ color:var(--muted); font-size:.93rem; }
-
-/* Sitzt jetzt unter dem Vergleich statt in der Textspalte — dort blieben
-   rechts unten sonst gut 200 px leer. */
-.laser__inset{
-  margin-top:clamp(1rem,1.6vw,1.6rem); aspect-ratio:2/1;
+.gsap-cyl .cyl__c[data-empty] { display: block; background: none; pointer-events: none; }
+/* Bild groesser als die Karte, damit die Gegenbewegung keine Kanten zeigt */
+.gsap-cyl .cyl__img {
+  inset: -100px 0 0 -100px;
+  width: calc(100% + 200px); height: calc(100% + 200px);
 }
 
-.laser__demo{ margin:0; }
-.laser__demo figcaption,
-.case__demo+.case__text{ font-size:.95rem; }
-.laser__demo figcaption{
-  margin-top:1.2rem; color:var(--muted); max-width:44ch;
-}
-.laser__demo figcaption b{ color:var(--fg); }
+/* ------------------------------------------------ 8c Eigenentwicklungen
+   Aufbau nach der teccad-Seite "3D-Druck": Kopf mit Produktbild, Erklaerblock,
+   Kartenreihe mit Pfeillisten, horizontaler Bilderlauf, zwei Produktspalten,
+   schmales Abschlussband. Der Abstand zwischen den Bloecken ist bewusst
+   kleiner als der Sektionsabstand, sonst reisst die Seite den Laengenkorridor. */
+.sec--own > * + * { margin-top: clamp(48px, 4.8vw, 74px); }
+.sec--own .lead { max-width: 52ch; }
 
-/* Vorher/Nachher */
-.cmp{
-  position:relative; overflow:hidden; aspect-ratio:1/1;
-  background:var(--surface); touch-action:pan-y; cursor:ew-resize;
-  user-select:none; -webkit-user-select:none;
+.own__head {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
+  gap: clamp(32px, 4vw, 72px);
+  align-items: center;
 }
-.cmp__img{ width:100%; height:100%; object-fit:cover; }
-.cmp__img--top{ object-position:50% 28%; }
-.cmp__after{
-  position:absolute; inset:0;
-  clip-path:inset(0 0 0 var(--pos));
-}
-.cmp__label{
-  position:absolute; top:1rem; z-index:3;
-  padding:.4rem .7rem; background:rgba(6,7,10,.72);
-  font:400 .66rem/1 var(--f-mono); letter-spacing:.16em; text-transform:uppercase;
-  color:var(--fg);
-}
-.cmp__label--a{ left:1rem; }
-.cmp__label--b{ right:1rem; background:var(--accent); color:#fff; }
-.cmp__handle{
-  position:absolute; top:0; bottom:0; left:var(--pos); z-index:4;
-  width:2px; margin-left:-1px; background:var(--accent);
-}
-.cmp__grip{
-  position:absolute; top:50%; left:50%; translate:-50% -50%;
-  display:grid; place-items:center; width:46px; height:46px;
-  background:var(--accent); color:#fff; border-radius:50%;
-  box-shadow:0 6px 24px rgba(0,0,0,.45);
-  transition:transform .3s var(--ease-o);
-}
-.cmp__grip svg{ width:22px; height:22px; }
-.cmp:hover .cmp__grip{ transform:scale(1.08); }
-.cmp__handle:focus-visible{ outline:2px solid #fff; outline-offset:2px; }
+/* 3:4 statt 4:5. Der Kopf traegt nur noch drei Zeilen Text, ein hoeheres Bild
+   liesse die linke Spalte leer stehen. */
+.own__headImg { aspect-ratio: 3 / 4; border-radius: 16px; }
+.own__act { margin: clamp(28px, 3vw, 40px) 0 0; }
 
-/* ───────────────────────────── 10 · AKZENTBAND ─────────────────────────────
-   Kontrast: Auf einer gesättigten Blaufläche erreicht dunkler Text die AA-
-   Schwelle nicht — selbst reines Schwarz kommt auf #2E5BFF nur auf 4,06 : 1,
-   und Abdunkeln der Fläche verschlechtert Schwarz weiter (auf #1F49E6 nur
-   3,15 : 1). Deshalb umgekehrt gelöst: Fläche leicht abgedunkelt auf
-   #2550E8 und Text auf Weiß → 6,2 : 1 für Titel/Labels, 5,3 : 1 für den
-   Fließtext. Der Farbbruch bleibt dabei voll erhalten.                       */
-.band{
-  position:relative; overflow:hidden;
-  padding-block:clamp(4.5rem,8vw,8rem);
-  background:var(--band-bg); color:#fff;
-}
-/* Ringabstand von 27/28 px auf 96/98 px vergrößert — die enge Version
-   erzeugte Moiré, das wie JPEG-Artefakte aussah. */
-.band__pattern{
-  position:absolute; inset:-30%; opacity:.16; pointer-events:none;
-  background:repeating-radial-gradient(circle at 74% 122%,
-             transparent 0 96px, rgba(255,255,255,.85) 96px 98px);
-}
-.band__in{ position:relative; }
-.band__title{
-  font-family:var(--f-display); font-weight:800;
-  font-size:var(--h2); line-height:.92; text-transform:uppercase;
-  letter-spacing:-.035em;
-  max-width:14ch;
-}
-/* Breitenkontrast innerhalb einer Headline: weit gesetzt, dann schmal. */
-.band__title-a{ font-variation-settings:'wdth' 122; letter-spacing:-.04em; }
-.band__title-b{ font-variation-settings:'wdth' 88;  letter-spacing:-.005em; }
-
-.kicker--ink{ color:#fff; }
-.kicker--ink .kicker__no{ color:#fff; border-color:rgba(255,255,255,.4); }
-
-.band__cols{
-  display:grid; grid-template-columns:repeat(3,1fr);
-  gap:clamp(1.5rem,3vw,3rem);
-  margin-top:clamp(3rem,5vw,5rem);
-  padding-top:2.2rem; border-top:1px solid rgba(255,255,255,.35);
-}
-.band__cols h3{
-  font-size:1.15rem; text-transform:uppercase; letter-spacing:-.01em;
-  margin-bottom:.8rem; color:#fff;
-}
-.band__cols p{ color:rgba(255,255,255,.92); font-size:.97rem; max-width:36ch; }
-
-/* ──────────────────────────── 11 · REFERENZEN ───────────────────────────── */
-.sec--ref{ background:var(--bg); }
-
-.case{
-  display:grid; grid-template-columns:minmax(0,.72fr) minmax(0,1fr);
-  gap:clamp(2rem,4.5vw,4.5rem); align-items:center;
-  padding-bottom:clamp(3.5rem,6vw,6rem);
-  margin-bottom:clamp(3.5rem,6vw,6rem);
-  border-bottom:1px solid var(--line);
-}
-.case__demo{ margin:0; }
-
-/* Diptychon statt Wipe (Lichtmaschinenhalter): zwei getrennte Aufnahmen,
-   sauber beschriftet. Ein Wipe würde Deckungsgleichheit behaupten, die es
-   bei diesen beiden Fotos nicht gibt. */
-.dip{
-  display:grid; grid-template-columns:1fr 1fr;
-  gap:clamp(.5rem,.9vw,.9rem);
-}
-.dip__panel{
-  position:relative; margin:0; overflow:hidden;
-  background:var(--surface); aspect-ratio:4/5;
-}
-.dip__panel img{
-  width:100%; height:100%; object-fit:cover; object-position:50% 45%;
-}
-.dip__panel--b img{ object-position:50% 50%; }
-.dip__panel figcaption{
-  position:absolute; inset:auto 0 0; z-index:2;
-  display:flex; align-items:baseline; gap:.55rem;
-  padding:3rem .95rem .9rem;
-  background:linear-gradient(to top, rgba(6,7,10,.95) 14%, transparent);
-  font:400 .72rem/1.35 var(--f-mono); color:#E7EAEF;
-}
-.dip__panel figcaption i{
-  font-style:normal; color:var(--accent-hi); flex:none;
+/* Fuehrt seit dem Wegfall des Erklaerblocks die Kartenreihe an. */
+.own__whyH {
+  margin: 0 0 clamp(28px, 3vw, 44px);
+  max-width: 34ch;
+  font-family: var(--ff-dis);
+  font-weight: 700;
+  font-size: clamp(1.6rem, 2.2vw, 2.35rem);
+  line-height: 1.06;
+  letter-spacing: -.026em;
+  color: var(--fg);
 }
 
-.case__text h3{
-  font-size:clamp(1.8rem,3.4vw,3rem); text-transform:uppercase;
-  letter-spacing:-.03em; margin-bottom:1.3rem; hyphens:auto;
+/* --- Kartenreihe ---------------------------------------------------------- */
+.own__steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(16px, 1.6vw, 26px);
 }
-.case__text p{ color:var(--fg-dim); max-width:48ch; }
-.steps{
-  display:flex; flex-wrap:wrap; gap:.6rem; margin-top:2rem;
+.own__step {
+  display: flex; flex-direction: column;
+  padding: clamp(24px, 2.2vw, 34px);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
 }
-.steps li{
-  display:flex; align-items:center; gap:.6rem;
-  padding:.6rem .95rem; border:1px solid var(--line);
-  font-size:.86rem; font-weight:600;
+.own__step h3 {
+  margin: 0 0 14px;
+  font-family: var(--ff-dis);
+  font-weight: 700;
+  font-size: clamp(1.15rem, .9vw + .8rem, 1.45rem);
+  line-height: 1.08;
+  letter-spacing: .01em;
+  text-transform: uppercase;
+  color: var(--fg);
 }
-.steps i{
-  font:400 .68rem/1 var(--f-mono); font-style:normal; color:var(--accent-hi);
+.own__step > p { margin: 0 0 22px; font-size: .96rem; color: var(--fg-dim); }
+.own__step--hi { background: var(--accent); border-color: var(--accent); }
+.own__step--hi h3 { color: #fff; }
+.own__step--hi > p { color: rgba(255, 255, 255, .92); }
+
+/* Pfeil-Aufzaehlung wie in der Vorlage */
+.arrow { display: grid; gap: 10px; }
+.arrow li {
+  position: relative;
+  padding-left: 24px;
+  font-size: .94rem;
+  line-height: 1.45;
+  color: var(--fg-dim);
+}
+.arrow li::before {
+  content: '';
+  position: absolute; left: 2px; top: .52em;
+  width: 7px; height: 7px;
+  border-top: 1.5px solid var(--accent-hi);
+  border-right: 1.5px solid var(--accent-hi);
+  transform: translateY(-50%) rotate(45deg);
+}
+.own__step--hi .arrow li { color: rgba(255, 255, 255, .94); }
+.own__step--hi .arrow li::before { border-color: rgba(255, 255, 255, .78); }
+
+/* --- Bilderlauf ----------------------------------------------------------- */
+.own__galHead {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 24px;
+  margin-bottom: clamp(20px, 2vw, 30px);
+}
+.own__galH {
+  margin: 0;
+  font-family: var(--ff-dis);
+  font-weight: 600;
+  font-size: clamp(1.15rem, 1vw + .8rem, 1.6rem);
+  letter-spacing: -.012em;
+  color: var(--fg);
+}
+.own__galNav { display: flex; gap: 10px; flex: 0 0 auto; }
+.galbtn {
+  width: 46px; height: 46px;
+  display: grid; place-items: center;
+  padding: 0;
+  background: none;
+  border: 1px solid var(--line-2);
+  border-radius: 50%;
+  color: var(--fg);
+  cursor: pointer;
+  transition: background-color .25s var(--ease), border-color .25s var(--ease), color .25s var(--ease);
+}
+.galbtn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.galbtn:hover { border-color: var(--accent); color: var(--accent-hi); }
+.galbtn[aria-disabled="true"] { opacity: .34; cursor: default; }
+.galbtn[aria-disabled="true"]:hover { border-color: var(--line-2); color: var(--fg); }
+
+/* Der Laufweg geht randlos ueber die Breite, das Innenmass richtet sich aber
+   weiter am Raster aus. overflow-x liegt im Element, die Seite bleibt schmal. */
+.own__track {
+  display: flex;
+  gap: clamp(14px, 1.4vw, 22px);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  padding-inline: max(var(--gut), calc((100% - var(--wrap)) / 2));
+  padding-bottom: 4px;
+  /* Ohne diese Zeile rastet die erste Karte auf die Innenkante und der Streifen
+     steht beim Laden schon um die Randbreite verschoben. */
+  scroll-padding-inline: max(var(--gut), calc((100% - var(--wrap)) / 2));
+}
+.own__track::-webkit-scrollbar { display: none; }
+@media (prefers-reduced-motion: reduce) { .own__track { scroll-behavior: auto; } }
+/* Schmale, hohe Karten wie in der Vorlage. Sieben Motive zu je rund 260 px
+   ergeben bei 1440 gut 1950 px Inhalt in einer 1320 px breiten Bahn, der Lauf
+   hat damit mehrere echte Stellungen statt nur einer. */
+.own__shot {
+  flex: 0 0 clamp(212px, 18.5vw, 262px);
+  scroll-snap-align: start;
+}
+.own__shot .frame { aspect-ratio: 5 / 7; border-radius: 14px; }
+.own__shot figcaption {
+  position: absolute; inset: auto 0 0 0;
+  padding: 40px 16px 14px;
+  background: linear-gradient(180deg, rgba(8,9,11,0) 0%, rgba(8,9,11,.88) 64%, rgba(8,9,11,.95) 100%);
+  font-size: .84rem;
+  font-weight: 600;
+  color: var(--fg);
 }
 
-.mosaic{
-  display:grid; grid-template-columns:repeat(12,1fr);
-  gap:clamp(.6rem,1.1vw,1.1rem);
+/* --- Die beiden Produkte -------------------------------------------------- */
+.own__prod {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(32px, 4vw, 72px);
+  padding-top: clamp(32px, 3.4vw, 52px);
+  border-top: 1px solid var(--line);
 }
-.tile{
-  position:relative; overflow:hidden; margin:0;
-  background:var(--surface); grid-column:span 4; aspect-ratio:1/1;
+.own__ico { display: block; color: var(--accent-hi); }
+.own__ico svg { width: 30px; height: 30px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.own__p h3 {
+  margin: 18px 0 12px;
+  font-family: var(--ff-dis);
+  font-weight: 600;
+  font-size: clamp(1.3rem, 1.1vw + .9rem, 1.7rem);
+  letter-spacing: -.018em;
+  color: var(--fg);
 }
-/* Gemischte Reihen (7+5) bekommen eine FESTE Höhe statt zweier verschiedener
-   Seitenverhältnisse — nur so schließen die Kanten bündig ab. Mit gleichem
-   aspect-ratio wären sie bei ungleicher Spaltenbreite zwangsläufig
-   unterschiedlich hoch. */
-.tile--7,
-.tile--5{ aspect-ratio:auto; height:clamp(15rem,26vw,26rem); }
-.tile--7{ grid-column:span 7; }
-.tile--5{ grid-column:span 5; }
-.tile--4{ grid-column:span 4; }
-.tile--3{ grid-column:span 3; }
-.tile img{
-  width:100%; height:100%; object-fit:cover;
-  transition:transform .8s var(--ease-o);
-}
-.tile:hover img{ transform:scale(1.05); }
-/* Parallax-Bilder werden pro Frame per GSAP gesetzt — hier darf keine
-   CSS-Transition dazwischenfunken. */
-.tile img[data-parallax]{ transition:none; }
-.tile figcaption{
-  position:absolute; inset:auto 0 0; z-index:2;
-  display:flex; flex-direction:column; gap:.28rem;
-  padding:3.5rem 1.15rem 1.05rem;
-  background:linear-gradient(to top, rgba(6,7,10,.94) 12%, transparent);
-}
-.tile figcaption b{
-  font:800 .95rem/1.1 var(--f-display); text-transform:uppercase;
-  letter-spacing:-.01em; font-variation-settings:'wdth' 108;
-}
-.tile figcaption span{
-  font:400 .7rem/1.45 var(--f-mono); color:var(--fg-dim);
+.own__p > p { margin: 0; font-size: 1rem; color: var(--fg-dim); }
+.own__sub { margin-top: clamp(24px, 2.4vw, 34px); }
+/* Die Liste laeuft zweispaltig, damit die Spalte in der Breite nicht leer
+   ausseinanderfaellt, seit die zweite Unterspalte entfallen ist. */
+.own__sub .arrow { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(16px, 1.6vw, 26px); }
+.own__sub h4 {
+  margin: 0 0 12px;
+  font-family: var(--ff-mon);
+  font-weight: 400; font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--muted);
 }
 
-/* ─────────────────────────────── 12 · MARQUEE ───────────────────────────── */
-.marquee-sec{
-  padding-block:clamp(3.5rem,6vw,6rem);
-  background:var(--bg-2);
-  border-block:1px solid var(--line-soft);
-  overflow:hidden;
+/* --- Abschlussband -------------------------------------------------------- */
+/* Schmal gehalten und ohne zweites Formular. Die Kontaktsektion nimmt die
+   Anfrage entgegen, hier steht nur der Weg dorthin. */
+.own__band { padding-inline: var(--gut); }
+.own__bandIn {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px clamp(20px, 2vw, 32px);
+  max-width: var(--wrap);
+  margin-inline: auto;
+  padding: clamp(22px, 2.2vw, 32px) clamp(24px, 2.6vw, 40px);
+  background: var(--accent);
+  border-radius: 16px;
 }
-/* Weiche Kanten statt harter Abrisse links und rechts. */
-.marquee{
-  overflow:hidden; margin-top:1rem;
-  -webkit-mask-image:linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-          mask-image:linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+.own__bandK {
+  margin: 0;
+  font-family: var(--ff-mon);
+  font-size: 12px; letter-spacing: .16em; text-transform: uppercase;
+  color: #fff;                       /* wie der Kicker der Akzentkarte, 5,18:1 */
 }
-.marquee__track{
-  display:flex; align-items:center; gap:clamp(1.2rem,2.4vw,2.4rem);
-  width:max-content;
+.own__bandT {
+  margin: 0;
+  flex: 1 1 340px;
+  font-family: var(--ff-dis);
+  font-weight: 600;
+  font-size: clamp(1.05rem, .9vw + .8rem, 1.4rem);
+  line-height: 1.2;
+  letter-spacing: -.014em;
+  color: #fff;
 }
-.marquee__track span{
-  font:800 clamp(2rem,5.4vw,4.6rem)/1 var(--f-display);
-  text-transform:uppercase; letter-spacing:-.035em;
-  font-variation-settings:'wdth' 110;
-  white-space:nowrap;
+.own__bandA {
+  font-weight: 700;
+  font-size: .98rem;
+  color: #fff;
+  border-bottom: 2px solid rgba(255, 255, 255, .48);
+  padding-block: 3px;
+  transition: border-color .25s var(--ease);
 }
-.marquee__track i{
-  font-style:normal; color:var(--accent-hi);
-  font-size:clamp(.9rem,1.7vw,1.5rem);
+.own__bandA:hover { border-bottom-color: #fff; }
+
+/* ----------------------------------------------------------- 9 Referenzen */
+/* Die belegte Geschichte des Lichtmaschinenhalters steht vor dem Raster:
+   links die zwei Zustaende, rechts der Vorgang in drei Saetzen. */
+.refx {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+  gap: clamp(28px, 3.4vw, 56px);
+  align-items: center;
+  margin-bottom: clamp(36px, 4vw, 60px);
+  padding-bottom: clamp(36px, 4vw, 60px);
+  border-bottom: 1px solid var(--line);
 }
-.marquee--rev{ margin-top:.4rem; }
-/* Bei 74 px Schriftgröße war 1 px Kontur praktisch unsichtbar. */
-.marquee--rev .marquee__track span{
-  color:transparent;
-  -webkit-text-stroke:1.8px rgba(255,255,255,.4);
+.refx__imgs { display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(12px, 1.4vw, 20px); }
+.refx__imgs .frame { aspect-ratio: 4 / 3; }
+.refx__imgs figcaption {
+  position: absolute; inset: auto 0 0 0;
+  padding: 36px 14px 12px;
+  background: linear-gradient(180deg, rgba(8,9,11,0) 0%, rgba(8,9,11,.86) 62%, rgba(8,9,11,.94) 100%);
+  font-family: var(--ff-mon);
+  font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--fg);
+}
+.refx__txt h3 {
+  margin: 16px 0 14px;
+  font-family: var(--ff-dis);
+  font-weight: 600;
+  font-size: clamp(1.3rem, 1.3vw + .9rem, 1.9rem);
+  line-height: 1.14;
+  letter-spacing: -.02em;
+  color: var(--fg);
+  text-wrap: balance;
+}
+.refx__txt p:last-child { margin: 0; font-size: 1rem; color: var(--fg-dim); }
+
+.ref {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(18px, 2.2vw, 34px) clamp(18px, 2.2vw, 32px);
+}
+.ref__i .frame { aspect-ratio: 1 / 1; }
+.ref__i figcaption {
+  position: absolute; inset: auto 0 0 0;
+  display: flex; align-items: baseline; gap: 12px;
+  padding: 44px 18px 16px;
+  background: linear-gradient(180deg, rgba(8,9,11,0) 0%, rgba(8,9,11,.86) 62%, rgba(8,9,11,.94) 100%);
+  font-family: var(--ff-txt);
+  font-size: .92rem;
+  font-weight: 600;
+  color: var(--fg);
+}
+.ref__i figcaption .idx { color: var(--accent-hi); }
+
+/* -------------------------------------------------------------- 10 Zahlen */
+.stats {
+  position: relative; overflow: hidden;
+  min-height: clamp(420px, 56vw, 600px);
+  display: flex; align-items: flex-end;
+  padding-block: clamp(84px, 10vw, 150px) clamp(56px, 6vw, 84px);
+}
+.stats__bg { position: absolute; inset: 0; z-index: 0; }
+.stats__bg img { width: 100%; height: 100%; object-fit: cover; }
+.stats__bg::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(180deg, var(--bg) 0%, rgba(8,9,11,.62) 30%, rgba(8,9,11,.86) 82%, var(--bg) 100%);
+}
+.stats__in { position: relative; z-index: 1; }
+/* Zwei mal zwei statt vier nebeneinander: nur so tragen alle vier Kennzahlen
+   dieselbe Groesse — das dreiteilige Frasmass braucht die Breite. */
+.stats__grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(28px, 3.4vw, 52px) clamp(32px, 4vw, 72px); }
+.stat { border-top: 1px solid var(--line-2); padding-top: 18px; }
+.stat dt {
+  font-family: var(--ff-mon);
+  font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--accent-hi);
+}
+.stat dd {
+  margin: 12px 0 0;
+  display: flex; align-items: flex-end;
+  min-height: clamp(2.1rem, 3.4vw, 3.4rem);
+}
+.num {
+  display: block;
+  font-family: var(--ff-dis);
+  font-weight: 700;
+  font-size: clamp(2.1rem, 3.4vw, 3.4rem);
+  line-height: 1;
+  letter-spacing: -.03em;
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
-/* ─────────────────────── 13 · EIGENENTWICKLUNGEN ────────────────────────── */
-.sec--eigen{ background:var(--bg); }
-/* Über grid-template-areas statt `order`: so bekommen BEIDE Blöcke exakt
-   gleich breite Medienspalten, egal auf welcher Seite sie stehen. Mit
-   `order` sprang Block 2 vorher von 821 px auf 500 px. */
-.dev{
-  display:grid; align-items:center;
-  grid-template-areas:'text media';
-  grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);
-  gap:clamp(2rem,4.5vw,4.5rem);
+/* ------------------------------------------------------------- 11 Kontakt */
+.con {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: clamp(40px, 5vw, 88px);
+  row-gap: 0;
+  align-items: start;
 }
-.dev--rev{
-  grid-template-areas:'media text';
-  grid-template-columns:minmax(0,1.18fr) minmax(0,.82fr);
+.con__head { grid-column: 1 / -1; }
+.con__img { aspect-ratio: 16 / 10; }
+.con__meta {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px;
+  margin-top: clamp(32px, 3.4vw, 48px);
 }
-.dev__text { grid-area:text; }
-.dev__media{ grid-area:media; }
-.dev+.dev{
-  margin-top:clamp(3.5rem,6vw,6rem);
-  padding-top:clamp(3.5rem,6vw,6rem);
-  border-top:1px solid var(--line);
+.con__meta h3 {
+  margin: 0 0 12px;
+  font-family: var(--ff-mon);
+  font-weight: 400; font-size: 13px; letter-spacing: .13em; text-transform: uppercase;
+  color: var(--muted);
 }
-.dev__text h3{
-  font-size:clamp(1.7rem,3.2vw,2.7rem); text-transform:uppercase;
-  letter-spacing:-.03em; margin-bottom:1.2rem; hyphens:auto;
-}
-.dev__sub{
-  margin-top:-.6rem !important; margin-bottom:1.4rem !important;
-  font:400 .76rem/1.5 var(--f-mono) !important; letter-spacing:.1em;
-  text-transform:uppercase; color:var(--accent-hi) !important;
-}
-.dev__text p{ color:var(--fg-dim); max-width:46ch; }
-.chips{ display:flex; flex-wrap:wrap; gap:.45rem; margin-top:1.8rem; }
-.chips li{
-  padding:.42rem .8rem; border:1px solid var(--line);
-  font:400 .7rem/1 var(--f-mono); letter-spacing:.1em; text-transform:uppercase;
-  color:var(--fg-dim);
-}
-.dev__media{
-  display:grid; grid-template-columns:repeat(2,1fr);
-  gap:clamp(.6rem,1.1vw,1.1rem);
-}
-.dev__big{ grid-column:1/-1; aspect-ratio:16/10; }
-.dev__s1,.dev__s2{ aspect-ratio:4/3; }
-.dev__media--single{ grid-template-columns:1fr; }
-.dev__media--single .dev__big{ aspect-ratio:16/10; }
+.con__meta h3 + h3 { margin-top: 26px; }
+.con__meta li, .con__meta address, .con__meta p { margin: 0 0 6px; font-size: .96rem; color: var(--fg-dim); }
+.con__meta a { color: var(--fg); border-bottom: 1px solid var(--line-2); transition: color .25s var(--ease), border-color .25s var(--ease); }
+.con__meta a:hover { color: var(--accent-hi); border-bottom-color: var(--accent-hi); }
 
-/* ───────────────────── 14 · BETRIEB · BÜHNE · STÄRKEN ───────────────────── */
-.sec--betrieb{ background:var(--bg-2); padding-top:0; }
-.stage{
-  position:relative; overflow:hidden;
-  min-height:clamp(24rem,58vh,40rem);
-  display:flex; align-items:flex-end;
-  margin-bottom:clamp(3rem,5vw,5rem);
+/* Formular ----------------------------------------------------------------- */
+.form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px clamp(16px, 1.6vw, 24px);
+  padding: clamp(24px, 2.6vw, 40px);
+  background: var(--surface);
+  border: 1px solid var(--line);
 }
-.stage__img{
-  position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+.f { display: flex; flex-direction: column; gap: 8px; }
+.f--full { grid-column: 1 / -1; }
+.f label {
+  font-family: var(--ff-mon);
+  font-size: 13px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--muted);
 }
-.stage__scrim{
-  position:absolute; inset:0;
-  background:
-    linear-gradient(75deg, rgba(8,9,11,.95) 6%, rgba(8,9,11,.5) 58%, rgba(8,9,11,.78)),
-    linear-gradient(to top, var(--bg-2) 1%, transparent 40%);
+.f label span { color: var(--accent-hi); }
+.f input, .f textarea {
+  width: 100%;
+  min-height: 46px;
+  padding: 11px 14px;
+  background: var(--bg);
+  border: 1px solid var(--line-2);
+  color: var(--fg);
+  font-family: var(--ff-txt);
+  font-size: 15px;
+  line-height: 1.5;
+  transition: border-color .25s var(--ease), background-color .25s var(--ease);
 }
-.stage__in{ position:relative; padding-block:clamp(2.5rem,5vw,4.5rem); }
-.stage__title{ max-width:12ch; }
+.f textarea { resize: vertical; min-height: 128px; }
+.f input:hover, .f textarea:hover { border-color: #333A46; }
+.f input:focus, .f textarea:focus { border-color: var(--accent); outline-offset: 1px; }
+.f input[aria-invalid="true"], .f textarea[aria-invalid="true"] { border-color: #FF6B6B; }
 
-.park{
-  display:grid; grid-template-columns:repeat(4,1fr);
-  gap:clamp(1rem,2vw,2rem);
+.f--check { flex-direction: row; align-items: flex-start; gap: 12px; }
+.f--check input {
+  flex: 0 0 auto;
+  width: 24px; height: 24px; min-height: 24px;
+  margin-top: 2px; padding: 0;
+  accent-color: var(--accent);
 }
-.park__item{ margin:0; }
-.park__item .frame{ aspect-ratio:1/1; margin-bottom:1.1rem; }
-.park__item .frame img{ transition:transform .8s var(--ease-o); }
-.park__item:hover .frame img{ transform:scale(1.05); }
-.park__item figcaption b{
-  display:block; margin-bottom:.45rem;
-  font:800 1.02rem/1.15 var(--f-display); text-transform:uppercase;
-  letter-spacing:-.015em; font-variation-settings:'wdth' 108;
+.f--check label {
+  font-family: var(--ff-txt);
+  font-size: .9rem; letter-spacing: 0; text-transform: none; line-height: 1.5;
+  color: var(--fg-dim);
 }
-.park__item figcaption span{ color:var(--muted); font-size:.9rem; line-height:1.55; }
+.f--check label a { color: var(--accent-hi); border-bottom: 1px solid currentColor; }
 
-/* Zwei Weitwinkel-Bänder: Dreherei und Messraum. */
-.halls{
-  display:grid; grid-template-columns:repeat(2,1fr);
-  gap:clamp(1rem,2vw,2rem);
-  margin-top:clamp(2.5rem,4vw,4rem);
-}
-.halls__item{ margin:0; }
-.halls__item .frame{ aspect-ratio:2.46/1; margin-bottom:1.1rem; }
-.halls__item figcaption b{
-  display:block; margin-bottom:.45rem;
-  font:800 1.02rem/1.15 var(--f-display); text-transform:uppercase;
-  letter-spacing:-.015em; font-variation-settings:'wdth' 108;
-}
-.halls__item figcaption span{ color:var(--muted); font-size:.9rem; line-height:1.55; }
+.form__foot { flex-direction: row; align-items: center; flex-wrap: wrap; gap: 16px 24px; margin-top: 8px; }
+.form__hint { margin: 0; font-size: .86rem; color: var(--muted); }
+.form__hint a { color: var(--fg-dim); border-bottom: 1px solid var(--line-2); }
+.form__note { grid-column: 1 / -1; margin: 0; font-size: .9rem; color: var(--accent-hi); }
+.form__note:empty { display: none; }
 
-.usp{
-  display:grid; grid-template-columns:repeat(3,1fr); gap:0;
-  border-top:1px solid var(--line);
+/* -------------------------------------------------------------- 12 Footer */
+.ftr { border-top: 1px solid var(--line); padding-block: clamp(56px, 6vw, 88px) 28px; }
+.ftr__grid {
+  display: grid;
+  grid-template-columns: 1.7fr repeat(4, minmax(0, 1fr));
+  gap: clamp(28px, 3vw, 56px);
 }
-.usp li{
-  padding:1.9rem 1.8rem 1.9rem 0;
-  border-bottom:1px solid var(--line-soft);
+.ftr__brand img { width: 64px; height: 64px; }
+.ftr__claim { margin: 20px 0 0; max-width: 34ch; font-size: .95rem; color: var(--muted); }
+.ftr h2 {
+  margin: 0 0 14px;
+  font-family: var(--ff-mon);
+  font-weight: 400; font-size: 13px; letter-spacing: .13em; text-transform: uppercase;
+  color: var(--accent-hi);
 }
-.usp li:nth-child(3n+2),.usp li:nth-child(3n+3){
-  padding-left:1.8rem; border-left:1px solid var(--line-soft);
-}
-.usp i{
-  display:block; margin-bottom:1rem;
-  font:400 .72rem/1 var(--f-mono); font-style:normal;
-  letter-spacing:.14em; color:var(--accent-hi);
-}
-.usp b{
-  display:block; margin-bottom:.5rem;
-  font-size:1.1rem; letter-spacing:-.01em;
-}
-.usp span{ color:var(--muted); font-size:.94rem; }
+.ftr li, .ftr address { font-size: .94rem; line-height: 1.85; color: var(--fg-dim); }
+.ftr a { transition: color .25s var(--ease); }
+.ftr a:hover { color: var(--accent-hi); }
 
-/* ─────────────────────────────── 15 · KARRIERE ──────────────────────────── */
-.sec--karriere{ background:var(--bg); }
-/* Headline steht in einer Spalte — etwas kleiner, damit keine Einzelwortzeilen entstehen */
-.karriere__left .h-display{ font-size:clamp(1.95rem,4.4vw,4rem); }
-/* Die Stärken-Headline soll auf zwei Zeilen bleiben, nicht auf drei. */
-.sechead--tight .h-display{ font-size:clamp(1.9rem,4.15vw,3.75rem); }
-.karriere__grid{
-  display:grid; grid-template-columns:minmax(0,1fr) minmax(0,.95fr);
-  gap:clamp(2.5rem,5vw,5rem); align-items:start;
+.ftr__bar {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 12px 32px;
+  margin-top: clamp(44px, 5vw, 72px);
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  font-size: .84rem;
+  color: var(--muted);
 }
-.karriere__left .lead{ margin-top:2rem; max-width:44ch; }
-.perks{
-  display:flex; flex-wrap:wrap; gap:.45rem; margin-top:2rem;
-}
-.perks li{
-  padding:.55rem .95rem; border:1px solid var(--line);
-  font:400 .74rem/1 var(--f-mono); letter-spacing:.08em; text-transform:uppercase;
-  color:var(--fg-dim);
-}
-/* Füllt jetzt die volle Spaltenbreite — mit max-width:24rem endete das Bild
-   mitten in der Spalte. object-position hält den Bildmittelpunkt oben. */
-.karriere__fig{ margin-top:2.8rem; aspect-ratio:16/10; }
-.karriere__fig img{ object-position:50% 38%; }
+.ftr__bar p { margin: 0; }
+.ftr__legal { display: flex; gap: 24px; }
+.ftr__ai { margin-left: auto !important; text-align: right; }
 
-.jobs__intro{
-  padding-bottom:1.1rem; margin-bottom:0; border-bottom:1px solid var(--line);
-  font:400 .74rem/1 var(--f-mono); letter-spacing:.18em; text-transform:uppercase;
-  color:var(--muted);
-}
-.job{ border-bottom:1px solid var(--line); }
-.job summary{
-  display:grid; grid-template-columns:1fr auto; align-items:center;
-  gap:.2rem 1.2rem; padding:1.6rem 0; cursor:pointer; list-style:none;
-}
-.job summary::-webkit-details-marker{ display:none; }
-.job__title{
-  font:800 clamp(1.2rem,2vw,1.6rem)/1.1 var(--f-display);
-  text-transform:uppercase; letter-spacing:-.02em;
-  transition:color .3s var(--ease);
-}
-.job__title b{ color:var(--muted); font-weight:800; }
-.job__meta{
-  grid-column:1; font:400 .72rem/1 var(--f-mono);
-  letter-spacing:.12em; text-transform:uppercase; color:var(--accent-hi);
-  margin-top:.55rem;
-}
-.job__ico{
-  grid-column:2; grid-row:1/3; position:relative;
-  width:38px; height:38px; border:1px solid var(--line-strong); border-radius:50%;
-  transition:background .3s var(--ease), border-color .3s var(--ease);
-}
-.job__ico::before,.job__ico::after{
-  content:''; position:absolute; top:50%; left:50%; translate:-50% -50%;
-  background:currentColor;
-}
-.job__ico::before{ width:13px; height:1.5px; }
-.job__ico::after{ width:1.5px; height:13px; transition:transform .35s var(--ease-o); }
-.job:hover .job__title{ color:var(--accent-hi); }
-.job:hover .job__ico{ border-color:var(--accent); }
-.job[open] .job__ico{ background:var(--accent); border-color:var(--accent); color:#fff; }
-.job[open] .job__ico::after{ transform:scaleY(0); }
-.job__body{ padding-bottom:1.9rem; max-width:52ch; }
-.job__body p{ color:var(--fg-dim); }
-.job__body ul{ margin:1.1rem 0 1.6rem; display:grid; gap:.5rem; }
-.job__body li{
-  position:relative; padding-left:1.2rem; color:var(--muted); font-size:.94rem;
-}
-.job__body li::before{
-  content:''; position:absolute; left:0; top:.62em;
-  width:5px; height:5px; background:var(--accent);
-}
-.job[open] .job__body{ animation:jobIn .45s var(--ease-o) both; }
-@keyframes jobIn{ from{ opacity:0; transform:translateY(-8px); } to{ opacity:1; transform:none; } }
+/* Tippziel: Fliesstext-Links bekommen vertikale Luft, damit die Trefferflaeche
+   auch bei 14–15 px Schrift ueber 24 px liegt. */
+.con__meta a, .ftr a, .form__hint a, .f--check label a { padding-block: 3px; }
 
-.jobs__call{
-  margin-top:2.5rem; padding:1.7rem;
-  border:1px solid var(--line); background:rgba(46,91,255,.06);
-}
-.jobs__call-k{
-  margin:0 0 .7rem;
-  font:400 .72rem/1 var(--f-mono); letter-spacing:.16em; text-transform:uppercase;
-  color:var(--accent-hi);
-}
-.jobs__call-t{ margin:0 0 1.1rem; color:var(--fg-dim); font-size:.97rem; max-width:38ch; }
-.jobs__call-l{ display:flex; flex-wrap:wrap; gap:.4rem 1.6rem; }
-.jobs__call-l a{ display:inline-block; padding-block:.3rem; font-weight:700; font-size:.98rem; }
-.jobs__call-l a:hover{ color:var(--accent-hi); }
+/* --------------------------------------------------- 13 Startzustaende GSAP */
+/* Greifen nur, wenn der GSAP-Stack nachweislich geladen ist. */
+.gsap .hero__kicker,
+.gsap .hero__sub,
+.gsap .hero__act { opacity: 0; }
+.gsap .hero__h1 { opacity: 0; }
+.gsap .rv { opacity: 0; }
+.gsap .adv__rule { transform: scaleX(0); }
+.gsap .frame > img { transform: scale(1.04); }
 
-/* ─────────────────────────────── 16 · KONTAKT ───────────────────────────── */
-.sec--kontakt{ position:relative; overflow:hidden; background:var(--bg-2); }
-.kontakt__bg{ position:absolute; inset:0; z-index:0; }
-.kontakt__bg img{ width:100%; height:100%; object-fit:cover; }
-/* Deckung von ~97 % auf ~85 % zurückgenommen — vorher war vom Foto
-   darunter praktisch nichts mehr zu sehen. */
-.kontakt__bg span{
-  position:absolute; inset:0;
-  background:
-    linear-gradient(100deg, rgba(10,12,15,.9) 20%, rgba(10,12,15,.8) 58%, rgba(10,12,15,.88)),
-    linear-gradient(to bottom, var(--bg-2) 0%, transparent 24% 74%, var(--bg-2) 100%);
-}
-.kontakt__head{
-  position:relative; z-index:1;
-  margin-bottom:clamp(2.5rem,4.5vw,4.5rem);
-}
-.kontakt__head .lead{ margin-top:1.8rem; max-width:48ch; }
-.kontakt__grid{
-  position:relative; z-index:1;
-  display:grid; grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);
-  gap:clamp(2.5rem,5vw,5rem); align-items:start;
+.no-anim .hero__kicker, .no-anim .hero__sub, .no-anim .hero__act,
+.no-anim .hero__h1, .no-anim .rv { opacity: 1 !important; }
+.no-anim .adv__rule { transform: none !important; }
+.no-anim .frame > img { transform: none !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  .gsap .hero__kicker, .gsap .hero__sub, .gsap .hero__act,
+  .gsap .hero__h1, .gsap .rv { opacity: 1 !important; }
+  .gsap .adv__rule { transform: none !important; }
+  .gsap .frame > img { transform: none !important; }
+  * { animation-duration: .001ms !important; transition-duration: .001ms !important; }
 }
 
-.contact{
-  display:grid; grid-template-columns:repeat(2,1fr); gap:0;
-  border-top:1px solid var(--line);
-}
-.contact li{
-  padding:1.3rem 1.2rem 1.3rem 0; border-bottom:1px solid var(--line-soft);
-}
-.contact li:nth-child(2n){ padding-left:1.2rem; border-left:1px solid var(--line-soft); }
-.contact b{
-  display:block; margin-bottom:.4rem;
-  font:400 .7rem/1 var(--f-mono); letter-spacing:.16em; text-transform:uppercase;
-  color:var(--muted);
-}
-.contact a,.contact span{ font-size:1rem; font-weight:600; line-height:1.45; }
-.contact a{ transition:color .25s var(--ease); }
-.contact a:hover{ color:var(--accent-hi); }
+/* ------------------------------------------------------------ 14 Responsiv */
+/* Die Navigation traegt jetzt sechs Eintraege plus Knopf und braucht in einer
+   Zeile rund 1200 px. Darunter wird daraus das Klappmenue. Der Kopf selbst
+   bleibt bis 980 px in voller Hoehe, Menue und Kopfmasse stehen deshalb in
+   getrennten Bloecken. */
+@media (max-width: 1280px) {
+  .burger { display: grid; place-items: center; }
 
-.form{
-  padding:clamp(1.6rem,2.6vw,2.6rem);
-  background:rgba(16,18,22,.72); border:1px solid var(--line);
-  backdrop-filter:blur(6px);
-}
-.form__row{ display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
-.field{ margin-bottom:1rem; }
-.field label{
-  display:block; margin-bottom:.55rem;
-  font:400 .7rem/1 var(--f-mono); letter-spacing:.14em; text-transform:uppercase;
-  color:var(--muted);
-}
-.field label span{ color:var(--accent); }
-.field input,.field select,.field textarea{
-  width:100%; padding:.85rem 1rem;
-  background:rgba(8,9,11,.6); border:1px solid var(--line);
-  font-size:.98rem; color:var(--fg);
-  transition:border-color .25s var(--ease), background .25s var(--ease);
-}
-.field textarea{ resize:vertical; min-height:8rem; }
-.field input::placeholder,.field textarea::placeholder{ color:#5D646E; }
-.field input:focus,.field select:focus,.field textarea:focus{
-  border-color:var(--accent); background:rgba(8,9,11,.9); outline:none;
-}
-.field input:user-invalid,.field textarea:user-invalid{ border-color:#FF5A5A; }
-.field select{ appearance:none; cursor:pointer;
-  background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),
-                   linear-gradient(135deg,var(--muted) 50%,transparent 50%);
-  background-position:calc(100% - 20px) 50%, calc(100% - 14px) 50%;
-  background-size:6px 6px, 6px 6px; background-repeat:no-repeat;
-}
-.check{
-  display:flex; gap:.75rem; align-items:flex-start;
-  margin:.5rem 0 1.6rem; font-size:.88rem; color:var(--muted); cursor:pointer;
-}
-.check input{ margin-top:.22rem; width:17px; height:17px; accent-color:var(--accent); flex:none; }
-.check a{ color:var(--fg-dim); text-decoration:underline; text-underline-offset:3px; }
-.form__foot{ display:flex; flex-wrap:wrap; align-items:center; gap:1.2rem; }
-.form__hint{ font-size:.82rem; color:var(--muted); margin:0; }
-.form__hint a{ color:var(--fg-dim); text-decoration:underline; text-underline-offset:3px; }
-.form__note{
-  margin:1.2rem 0 0; padding:0; font-size:.92rem; color:var(--accent-hi);
-  min-height:0;
-}
-.form__note.is-error{ color:#FF7A7A; }
-
-/* ──────────────────────────────── 17 · FOOTER ───────────────────────────── */
-.ftr{ background:var(--bg); border-top:1px solid var(--line); padding-block:clamp(3rem,5vw,5rem) 2rem; }
-.ftr__top{
-  display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between;
-  gap:2rem; padding-bottom:clamp(2.5rem,4vw,4rem);
-}
-/* Das Original-Logo ist ein weisses Logo mit eigener Transparenz —
-   es steht direkt auf dem dunklen Grund, ohne weisse Platte. */
-.ftr__logo{
-  display:block;
-  transition:transform .4s var(--ease-o);
-}
-.ftr__logo img{ width:clamp(240px,32vw,380px); height:auto; }
-.ftr__logo:hover{ transform:translateY(-3px); }
-.ftr__claim{
-  margin:0; font:800 clamp(1.05rem,1.7vw,1.5rem)/1.25 var(--f-display);
-  text-transform:uppercase; letter-spacing:-.02em; text-align:right;
-  font-variation-settings:'wdth' 108;
-}
-
-.ftr__cols{
-  display:grid; grid-template-columns:repeat(4,1fr); gap:2rem;
-  padding-block:clamp(2rem,3.5vw,3.5rem);
-  border-top:1px solid var(--line);
-}
-.ftr__cols h2{
-  margin-bottom:1.1rem;
-  font:400 .7rem/1 var(--f-mono); letter-spacing:.16em; text-transform:uppercase;
-  color:var(--accent);
-}
-.ftr__cols address{ font-style:normal; color:var(--fg-dim); line-height:1.8; }
-.ftr__cols li{ color:var(--fg-dim); line-height:1.8; }
-.ftr__cols a{ transition:color .25s var(--ease); }
-.ftr__cols a:hover{ color:var(--accent-hi); }
-
-.ftr__bar{
-  display:flex; flex-wrap:wrap; align-items:center; gap:1rem 2rem;
-  padding-top:1.8rem; border-top:1px solid var(--line-soft);
-  font-size:.8rem; color:var(--muted);
-}
-.ftr__bar p{ margin:0; }
-.ftr__legal{ display:flex; gap:1.4rem; }
-.ftr__legal a{ text-decoration:underline; text-underline-offset:3px; }
-.ftr__legal a:hover{ color:var(--fg); }
-.ftr__ai{ margin-left:auto !important; opacity:.7; }
-
-/* ────────────── 18 · REVEAL-STARTZUSTÄNDE (nur mit geladenem GSAP) ────────────
-   Die Startzustände hängen bewusst an `.gsap` — diese Klasse setzt ein
-   Inline-Script erst, wenn der Vendor-Stack tatsächlich geladen ist. Fällt eine
-   Datei aus, greift keine einzige dieser Regeln und die Seite ist komplett
-   sichtbar. `.no-anim` ist das 2-Sekunden-Sicherheitsnetz aus dem <head>.      */
-.gsap:not(.no-anim) [data-reveal]{ opacity:0; transform:translateY(38px); }
-.gsap:not(.no-anim) [data-split] .l{ opacity:0; }
-.gsap:not(.no-anim) .hero__kicker,
-.gsap:not(.no-anim) .hero__sub,
-.gsap:not(.no-anim) .hero__cta,
-.gsap:not(.no-anim) .hero__foot{ opacity:0; }
-
-/* Vom Sicherheitsnetz bzw. von main.js freigegebene Elemente */
-.gsap [data-reveal].is-in,
-.gsap [data-split] .l.is-in{ opacity:1 !important; transform:none !important; }
-
-/* ────────────────────────────── 19 · RESPONSIVE ─────────────────────────── */
-@media (max-width:1180px){
-  .nav{ display:none; }
-  .burger{ display:flex; }
-  .hdr__cta{ display:none; }
-}
-
-@media (max-width:1080px){
-  :root{ --hdr-h:72px; }
-  .anspruch__grid,
-  .laser__grid,
-  .case,
-  .dev,
-  .karriere__grid,
-  .kontakt__grid{ grid-template-columns:minmax(0,1fr); }
-  .dev--rev .dev__text{ order:0; }
-  .anspruch__fig{ aspect-ratio:16/9; }
-  .case__demo{ max-width:34rem; }
-  .cmp--tall{ aspect-ratio:1/1; }
-  .laser__demo{ max-width:34rem; }
-  .park{ grid-template-columns:repeat(2,1fr); }
-  .usp{ grid-template-columns:repeat(2,1fr); }
-  .usp li:nth-child(3n+2),.usp li:nth-child(3n+3){ padding-left:0; border-left:0; }
-  .usp li:nth-child(2n){ padding-left:1.8rem; border-left:1px solid var(--line-soft); }
-  .karriere__fig{ max-width:34rem; }
-}
-
-@media (max-width:1000px){
-  /* Statt der Cursor-Vorschau bekommt jede Leistung ihr eigenes Bild.
-     Reihenfolge: Index + Titel · Bild · Text                        */
-  .svc__peek{ display:none; }
-  .svc__row{
-    grid-template-columns:3.2rem minmax(0,1fr);
-    align-items:start; gap:1.2rem 1.1rem;
+  .nav {
+    position: fixed; inset: var(--hh) 0 auto;
+    flex-direction: column; align-items: stretch;
+    gap: 0;
+    padding: 12px var(--gut) 28px;
+    /* Deckend, nicht .97: bei drei Prozent Durchlass las man ueber dem hellen
+       Hero-Video die Ueberschrift durch die Menueeintraege hindurch mit. */
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+    opacity: 0; visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity .3s var(--ease), transform .3s var(--ease), visibility .3s;
   }
-  .svc__no  { grid-column:1; grid-row:1; padding-top:.35em; }
-  .svc__title{ grid-column:2; grid-row:1; }
-  .svc__thumb{ display:block; grid-column:2; grid-row:2; aspect-ratio:16/9; overflow:hidden; }
-  .svc__thumb img{ width:100%; height:100%; object-fit:cover; }
-  .svc__body{ grid-column:2; grid-row:3; }
-  .svc__row:hover .svc__title{ transform:none; }
-  .svc__row::before{ display:none; }
-  .mosaic{ grid-template-columns:repeat(6,1fr); }
-  .tile,.tile--7,.tile--5{ grid-column:span 6; aspect-ratio:16/10; }
-  .tile--3{ grid-column:span 3; aspect-ratio:1/1; }
-  .addons{ grid-template-columns:1fr; }
-  .addons li{ padding:1.3rem 0; }
-  .addons li+li{ padding-left:0; }
-  .band__cols{ grid-template-columns:1fr; gap:2rem; }
-  .ftr__cols{ grid-template-columns:repeat(2,1fr); gap:2rem 1.5rem; }
-  .ftr__claim{ text-align:left; }
-}
-
-@media (max-width:760px){
-  :root{ --sec-y:clamp(3.5rem,12vw,5rem); }
-  .hero{ min-height:92svh; }
-  .hero__foot-in{ flex-direction:column; align-items:flex-start; gap:1rem; }
-  .hero__tags{ gap:.55rem 1.1rem; font-size:.62rem; }
-  .hero__tags li+li::before{ display:none; }
-  .stats{ grid-template-columns:repeat(2,1fr); }
-  .stat{ padding:1.4rem 1rem 1.4rem 0; border-bottom:1px solid var(--line-soft); }
-  .stat:nth-child(2n){ padding-left:1rem; border-left:1px solid var(--line-soft); }
-  .stat+.stat{ padding-left:0; border-left:0; }
-  .stat:nth-child(2n){ padding-left:1rem; border-left:1px solid var(--line-soft); }
-  .park{ grid-template-columns:1fr; }
-  .usp{ grid-template-columns:1fr; }
-  .usp li,.usp li:nth-child(2n){ padding:1.4rem 0; border-left:0; }
-  .contact{ grid-template-columns:1fr; }
-  .contact li,.contact li:nth-child(2n){ padding:1.1rem 0; border-left:0; }
-  .form__row{ grid-template-columns:1fr; gap:0; }
-  .form{ padding:1.3rem; }
-  .dev__media{ grid-template-columns:1fr; }
-  .dev__s2{ display:none; }
-  .mosaic{ grid-template-columns:1fr; }
-  .tile,.tile--7,.tile--5,.tile--3{ grid-column:span 1; aspect-ratio:4/3; }
-  .ftr__bar{ flex-direction:column; align-items:flex-start; gap:.8rem; }
-  .ftr__ai{ margin-left:0 !important; }
-  .btn{ padding:.8rem 1.15rem; font-size:.74rem; }
-  .btn--lg{ padding:.95rem 1.35rem; font-size:.78rem; }
-  .cmp__grip{ width:40px; height:40px; }
-  .svc__title{ font-size:clamp(1.35rem,5.6vw,1.75rem); }
-  .svc__row{ padding-block:1.6rem; }
-}
-
-@media (max-width:520px){
-  /* Einspaltig, damit Telefonnummern und Mailadressen nicht umbrechen */
-  .ftr__cols{ grid-template-columns:1fr; gap:1.8rem; }
-}
-
-@media (max-width:420px){
-  .brand__txt{ display:none; }
-  .hero__cta{ flex-direction:column; align-items:stretch; }
-  .hero__cta .btn{ justify-content:center; }
-}
-
-/* ─────────────────────────── 20 · REDUCED MOTION ────────────────────────── */
-@media (prefers-reduced-motion:reduce){
-  *,*::before,*::after{
-    animation-duration:.001ms !important; animation-iteration-count:1 !important;
-    transition-duration:.001ms !important; scroll-behavior:auto !important;
+  .nav.is-open { opacity: 1; visibility: visible; transform: none; }
+  .nav > a:not(.nav__cta) {
+    padding: 16px 0;
+    font-size: 1.1rem;
+    border-bottom: 1px solid var(--line);
   }
-  .gsap [data-reveal],
-  .gsap [data-split] .l,
-  .gsap .hero__kicker,
-  .gsap .hero__sub,
-  .gsap .hero__cta,
-  .gsap .hero__foot{ opacity:1 !important; transform:none !important; }
-  [data-parallax]{ transform:none !important; }
-  .hero__video{ transform:none; }
-  .scrollcue__bar i{ display:none; }
-  .marquee__track{ transform:none !important; }
+  .nav > a:not(.nav__cta)::after { display: none; }
+  .nav__cta { margin: 20px 0 0; align-self: flex-start; }
+}
+
+@media (max-width: 1000px) {
+  .svc { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* Drei Karten auf zwei Spalten: die dritte nimmt die volle Breite, sonst
+     stuenden zwei halb leere Reihen untereinander. */
+  .own__steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .own__step:last-child { grid-column: 1 / -1; }
+  /* Die durchlaufende dritte Karte ist flacher als die beiden darueber. Ihre
+     Liste laeuft deshalb zweispaltig und fuellt die Breite, statt sie leer
+     stehen zu lassen. */
+  .own__step:last-child .arrow { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(16px, 2vw, 32px); }
+  .own__head { gap: clamp(24px, 3vw, 44px); }
+}
+
+/* Auf schmalen Desktops waeren 475-px-Karten zu gross fuer den Ausschnitt —
+   der Ring wird kleiner, der Radius rechnet sich mit. */
+@media (min-width: 768px) and (max-width: 1023px) {
+  :root { --cyl-w: 21rem; }
+}
+@media (min-width: 1024px) and (max-width: 1200px) {
+  :root { --cyl-w: 25rem; }
+}
+
+@media (max-width: 980px) {
+  :root { --hh: 84px; }
+  .mark { width: 62px; height: 62px; }        /* Kreis 62 px in 84-px-Kopfzeile */
+  .brand { gap: 12px; }
+
+  .adv { grid-template-columns: repeat(2, 1fr); gap: clamp(28px, 4vw, 44px); }
+  .con { grid-template-columns: minmax(0, 1fr); row-gap: clamp(32px, 4vw, 48px); }
+  .ftr__grid { grid-template-columns: 1fr 1fr; }
+
+  /* Kopf und Erklaerblock stapeln, das Produktbild wandert nach oben und wird
+     flacher, damit es nicht den halben Bildschirm einnimmt. */
+  .own__head { grid-template-columns: minmax(0, 1fr); }
+  /* 4:3 statt 16:10: die Vorlagen sind Hochformat, ein flacherer Ausschnitt
+     zeigt vom Schweisstisch nur noch die Platte. */
+  .own__headImg { order: -1; aspect-ratio: 4 / 3; }
+  .own__whyH br { display: none; }
+  .own__prod { grid-template-columns: minmax(0, 1fr); row-gap: clamp(36px, 5vw, 52px); }
+  .refx { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 760px) {
+  .ref { grid-template-columns: repeat(2, 1fr); }
+  .cyl { grid-template-columns: repeat(2, 1fr); }
+  .con__meta { grid-template-columns: 1fr; }
+  .form { grid-template-columns: minmax(0, 1fr); }
+  .own__head .h2 br { display: none; }
+}
+
+@media (max-width: 620px) {
+  .svc { grid-template-columns: minmax(0, 1fr); }
+  .svc__top { aspect-ratio: 21 / 9; }
+  .own__steps { grid-template-columns: minmax(0, 1fr); }
+  .own__step:last-child { grid-column: auto; }
+  /* Auf dem Handy ist fuer zwei Listenspalten kein Platz. Beide Faelle muessen
+     hier zurueckgesetzt werden, sonst laufen die langen Eintraege der dritten
+     Karte ineinander. */
+  .own__sub .arrow,
+  .own__step:last-child .arrow { grid-template-columns: minmax(0, 1fr); }
+  /* Auf dem Handy uebernimmt das Wischen, die Pfeile blenden aus. */
+  .own__galNav { display: none; }
+  .own__shot { flex-basis: 68vw; }
+}
+
+@media (max-width: 560px) {
+  .adv { grid-template-columns: minmax(0, 1fr); }
+  .adv__i h3 { min-height: 0; }
+  .stats__grid { grid-template-columns: minmax(0, 1fr); gap: 26px; }
+  /* Der Fussbereich bleibt zweispaltig, die Marke nimmt die volle Breite.
+     Einspaltig war allein der Fuss ueber 1000 px lang. */
+  .ftr__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 24px; }
+  .ftr__brand { grid-column: 1 / -1; }
+  .ftr__ai { margin-left: 0 !important; text-align: left; }
+  .ftr__bar { gap: 14px; }
+  .refx__imgs { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 460px) {
+  /* Marke bleibt, nur Vorname und Rechtsform blenden aus: "WALCZOK". */
+  .brand__word--opt { display: none; }
+  .brand__word { font-size: 14px; letter-spacing: .15em; }
+  /* Die Referenzen bleiben auch auf dem Handy zweispaltig. Einspaltig waren
+     sechs quadratische Kacheln allein gut 2000 px lang. */
+  .ref__i figcaption { padding: 34px 12px 12px; font-size: .82rem; gap: 8px; }
+  /* Einspaltig, aber im Querformat — sonst wird die Sektion auf dem Handy
+     unverhaeltnismaessig lang (wie im Original). */
+  .cyl { grid-template-columns: minmax(0, 1fr); }
+  .cyl__c { aspect-ratio: 4 / 3; }
+  .btn--lg { width: 100%; }
+}
+
+/* ================================================= 15 Ergaenzungen 09/2026
+   Zweiter Hero-Knopf und Belegzeile, Laufband, Unternehmen (Geschaeftsfuehrung),
+   Karriere mit schaltbaren Stellen, Zeilenmasken fuer die Ueberschriften. */
+
+/* --- Hero ----------------------------------------------------------------- */
+.hero__act { display: flex; flex-wrap: wrap; gap: 12px 14px; }
+.btn--ghost { background: transparent; color: var(--fg); border-color: rgba(255, 255, 255, .34); }
+.btn--ghost:hover { border-color: var(--fg); background: rgba(255, 255, 255, .06); }
+.hero__proof {
+  display: flex; flex-wrap: wrap; gap: 10px 28px;
+  margin: clamp(36px, 5vh, 56px) 0 0;
+  padding-top: 22px;
+  border-top: 1px solid rgba(255, 255, 255, .14);
+}
+.hero__proof li {
+  position: relative; padding-left: 18px;
+  font-family: var(--ff-mon); font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--fg-dim);
+}
+.hero__proof li::before { content: ''; position: absolute; left: 0; top: .42em; width: 7px; height: 7px; background: var(--accent); }
+/* Langsame Ruhefahrt des Videos beim Laden: 1,08 -> 1 in neun Sekunden. */
+.hero__media video { animation: heroZoom 9s var(--ease) both; }
+@keyframes heroZoom { from { transform: scale(1.08); } to { transform: scale(1); } }
+
+/* --- Laufband ------------------------------------------------------------- */
+/* Zwei identische Saetze; der Streifen faehrt exakt um einen Satz und springt
+   deshalb nahtlos. Unter der Maus haelt er an. */
+.ticker { overflow: hidden; border-block: 1px solid var(--line); background: var(--bg); padding-block: 18px; }
+.ticker__track { display: flex; width: max-content; animation: ticker 64s linear infinite; }
+.ticker__set { display: flex; align-items: center; gap: 34px; padding-right: 34px; }
+.ticker span {
+  font-family: var(--ff-dis); font-weight: 600; font-size: 13px;
+  letter-spacing: .14em; text-transform: uppercase; white-space: nowrap;
+  color: var(--muted);
+}
+.ticker i { width: 6px; height: 6px; background: var(--accent); flex: none; }
+@keyframes ticker { to { transform: translateX(-50%); } }
+.ticker:hover .ticker__track { animation-play-state: paused; }
+
+/* --- Unternehmen ---------------------------------------------------------- */
+.ceo {
+  display: grid;
+  grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr);
+  gap: clamp(32px, 5vw, 88px);
+  align-items: start;
+}
+.ceo__img { aspect-ratio: 4 / 5; border-radius: 16px; position: sticky; top: calc(var(--hh) + 24px); }
+.ceo__img figcaption, .car__img figcaption {
+  position: absolute; inset: auto 0 0 0;
+  padding: 48px 20px 18px;
+  background: linear-gradient(180deg, rgba(8,9,11,0) 0%, rgba(8,9,11,.88) 70%, rgba(8,9,11,.95) 100%);
+  font-family: var(--ff-mon); font-size: 12px; letter-spacing: .1em; text-transform: uppercase;
+  line-height: 1.5;
+  color: var(--fg);
+}
+.ceo__txt .head { margin-bottom: clamp(28px, 3vw, 44px); }
+.ceo__quote { margin: 0; padding-left: clamp(20px, 2.4vw, 32px); border-left: 2px solid var(--accent); }
+.ceo__quote p {
+  margin: 0;
+  font-family: var(--ff-dis); font-weight: 500;
+  font-size: clamp(1.2rem, 1.1vw + .9rem, 1.7rem);
+  line-height: 1.32; letter-spacing: -.012em;
+  color: var(--fg);
+  text-wrap: pretty;
+}
+.ceo__quote footer { display: flex; flex-direction: column; gap: 4px; margin-top: 22px; }
+.ceo__quote footer b { font-weight: 700; font-size: 1rem; color: var(--fg); }
+.ceo__quote footer span { font-size: .9rem; color: var(--muted); }
+.ceo__facts { margin-top: clamp(36px, 4vw, 56px); border-top: 1px solid var(--line); }
+.ceo__facts li {
+  display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 18px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--line);
+}
+.ceo__year { font-family: var(--ff-dis); font-weight: 700; font-size: 1.5rem; line-height: 1.2; letter-spacing: -.02em; color: var(--accent-hi); }
+.ceo__facts p { margin: 0; font-size: .96rem; color: var(--fg-dim); }
+
+/* --- Karriere ------------------------------------------------------------- */
+.sec--car { border-top: 1px solid var(--line); }
+.car {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+  gap: clamp(32px, 5vw, 80px);
+  align-items: start;
+}
+.car__img { aspect-ratio: 4 / 3; border-radius: 16px; }
+.car__ben {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(22px, 2.4vw, 36px) clamp(20px, 2vw, 32px);
+  margin-top: clamp(28px, 3vw, 44px);
+}
+.car__ben li { padding-top: 16px; border-top: 1px solid var(--line-2); }
+.car__ben .idx { margin-bottom: 10px; color: var(--accent-hi); }
+.car__ben h3 { margin: 0 0 8px; font-family: var(--ff-dis); font-weight: 600; font-size: 1.1rem; letter-spacing: -.01em; color: var(--fg); }
+.car__ben p { margin: 0; font-size: .92rem; color: var(--fg-dim); }
+.car__jobsH { margin: 0 0 18px; font-family: var(--ff-mon); font-weight: 400; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.jobs { display: grid; gap: 16px; }
+.job {
+  padding: clamp(24px, 2.4vw, 34px);
+  border: 1px solid var(--line); border-radius: 16px;
+  background: var(--surface);
+  transition: border-color .3s var(--ease), transform .3s var(--ease);
+}
+.job:hover { border-color: var(--line-2); transform: translateY(-3px); }
+.job__meta { margin: 0 0 12px; font-family: var(--ff-mon); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-hi); }
+.job h4 {
+  margin: 0 0 12px;
+  font-family: var(--ff-dis); font-weight: 700;
+  font-size: clamp(1.3rem, 1vw + .9rem, 1.6rem);
+  line-height: 1.1; letter-spacing: -.015em;
+  color: var(--fg);
+}
+.job > p:not(.job__meta) { margin: 0 0 18px; font-size: .96rem; color: var(--fg-dim); }
+.job .arrow { margin-bottom: 24px; }
+.job--init { margin-top: 16px; background: transparent; border-style: dashed; }
+.jobs[hidden] { display: none; }
+.jobs__none { margin: 0 0 16px; padding: 20px 24px; border: 1px solid var(--line); border-radius: 12px; font-size: .95rem; color: var(--fg-dim); }
+.jobs__none[hidden] { display: none; }
+.car__call { margin: 24px 0 0; font-size: .92rem; color: var(--muted); }
+.car__call a { color: var(--fg); border-bottom: 1px solid var(--line-2); padding-block: 3px; transition: color .25s var(--ease), border-color .25s var(--ease); }
+.car__call a:hover { color: var(--accent-hi); border-bottom-color: var(--accent-hi); }
+
+/* --- Startzustaende der Ergaenzungen -------------------------------------- */
+/* Die Sektionsueberschriften fahren zeilenweise aus einer Maske (SplitText).
+   Ohne SplitText setzt main.js die Deckkraft sofort auf 1. */
+.gsap .h2 { opacity: 0; }
+.gsap .hero__proof { opacity: 0; }
+.no-anim .h2, .no-anim .hero__proof { opacity: 1 !important; }
+@media (prefers-reduced-motion: reduce) {
+  .gsap .h2, .gsap .hero__proof { opacity: 1 !important; }
+  .ticker__track { animation: none; }
+  .hero__media video { animation: none; }
+}
+
+/* --- Responsiv ------------------------------------------------------------ */
+@media (max-width: 980px) {
+  .ceo { grid-template-columns: minmax(0, 1fr); }
+  .ceo__img { position: static; aspect-ratio: 16 / 10; }
+  .car { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 560px) {
+  .car__ben { grid-template-columns: minmax(0, 1fr); }
+  .ceo__facts li { grid-template-columns: 72px minmax(0, 1fr); }
+  .hero__proof { gap: 8px 18px; }
+  .ticker { padding-block: 14px; }
 }

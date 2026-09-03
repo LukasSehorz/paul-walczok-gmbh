@@ -9,3 +9,6 @@ desktop.ini
 # Editor
 .vscode/
 .idea/
+
+# Anschauungsmaterial der Logo-Animation (nicht auf der Seite verlinkt)
+assets/video/logo-veo-*.mp4

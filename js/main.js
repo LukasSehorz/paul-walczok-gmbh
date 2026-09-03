@@ -1,516 +1,487 @@
-/* ═══════════════════════════════════════════════════════════════════════════
-   Paul Walczok GmbH — main.js
-   GSAP + ScrollTrigger + SplitText + Lenis (alles lokal aus js/vendor/)
-
-   01 Setup & Helfer        02 Lenis (Smooth Scroll)   03 Header & Navigation
-   04 Rotierende Bildmarke  05 Hero-Intro & Parallax   06 Scroll-Reveals
-   07 Headline-Reveals      08 Zähler                  09 Marquee
-   10 Vorher/Nachher        11 Bild-Parallax           12 Leistungs-Vorschau
-   13 Magnet-Buttons        14 Formular                15 Kleinkram
-
-   Performance: animiert werden ausschließlich transform und opacity.
-   ═══════════════════════════════════════════════════════════════════════════ */
-
+/* ==========================================================================
+   Paul Walczok GmbH — Bewegung
+   Sparsam und strukturstuetzend: 3D-Logo, Hero-Intro mit leichter Parallax,
+   Zeilenmasken der Ueberschriften, gebuendelte Reveals, Zaehler, Bild-Reveal,
+   Stellen-Schalter. Kein Pinning, kein Preloader, keine Parallax-Schwaerme.
+   Nur transform und opacity. Ohne GSAP bleibt die Seite vollstaendig sichtbar.
+   ========================================================================== */
 (function () {
   'use strict';
 
-  /* ───────────────────────── 01 · SETUP & HELFER ───────────────────────── */
+  var root  = document.documentElement;
+  var G     = window.gsap;
+  var ST    = window.ScrollTrigger;
+  var Split = window.SplitText;
+  var LenisC = window.Lenis;
 
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var hasGSAP = typeof window.gsap !== 'undefined';
-  var canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  var hasGsap = !!(G && ST);
 
-  var $  = function (sel, ctx) { return (ctx || document).querySelector(sel); };
-  var $$ = function (sel, ctx) { return Array.prototype.slice.call((ctx || document).querySelectorAll(sel)); };
+  /* Erst jetzt — nach nachweislich geladenem Stack — duerfen die versteckten
+     Startzustaende greifen. main.js laeuft vor dem ersten Paint. */
+  if (hasGsap && !reduce) root.classList.add('gsap');
+  root.classList.add('anim-ready');
 
-  if (hasGSAP) {
-    gsap.registerPlugin(ScrollTrigger);
-    if (window.SplitText) { gsap.registerPlugin(SplitText); }
-    ScrollTrigger.config({ ignoreMobileResize: true });
-    gsap.defaults({ ease: 'power3.out', duration: .9 });
+  /* ------------------------------------------------------------ Jahreszahl */
+  var yr = document.getElementById('year');
+  if (yr) yr.textContent = new Date().getFullYear();
+
+  /* --------------------------------------------------------- Kopfzeile fix */
+  var hdr = document.getElementById('hdr');
+  var stuck = false;
+  function onScrollHdr() {
+    var s = (window.scrollY || window.pageYOffset) > 24;
+    if (s !== stuck) { stuck = s; hdr.classList.toggle('is-stuck', s); }
+  }
+  onScrollHdr();
+  window.addEventListener('scroll', onScrollHdr, { passive: true });
+
+  /* -------------------------------------------------------------- Mobilmenu */
+  var burger = document.getElementById('burger');
+  var nav    = document.getElementById('nav');
+  /* Bei offenem Menue steht die Seite dahinter still. Ohne die Sperre scrollt
+     das Dokument unter dem Menue weiter, sobald man ueber die Liste wischt. */
+  function sperreSeite(an) {
+    document.body.style.overflow = an ? 'hidden' : '';
+    if (lenis) { if (an) lenis.stop(); else lenis.start(); }
+  }
+  function closeNav() {
+    nav.classList.remove('is-open');
+    if (hdr) hdr.classList.remove('is-navopen');
+    burger.setAttribute('aria-expanded', 'false');
+    sperreSeite(false);
+  }
+  if (burger && nav) {
+    burger.addEventListener('click', function () {
+      var open = nav.classList.toggle('is-open');
+      if (hdr) hdr.classList.toggle('is-navopen', open);
+      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      sperreSeite(open);
+    });
+    nav.addEventListener('click', function (e) {
+      if (e.target.closest('a')) closeNav();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && nav.classList.contains('is-open')) { closeNav(); burger.focus(); }
+    });
   }
 
-  /* Kopfhöhe als px-Wert (für Sprungziele) */
-  function headerOffset() {
-    var h = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--hdr-h'), 10);
-    return isNaN(h) ? 84 : h;
-  }
-
-  /* ───────────────────── 02 · LENIS · SMOOTH SCROLL ────────────────────── */
-
+  /* ---------------------------------------------------- Sanftes Scrollen */
   var lenis = null;
-
-  if (!reduce && hasGSAP && typeof window.Lenis !== 'undefined') {
-    lenis = new Lenis({
-      lerp: .085,
-      wheelMultiplier: 1,
-      smoothWheel: true,
-      touchMultiplier: 1.6
-    });
-
-    lenis.on('scroll', ScrollTrigger.update);
-    gsap.ticker.add(function (time) { lenis.raf(time * 1000); });
-    gsap.ticker.lagSmoothing(0);
+  if (LenisC && hasGsap && !reduce) {
+    lenis = new LenisC({ duration: 1.05, smoothWheel: true, wheelMultiplier: 1, touchMultiplier: 1.6 });
+    root.style.scrollBehavior = 'auto';
+    lenis.on('scroll', ST.update);
+    G.ticker.add(function (t) { lenis.raf(t * 1000); });
+    G.ticker.lagSmoothing(0);
   }
 
-  /* Anker-Links laufen über Lenis, damit Smooth-Scroll und ScrollTrigger synchron bleiben */
-  function scrollToTarget(target) {
-    if (!target) return;
-    if (lenis) { lenis.scrollTo(target, { offset: -(headerOffset() - 10), duration: 1.2 }); }
-    else { target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' }); }
-  }
-
-  $$('a[href^="#"]').forEach(function (a) {
-    a.addEventListener('click', function (e) {
-      var id = a.getAttribute('href');
-      if (!id || id === '#') return;
-      var target = id === '#top' ? document.body : document.getElementById(id.slice(1));
-      if (!target) return;
-      e.preventDefault();
-      closeMenu();
-      if (id === '#top') { lenis ? lenis.scrollTo(0, { duration: 1.2 }) : window.scrollTo(0, 0); }
-      else { scrollToTarget(target); }
-      history.replaceState(null, '', id);
-    });
+  /* Ankerspruenge: Kopfzeilenhoehe beruecksichtigen */
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    var id = a.getAttribute('href');
+    if (!id || id === '#') return;
+    var t = document.querySelector(id);
+    if (!t) return;
+    var off = -(hdr ? hdr.offsetHeight : 0) - 8;
+    if (lenis) { e.preventDefault(); lenis.scrollTo(t, { offset: off, duration: 1.1 }); }
   });
 
-  /* ─────────────────── 03 · HEADER & MOBILE-NAVIGATION ─────────────────── */
+  /* Der Bilderlauf haengt an keiner Bibliothek und laeuft deshalb vor dem
+     GSAP-Zweig los. Faellt der Vendor-Stack aus, bleibt er trotzdem bedienbar. */
+  initGal();
+  initJobs();
 
-  var hdr     = $('#hdr');
-  var burger  = $('#burger');
-  var mobile  = $('#mobilenav');
-  var menuOpen = false;
+  /* ============================================================== LOGO ==
+     Die Schraube steht fest, der Messbuegel dreht sich in der Bildebene um die
+     Schraubenachse (Bildmitte der Ebene). Beim Scrollen folgt der Winkel dem
+     Scrollweg (eine halbe Umdrehung je Bildschirmhoehe; abwaerts vorwaerts,
+     aufwaerts rueckwaerts), gedaempft, damit nichts springt. Wird 1,2 s lang
+     nicht gescrollt, kehrt der Buegel in 1,5 s mit weichem Auslauf (kubisches
+     Ease-out, ohne Ueberschwingen) zum naechsten Vielfachen von 360 Grad
+     zurueck, also in die Originallage, und bleibt dort stehen: in Ruhe ist
+     das Logo exakt die Kundendatei. Beim
+     Laden steht er bei 0 Grad. Bei reduzierter Bewegung passiert nichts.
+     window.__markHold (Zahl) friert einen Winkel ein, nur fuer Bildschirmfotos. */
+  var markFrame = document.getElementById('markFrame');
+  if (markFrame && !reduce) {
+    var RUHE_MS = 1200, RUECKKEHR_MS = 1500;
+    var jetzt = function () { return (window.performance && performance.now) ? performance.now() : Date.now(); };
+    var scrollWinkel = 0, winkel = 0, gesetzt = null, tVor = null, letzterScroll = -1e9;
+    var ruheStart = null, ruheVon = 0;
+    var letzterY = window.pageYOffset || 0;
 
-  function onScrollHeader() {
-    hdr.classList.toggle('is-stuck', (window.scrollY || window.pageYOffset) > 30);
-  }
-  onScrollHeader();
-  window.addEventListener('scroll', onScrollHeader, { passive: true });
+    window.addEventListener('scroll', function () {
+      var y = window.pageYOffset || 0;
+      scrollWinkel += (y - letzterY) * (180 / Math.max(320, window.innerHeight));
+      letzterY = y;
+      letzterScroll = jetzt();
+    }, { passive: true });
 
-  function openMenu() {
-    menuOpen = true;
-    mobile.hidden = false;
-    burger.setAttribute('aria-expanded', 'true');
-    burger.querySelector('.u-sr').textContent = 'Menü schließen';
-    document.body.classList.add('is-locked');
-    if (lenis) lenis.stop();
-
-    if (hasGSAP && !reduce) {
-      gsap.fromTo(mobile, { opacity: 0 }, { opacity: 1, duration: .35, ease: 'power2.out' });
-      gsap.fromTo($$('.mnav__in a, .mnav__foot', mobile),
-        { yPercent: 60, opacity: 0 },
-        { yPercent: 0, opacity: 1, duration: .55, stagger: .045, ease: 'power3.out', delay: .06 });
-    }
-  }
-
-  function closeMenu() {
-    if (!menuOpen) return;
-    menuOpen = false;
-    burger.setAttribute('aria-expanded', 'false');
-    burger.querySelector('.u-sr').textContent = 'Menü öffnen';
-    document.body.classList.remove('is-locked');
-    if (lenis) lenis.start();
-
-    if (hasGSAP && !reduce) {
-      gsap.to(mobile, {
-        opacity: 0, duration: .28, ease: 'power2.in',
-        onComplete: function () { mobile.hidden = true; gsap.set(mobile, { clearProps: 'opacity' }); }
-      });
-    } else {
-      mobile.hidden = true;
-    }
-  }
-
-  burger.addEventListener('click', function () { menuOpen ? closeMenu() : openMenu(); });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeMenu(); });
-
-  /* ────────────────── 04 · ROTIERENDE BILDMARKE (NAVBAR) ───────────────── */
-  /* Endlosrotation um die eigene Achse; Tempo und Richtung folgen dem Scrollen. */
-
-  var mark = $('#spinMark');
-
-  if (mark && hasGSAP && !reduce) {
-    var spin = gsap.to(mark, {
-      rotation: 360,
-      duration: 24,
-      ease: 'none',
-      repeat: -1,
-      transformOrigin: '50% 50%'
-    });
-
-    var idleTimer = null;
-
-    ScrollTrigger.create({
-      start: 0,
-      end: 'max',
-      invalidateOnRefresh: true,
-      onUpdate: function (self) {
-        var v   = self.getVelocity();               // px/s
-        var dir = v < 0 ? -1 : 1;                   // Richtung folgt dem Scrollen
-        var boost = gsap.utils.clamp(0, 8, Math.abs(v) / 320);
-
-        gsap.to(spin, {
-          timeScale: dir * (1 + boost),
-          duration: .45,
-          ease: 'power2.out',
-          overwrite: true
-        });
-
-        clearTimeout(idleTimer);
-        idleTimer = setTimeout(function () {
-          gsap.to(spin, { timeScale: 1, duration: 1.4, ease: 'power2.out', overwrite: true });
-        }, 160);
-      }
-    });
-  }
-
-  /* ────────────────── 05 · HERO · INTRO UND PARALLAX ───────────────────── */
-
-  var heroVideo = $('#heroVideo');
-
-  /* Bei reduzierter Bewegung kein Autoplay — das Poster bleibt stehen. */
-  if (reduce && heroVideo) {
-    heroVideo.removeAttribute('autoplay');
-    heroVideo.autoplay = false;
-    heroVideo.pause();
-  }
-
-  if (hasGSAP && !reduce) {
-
-    /* Intro: Badge → Headline (zeilenweise) → Sub → CTAs → Scroll-Cue */
-    var heroTl = gsap.timeline({ delay: .15 });
-
-    heroTl
-      .fromTo('.hero__kicker', { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: .7 }, 0)
-      .add(revealHeadline($('.hero__title')), .12)
-      .fromTo('.hero__sub',  { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: .8 }, .55)
-      .fromTo('.hero__cta',  { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: .7 }, .7)
-      .fromTo('.hero__foot', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: .8 }, .85);
-
-    /* Video-Parallax: langsames Wegdriften beim Scrollen */
-    if (heroVideo) {
-      gsap.to(heroVideo, {
-        yPercent: 12,
-        scale: 1.16,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: '.hero',
-          start: 'top top',
-          end: 'bottom top',
-          scrub: true,
-          invalidateOnRefresh: true
+    (function takt(t) {
+      t = t || jetzt();
+      if (tVor === null) tVor = t;
+      var dt = Math.min(0.1, (t - tVor) / 1000); tVor = t;   /* s, gedeckelt (Tab-Wechsel) */
+      if (t - letzterScroll > RUHE_MS) {
+        /* Ruhe: Ziel auf die Originallage einrasten und in RUECKKEHR_MS mit
+           kubischem Ease-out dorthin laufen (endet exakt, kein Ueberschwingen) */
+        if (ruheStart === null) {
+          ruheStart = t; ruheVon = winkel;
+          scrollWinkel = Math.round(scrollWinkel / 360) * 360;
         }
-      });
-    }
-
-    /* Hero-Inhalt fährt beim Verlassen leicht mit */
-    gsap.to('.hero__body', {
-      yPercent: -14,
-      opacity: .35,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: '.hero',
-        start: 'top top',
-        end: 'bottom top',
-        scrub: true,
-        invalidateOnRefresh: true
+        var p = Math.min(1, (t - ruheStart) / RUECKKEHR_MS);
+        p = 1 - Math.pow(1 - p, 3);
+        winkel = ruheVon + (scrollWinkel - ruheVon) * p;
+      } else {
+        ruheStart = null;
+        winkel += (scrollWinkel - winkel) * Math.min(1, dt * 7);   /* Daempfung ~140 ms */
       }
-    });
+      var w = Math.round(winkel * 10) / 10;
+      if (typeof window.__markHold === 'number') w = window.__markHold;  /* nur fuer Bildschirmfotos */
+      if (w !== gesetzt) {
+        gesetzt = w;
+        markFrame.style.transform = 'rotate(' + w + 'deg)';
+      }
+      requestAnimationFrame(takt);
+    }());
   }
 
-  /* ───────────────────── 06 · GENERISCHE SCROLL-REVEALS ────────────────── */
+  if (!hasGsap || reduce) { initForm(); return; }
 
-  if (hasGSAP && !reduce) {
+  initForm();
 
-    /* Gruppen: gestaffelt, ein Trigger für alle Kinder */
-    $$('[data-reveal-group]').forEach(function (group) {
-      var items = $$('[data-reveal]', group);
-      if (!items.length) return;
-      gsap.to(items, {
-        y: 0, opacity: 1, duration: .9, stagger: .085, ease: 'power3.out',
-        scrollTrigger: { trigger: group, start: 'top 84%', once: true, invalidateOnRefresh: true }
-      });
-    });
-
-    /* Einzelne Elemente außerhalb einer Gruppe */
-    $$('[data-reveal]').forEach(function (el) {
-      if (el.closest('[data-reveal-group]')) return;
-      gsap.to(el, {
-        y: 0, opacity: 1, duration: .9, ease: 'power3.out',
-        scrollTrigger: { trigger: el, start: 'top 88%', once: true, invalidateOnRefresh: true }
-      });
-    });
+  /* Schriften abwarten: SplitText darf erst teilen, wenn die Webfonts stehen,
+     sonst stimmen die Zeilenumbrueche nicht (und GSAP warnt). Hero-Intro und
+     Scroll-Aufbau starten deshalb gemeinsam nach document.fonts.ready; Kicker,
+     Sub und Act laufen so weiterhin in einer Timeline mit der Ueberschrift.
+     Sicherheitsnetz: spaetestens nach 1,5 s geht es auch ohne Aufloesung los;
+     fehlt document.fonts, sofort. */
+  var gestartet = false;
+  function startAnim() {
+    if (gestartet) return;
+    gestartet = true;
+    heroIntro();
+    /* Der Scroll-Aufbau haengt sich hinter den ersten Bildwechsel: so faellt
+       der Intro-Aufbau nicht in eine einzige lange Aufgabe, und die
+       Hero-Bewegung laeuft auf schwachen Geraeten von Anfang an sauber. */
+    if (window.requestAnimationFrame) {
+      requestAnimationFrame(function () { requestAnimationFrame(safeInitScroll); });
+    } else {
+      safeInitScroll();
+    }
   }
+  var fontsReady = document.fonts && document.fonts.ready;
+  if (fontsReady && typeof fontsReady.then === 'function') {
+    fontsReady.then(startAnim, startAnim);
+    setTimeout(startAnim, 1500);
+  } else {
+    startAnim();
+  }
+  return;
 
-  /* ──────────────── 07 · HEADLINE-REVEALS (SplitText + Maske) ──────────── */
-  /* Jede Zeile fährt aus einer Maske hoch. Fällt ohne SplitText auf ein
-     einfaches Einblenden der vorhandenen .l-Zeilen zurück.                */
+  /* ========================================================== HERO-INTRO == */
+  function heroIntro() {
+    var h1 = document.querySelector('.hero__h1');
+    var tl = G.timeline({ defaults: { ease: 'power3.out' }, delay: 0.12 });
 
-  function revealHeadline(el) {
-    if (!el || !hasGSAP) return null;
-
-    var lines = null;
-
-    if (window.SplitText) {
-      try {
-        var split = new SplitText(el, { type: 'lines', linesClass: 'sline' });
-        lines = split.lines;
-        /* Maske je Zeile: oben etwas Luft für Umlaute, unten sauber abgeschnitten */
-        lines.forEach(function (line) {
-          var wrap = document.createElement('span');
-          wrap.className = 'smask';
-          line.parentNode.insertBefore(wrap, line);
-          wrap.appendChild(line);
-        });
-      } catch (err) { lines = null; }
+    if (Split && h1) {
+      var split = new Split(h1, { type: 'lines', mask: 'lines', linesClass: 'hl' });
+      G.set(h1, { opacity: 1 });
+      tl.from(split.lines, { yPercent: 112, duration: 1.0, stagger: 0.09 }, 0.1);
+    } else if (h1) {
+      tl.fromTo(h1, { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: .9 }, 0.1);
     }
 
-    /* .l-Zeilen sind per CSS unsichtbar gestartet — jetzt freigeben */
-    gsap.set($$('.l', el), { opacity: 1 });
+    tl.fromTo('.hero__kicker', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: .7 }, 0)
+      .fromTo('.hero__sub',    { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: .8 }, 0.5)
+      .fromTo('.hero__act',    { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: .8 }, 0.62)
+      .fromTo('.hero__proof',  { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: .8 }, 0.8);
+  }
 
-    if (!lines || !lines.length) {
-      lines = $$('.l', el);
-      if (!lines.length) lines = [el];
-      return gsap.from(lines, { y: 40, opacity: 0, duration: .9, stagger: .08 });
-    }
+  /* Ausfallschutz: bricht der Scroll-Aufbau ab, faellt die Seite auf den
+     sichtbaren Zustand zurueck, statt mit unsichtbaren Sektionen stehenzubleiben. */
+  function safeInitScroll() {
+    try { initScroll(); }
+    catch (e) { root.classList.remove('gsap'); root.classList.add('no-anim'); }
+  }
 
-    return gsap.from(lines, {
-      yPercent: 118,
-      duration: 1.05,
-      stagger: .085,
-      ease: 'power4.out'
+  /* ======================================================= SCROLL-REVEALS ==
+     Gebuendelt ueber ScrollTrigger.batch — ein Trigger je Gruppe, nicht je
+     Element. Alles nur einmal (once). */
+  function initScroll() {
+
+  /* Hero-Video faehrt beim Verlassen langsam mit, der Text etwas schneller.
+     Nur transform, kein Filter. */
+  var heroMedia = document.querySelector('.hero__media');
+  if (heroMedia) {
+    G.to(heroMedia, {
+      yPercent: 16, ease: 'none',
+      scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true, invalidateOnRefresh: true }
+    });
+    G.to('.hero__in', {
+      yPercent: -8, opacity: .25, ease: 'none',
+      scrollTrigger: { trigger: '.hero', start: '40% top', end: 'bottom top', scrub: true, invalidateOnRefresh: true }
     });
   }
 
-  if (hasGSAP && !reduce) {
-    $$('[data-split]').forEach(function (el) {
-      if (el.closest('.hero')) return;                 /* Hero läuft über die Intro-Timeline */
-      ScrollTrigger.create({
-        trigger: el,
-        start: 'top 86%',
-        once: true,
-        invalidateOnRefresh: true,
-        onEnter: function () { revealHeadline(el); }
+  /* Sektionsueberschriften: jede Zeile faehrt aus einer eigenen Maske hoch.
+     autoSplit teilt bei Breitenwechsel neu und ruft onSplit erneut auf. Ohne
+     SplitText bleibt die Ueberschrift einfach sichtbar, der umgebende .rv-Block
+     blendet sie dann mit ein. */
+  var h2s = document.querySelectorAll('.h2');
+  if (Split && h2s.length) {
+    h2s.forEach(function (h) {
+      G.set(h, { opacity: 1 });
+      Split.create(h, {
+        type: 'lines', mask: 'lines', linesClass: 'hl', autoSplit: true,
+        onSplit: function (self) {
+          return G.from(self.lines, {
+            yPercent: 110, duration: .95, ease: 'power3.out', stagger: .09,
+            scrollTrigger: { trigger: h, start: 'top 88%', once: true }
+          });
+        }
       });
     });
   } else {
-    /* Ohne Animation: Zeilen sofort sichtbar machen */
-    $$('[data-split] .l').forEach(function (l) { l.style.opacity = 1; });
+    G.set(h2s, { opacity: 1 });
   }
 
-  /* ───────────────────────────── 08 · ZÄHLER ──────────────────────────── */
-
-  var nf = new Intl.NumberFormat('de-DE');
-
-  $$('[data-count]').forEach(function (el) {
-    var end   = parseFloat(el.getAttribute('data-count'));
-    var plain = el.hasAttribute('data-plain');
-    var fmt   = function (v) { return plain ? String(Math.round(v)) : nf.format(Math.round(v)); };
-
-    if (!hasGSAP || reduce) { el.textContent = fmt(end); return; }
-
-    var obj = { v: 0 };
-    gsap.to(obj, {
-      v: end,
-      duration: 1.6,
-      ease: 'power2.out',
-      onUpdate: function () { el.textContent = fmt(obj.v); },
-      scrollTrigger: { trigger: el, start: 'top 92%', once: true }
-    });
-  });
-
-  /* ──────────────────────────── 09 · MARQUEE ──────────────────────────── */
-
-  $$('[data-marquee]').forEach(function (box) {
-    var track = $('.marquee__track', box);
-    if (!track) return;
-
-    /* Inhalt verdoppeln → nahtloser Loop bei xPercent -50 */
-    track.innerHTML += track.innerHTML;
-
-    if (!hasGSAP || reduce) return;
-
-    var rev = box.getAttribute('data-dir') === '-1';
-    gsap.fromTo(track,
-      { xPercent: rev ? -50 : 0 },
-      { xPercent: rev ? 0 : -50, duration: 34, ease: 'none', repeat: -1 });
-  });
-
-  /* ──────────────── 10 · VORHER/NACHHER-VERGLEICH (2×) ─────────────────── */
-
-  $$('[data-cmp]').forEach(function (box) {
-    var handle = $('[data-cmp-handle]', box);
-    if (!handle) return;
-
-    var dragging = false;
-
-    function setPos(pct, announce) {
-      pct = Math.max(0, Math.min(100, pct));
-      box.style.setProperty('--pos', pct + '%');
-      handle.setAttribute('aria-valuenow', Math.round(pct));
-      if (announce !== false) {
-        handle.setAttribute('aria-valuetext', Math.round(pct) + ' % ' +
-          ($('.cmp__label--b', box) ? $('.cmp__label--b', box).textContent : 'Nachher'));
-      }
+  ST.batch('.rv', {
+    start: 'top 88%',
+    once: true,
+    batchMax: 6,
+    onEnter: function (els) {
+      G.fromTo(els,
+        { opacity: 0, y: 26 },
+        { opacity: 1, y: 0, duration: .85, ease: 'power3.out', stagger: 0.08, overwrite: true });
     }
-
-    function fromEvent(e) {
-      var r = box.getBoundingClientRect();
-      setPos(((e.clientX - r.left) / r.width) * 100);
-    }
-
-    box.addEventListener('pointerdown', function (e) {
-      dragging = true;
-      box.setPointerCapture(e.pointerId);
-      fromEvent(e);
-    });
-    box.addEventListener('pointermove', function (e) { if (dragging) fromEvent(e); });
-    box.addEventListener('pointerup', function (e) {
-      dragging = false;
-      if (box.hasPointerCapture(e.pointerId)) box.releasePointerCapture(e.pointerId);
-    });
-    box.addEventListener('pointercancel', function () { dragging = false; });
-
-    /* Tastatur: Pfeile ±3 %, mit Shift ±10 %, Pos1/Ende auf die Extreme */
-    handle.addEventListener('keydown', function (e) {
-      var cur = parseFloat(handle.getAttribute('aria-valuenow')) || 50;
-      var step = e.shiftKey ? 10 : 3;
-      var next = null;
-
-      if (e.key === 'ArrowLeft'  || e.key === 'ArrowDown') next = cur - step;
-      if (e.key === 'ArrowRight' || e.key === 'ArrowUp')   next = cur + step;
-      if (e.key === 'Home') next = 0;
-      if (e.key === 'End')  next = 100;
-
-      if (next !== null) { e.preventDefault(); setPos(next); }
-    });
-
-    setPos(50);
   });
 
-  /* ─────────────────────── 11 · BILD-PARALLAX (scrub) ──────────────────── */
-  /* Bilder sind per CSS auf 1.14 überskaliert; wir bewegen max. ±7 %.      */
+  /* Akzentlinien der Vorteile-Spalten wachsen von links auf */
+  ST.batch('.adv__rule', {
+    start: 'top 92%',
+    once: true,
+    onEnter: function (els) {
+      G.to(els, { scaleX: 1, duration: .9, ease: 'power2.out', stagger: 0.08 });
+    }
+  });
 
-  if (hasGSAP && !reduce) {
-    $$('[data-parallax]').forEach(function (img) {
-      gsap.fromTo(img,
-        { yPercent: -7, scale: 1.14 },
-        {
-          yPercent: 7, scale: 1.14, ease: 'none',
-          scrollTrigger: {
-            trigger: img.closest('figure, .frame, .stage, .tile') || img,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: true,
-            invalidateOnRefresh: true
-          }
+  /* ========================================================= BILD-REVEAL ==
+     Leichte Skalierung 1.04 -> 1, hoechstens drei gleichzeitig. */
+  ST.batch('.frame > img', {
+    start: 'top 92%',
+    once: true,
+    batchMax: 3,
+    onEnter: function (els) {
+      els.forEach(function (el) { el.style.willChange = 'transform'; });
+      G.to(els, {
+        scale: 1, duration: 1.25, ease: 'power2.out', stagger: 0.1, overwrite: true,
+        onComplete: function () { els.forEach(function (el) { el.style.willChange = ''; }); }
+      });
+    }
+  });
+
+  /* ============================================================= ZAEHLER ==
+     Maschinendaten und Gruendungsjahr werden NICHT gezaehlt — waehrend des
+     Hochlaufens stuenden sonst plausibel aussehende, aber falsche Angaben
+     ueber den Betrieb auf dem Bildschirm. Nur die Mitarbeiterzahl laeuft an,
+     und die in 0,6 s. */
+  var nums = document.querySelectorAll('[data-count]');
+  if (nums.length) {
+    var stats = document.querySelector('.stats');
+    ST.create({
+      trigger: stats,
+      start: 'top 78%',
+      once: true,
+      onEnter: function () {
+        nums.forEach(function (el) {
+          var target = parseInt(el.getAttribute('data-count'), 10);
+          if (isNaN(target)) return;
+          var obj = { v: 0 };
+          el.textContent = '0';
+          G.to(obj, {
+            v: target, duration: 0.6, ease: 'power2.out',
+            onUpdate: function () { el.textContent = String(Math.round(obj.v)); },
+            onComplete: function () { el.textContent = String(target); }
+          });
         });
-    });
-
-    /* Betriebs-Bühne: der Hallenblick zieht etwas langsamer mit */
-    var stageImg = $('.stage__img');
-    if (stageImg) gsap.set(stageImg, { transformOrigin: '50% 50%' });
-  }
-
-  /* ──────────── 12 · LEISTUNGEN · VORSCHAUBILD AM CURSOR (Desktop) ─────── */
-
-  (function () {
-    var list = $('#svcList');
-    var peek = $('#svcPeek');
-    var peekImg = $('#svcPeekImg');
-    if (!list || !peek || !hasGSAP || reduce || !canHover) return;
-    if (!window.matchMedia('(min-width: 1001px)').matches) return;
-
-    var xTo = gsap.quickTo(peek, 'x', { duration: .5, ease: 'power3' });
-    var yTo = gsap.quickTo(peek, 'y', { duration: .5, ease: 'power3' });
-    var visible = false;
-
-    list.addEventListener('pointermove', function (e) {
-      var r = list.getBoundingClientRect();
-      xTo(e.clientX - r.left - 135);
-      yTo(e.clientY - r.top - 101);
-    });
-
-    $$('.svc__row', list).forEach(function (row) {
-      row.addEventListener('pointerenter', function () {
-        var src = row.getAttribute('data-peek');
-        if (src && peekImg.getAttribute('src') !== src) peekImg.setAttribute('src', src);
-        if (!visible) {
-          visible = true;
-          gsap.to(peek, { opacity: 1, duration: .35, ease: 'power2.out' });
-        }
-      });
-    });
-
-    list.addEventListener('pointerleave', function () {
-      visible = false;
-      gsap.to(peek, { opacity: 0, duration: .3, ease: 'power2.out' });
-    });
-  }());
-
-  /* ───────────────────────── 13 · MAGNET-BUTTONS ───────────────────────── */
-
-  if (hasGSAP && !reduce && canHover) {
-    $$('[data-magnet]').forEach(function (el) {
-      var xTo = gsap.quickTo(el, 'x', { duration: .45, ease: 'power3' });
-      var yTo = gsap.quickTo(el, 'y', { duration: .45, ease: 'power3' });
-
-      el.addEventListener('pointermove', function (e) {
-        var r = el.getBoundingClientRect();
-        xTo((e.clientX - (r.left + r.width / 2)) * .22);
-        yTo((e.clientY - (r.top + r.height / 2)) * .32);
-      });
-      el.addEventListener('pointerleave', function () { xTo(0); yTo(0); });
+      }
     });
   }
 
-  /* ──────────────────────────── 14 · FORMULAR ─────────────────────────── */
-  /* Reines Frontend — es gibt kein Backend. Wir bestätigen freundlich und
-     verweisen auf Telefon und E-Mail.                                      */
+  /* ================================================== BRANCHEN-ZYLINDER ==
+     14 Ringplaetze, sechs davon belegt — die uebrigen bleiben leer, damit die
+     Karten einen offenen Bogen bilden statt eines geschlossenen Rads. Der Ring
+     dreht beim Scrollen von -102 auf -25 Grad und schiebt sich nach unten,
+     waehrend die Bilder in den Karten gegenlaeufig wandern. Erst ab 768 px;
+     darunter (und ohne GSAP) bleibt die Sektion ein schlichtes Raster. */
+  var cyl      = document.getElementById('cyl');
+  var cylWrap  = document.getElementById('cylWrap');
+  var cylStage = document.getElementById('cylStage');
 
-  var form = $('#kontaktForm');
-  var note = $('#formNote');
+  if (cyl && cylWrap && cylStage) {
+    var TOTAL = 14;
+    for (var ci = cyl.children.length; ci < TOTAL; ci++) {
+      var slot = document.createElement('li');
+      slot.className = 'cyl__c';
+      slot.setAttribute('data-empty', '');
+      slot.setAttribute('aria-hidden', 'true');
+      cyl.appendChild(slot);
+    }
+    Array.prototype.forEach.call(cyl.children, function (card, i) {
+      card.style.setProperty('--index', i + 1);
+    });
 
-  if (form && note) {
+    G.matchMedia().add('(min-width: 768px)', function () {
+      root.classList.add('gsap-cyl');   /* Hoehe des Scrollwegs kommt aus dem CSS */
+
+      var base = {
+        trigger: cylWrap, start: 'top 75%', end: 'bottom 25%',
+        scrub: true, invalidateOnRefresh: true,
+        onToggle: function (self) { cyl.style.willChange = self.isActive ? 'transform' : ''; }
+      };
+      var imgs = cyl.querySelectorAll('.cyl__img');
+
+      /* Startwinkel: die Vorlage beginnt bei -102 Grad, hat aber nur vier belegte
+         Ringplaetze. Sechs Karten spannen einen Bogen von 5 x 25,7 = 128,6 Grad
+         und stuenden bei -102 schon quer ueber den Schirm. Bei -180 liegt die
+         letzte Karte links der Mitte, die rechte Bildhaelfte ist frei, und die
+         Karten schwenken beim Scrollen dort hinein. Bis -25 Grad wandert damit
+         jede der sechs Karten genau einmal durch die Bildmitte. */
+      /* Startwinkel: Die Referenz startet mit vier belegten Ringplätzen bei -102°.
+         Wir haben sechs, also 51,4° mehr Bogen (25,7° je Platz) — der gleiche
+         Bildeindruck beim Eintritt ergibt sich deshalb bei -153°: links stehen
+         zweieinhalb Karten, die rechte Hälfte ist frei, dann schwenken sie ein. */
+      G.fromTo(cyl, { rotateY: -153 }, {
+        rotateY: -25, yPercent: 100, ease: 'power1.inOut',
+        scrollTrigger: base
+      });
+      G.fromTo(imgs, { x: 100 }, {
+        x: -100, ease: 'power1.inOut',
+        scrollTrigger: { trigger: cylWrap, start: 'top 75%', end: 'bottom 25%', scrub: true, invalidateOnRefresh: true }
+      });
+      G.fromTo(imgs, { y: -100 }, {
+        y: 100, ease: 'none',
+        scrollTrigger: { trigger: cylWrap, start: 'top bottom', end: 'bottom top', scrub: true, invalidateOnRefresh: true }
+      });
+
+      return function () {
+        root.classList.remove('gsap-cyl');
+        cylWrap.style.height = '';
+        cyl.style.willChange = '';
+        G.set(cyl, { clearProps: 'transform' });
+        G.set(imgs, { clearProps: 'transform' });
+      };
+    });
+  }
+
+  ST.refresh();
+  window.addEventListener('load', function () { ST.refresh(); });
+  }
+
+  /* ====================================================== BILDERLAUF ==
+     Anwendungsbeispiele der Eigenentwicklungen. Gescrollt wird nativ ueber
+     overflow-x mit Scroll-Snap, die beiden Pfeile schieben um genau eine
+     Kartenbreite. Kein Timer, kein Autoplay, keine Bibliothek.
+
+     Am Ende bekommen die Pfeile `aria-disabled` statt `disabled`. Ein Knopf mit
+     `disabled` faellt aus dem Tab-Lauf, und wer ihn per Tastatur ausloest,
+     verliert im selben Moment den Fokus an `body` und steht wieder am Anfang
+     des Dokuments. So bleiben beide Knoepfe erreichbar und laufen am Anschlag
+     nur folgenlos. Zusaetzlich bedienen Pfeiltasten, Pos1 und Ende den Lauf,
+     alle mit derselben Schrittweite wie die Knoepfe. */
+  function initGal() {
+    var gal = document.querySelector('[data-gal]');
+    if (!gal) return;
+
+    var track = gal.querySelector('[data-gal-track]');
+    var prev  = gal.querySelector('[data-gal-prev]');
+    var next  = gal.querySelector('[data-gal-next]');
+    if (!track || !prev || !next) return;
+
+    function schritt() {
+      var karte = track.firstElementChild;
+      if (!karte) return track.clientWidth * 0.8;
+      var lueckeRoh = parseFloat(getComputedStyle(track).columnGap || '0');
+      var luecke = isNaN(lueckeRoh) ? 0 : lueckeRoh;
+      return karte.getBoundingClientRect().width + luecke;
+    }
+
+    function maximum() { return track.scrollWidth - track.clientWidth; }
+
+    function stand() {
+      var max = maximum();
+      prev.setAttribute('aria-disabled', track.scrollLeft <= 2 ? 'true' : 'false');
+      next.setAttribute('aria-disabled', track.scrollLeft >= max - 2 ? 'true' : 'false');
+    }
+
+    function schiebe(weite) {
+      var ziel = Math.max(0, Math.min(maximum(), track.scrollLeft + weite));
+      if (Math.abs(ziel - track.scrollLeft) < 1) return;   /* am Anschlag folgenlos */
+      track.scrollTo({ left: ziel, behavior: 'smooth' });
+    }
+    function springe(ziel) {
+      track.scrollTo({ left: Math.max(0, Math.min(maximum(), ziel)), behavior: 'smooth' });
+    }
+
+    prev.addEventListener('click', function () { schiebe(-schritt()); });
+    next.addEventListener('click', function () { schiebe( schritt()); });
+
+    track.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowRight')      { e.preventDefault(); schiebe( schritt()); }
+      else if (e.key === 'ArrowLeft')  { e.preventDefault(); schiebe(-schritt()); }
+      else if (e.key === 'Home')       { e.preventDefault(); springe(0); }
+      else if (e.key === 'End')        { e.preventDefault(); springe(maximum()); }
+    });
+
+    var warten;
+    track.addEventListener('scroll', function () {
+      clearTimeout(warten);
+      warten = setTimeout(stand, 80);
+    }, { passive: true });
+    window.addEventListener('resize', stand, { passive: true });
+    stand();
+  }
+
+  /* ============================================================= STELLEN ==
+     Der Kunde blendet Stellen selbst aus, indem er dem <li class="job"> das
+     Attribut `hidden` gibt. Sind alle Stellen versteckt, erscheint der Hinweis
+     statt der leeren Liste. Die Initiativbewerbung steht ausserhalb der Liste
+     und bleibt immer sichtbar. */
+  function initJobs() {
+    var jobs = document.getElementById('jobs');
+    var none = document.getElementById('jobsNone');
+    if (!jobs || !none) return;
+    var offen = jobs.querySelectorAll('.job:not([hidden])').length;
+    none.hidden = offen > 0;
+    jobs.hidden = offen === 0;
+  }
+
+  /* ============================================================ FORMULAR ==
+     Rein im Frontend, ohne Uebertragung. */
+  function initForm() {
+    var form = document.getElementById('form');
+    var note = document.getElementById('formNote');
+    if (!form || !note) return;
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-
-      if (!form.checkValidity()) {
-        note.classList.add('is-error');
-        note.textContent = 'Bitte prüfen Sie die markierten Felder — Name, E-Mail, Nachricht und die Einwilligung brauchen wir.';
-        var firstInvalid = form.querySelector(':invalid');
-        if (firstInvalid) firstInvalid.focus();
+      var bad = null;
+      var fields = form.querySelectorAll('[required]');
+      Array.prototype.forEach.call(fields, function (f) {
+        var ok = f.type === 'checkbox' ? f.checked : f.checkValidity() && f.value.trim() !== '';
+        f.setAttribute('aria-invalid', ok ? 'false' : 'true');
+        if (!ok && !bad) bad = f;
+      });
+      if (bad) {
+        note.textContent = 'Bitte füllen Sie die Pflichtfelder aus.';
+        bad.focus();
         return;
       }
-
-      var name = (form.elements.name && form.elements.name.value.trim().split(' ')[0]) || '';
-      note.classList.remove('is-error');
-      note.textContent = (name ? name + ', vielen ' : 'Vielen ') +
-        'Dank für Ihre Anfrage. Wir melden uns zügig zurück. Wenn es eilt: 0 87 03 / 93 31 - 0 oder info@walczok-gmbh.de.';
-
+      note.textContent = 'Vielen Dank. Wir melden uns zügig bei Ihnen.';
       form.reset();
-      if (hasGSAP && !reduce) {
-        gsap.fromTo(note, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: .5 });
-      }
+      Array.prototype.forEach.call(fields, function (f) { f.removeAttribute('aria-invalid'); });
     });
   }
-
-  /* ───────────────────────────── 15 · KLEINKRAM ───────────────────────── */
-
-  var year = $('#year');
-  if (year) year.textContent = new Date().getFullYear();
-
-  /* will-change nach dem Intro wieder abräumen */
-  window.setTimeout(function () {
-    $$('.btn').forEach(function (b) { b.style.willChange = 'auto'; });
-  }, 4000);
-
-  /* Layout nach dem Laden von Schriften und Bildern neu vermessen */
-  if (hasGSAP) {
-    window.addEventListener('load', function () { ScrollTrigger.refresh(); });
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(function () { ScrollTrigger.refresh(); });
-    }
-  }
-
 }());
