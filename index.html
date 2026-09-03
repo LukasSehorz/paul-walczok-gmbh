@@ -98,7 +98,14 @@
              Flaeche ist ein Kreis um dieses Zentrum, der Buegel bleibt in jeder
              Drehlage mit Luft darin. js/main.js setzt nur den Drehwinkel. -->
         <span class="mark" id="mark" role="img" aria-label="Bildmarke der Paul Walczok GmbH">
-          <img class="mark__frame" id="markFrame" src="assets/img/logo-frame.png" width="300" height="300" alt="" decoding="async">
+          <!-- Der Buegel liegt in einem Rahmen, der sich NICHT mitdreht und die
+               Silhouette der Schraube ausstanzt (mask-image). Dadurch laeuft der
+               Buegel sichtbar hinter der Schraube durch, ohne dass die Schraube
+               eine deckende Flaeche braucht. Beide Ebenen sind reine Linien in
+               der Akzentfarbe und stehen direkt auf dem dunklen Grund. -->
+          <span class="mark__clip">
+            <img class="mark__frame" id="markFrame" src="assets/img/logo-frame.png" width="300" height="300" alt="" decoding="async">
+          </span>
           <img class="mark__bolt" src="assets/img/logo-bolt.png" width="300" height="300" alt="" decoding="async">
         </span>
       </a>

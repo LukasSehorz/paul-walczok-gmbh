@@ -193,29 +193,36 @@ textarea:focus-visible, [tabindex]:focus-visible {
 
 .brand { display: flex; align-items: center; gap: 16px; margin-right: auto; }
 
-/* Bildmarke 1:1 wie die Kundendatei auf weissem, kreisrundem Grund
-   (Durchmesser 84 px in der 112-px-Kopfzeile). Beide Ebenen sind quadratisch,
-   das Drehzentrum (Schraubenachse = Mittelpunkt des inneren Bogens) liegt in
-   der Bildmitte, also im Kreismittelpunkt. Der Buegel dreht sich in der
-   Bildebene um dieses Zentrum; sein entferntester Punkt (rechte Spindel)
-   bleibt mit rund 1,7 px Luft im Kreis. Die Schraube liegt als eigene Ebene obenauf
-   und deckt den Buegel, wenn er hinter ihr vorbeilaeuft. clip-path haelt den
-   Kreis auch in Safari dicht, falls je ein Subpixel ueberstuende. */
+/* Bildmarke als reine Strichzeichnung in der Akzentfarbe, ohne Flaeche, direkt
+   auf dem dunklen Grund der Kopfzeile (Kantenlaenge 84 px in der 112-px-Zeile).
+   Beide Ebenen sind quadratisch; das Drehzentrum (Schraubenachse = Mittelpunkt
+   des inneren Bogens) liegt in der Bildmitte. Der Buegel dreht sich in der
+   Bildebene um dieses Zentrum und bleibt dabei innerhalb des Quadrats.
+
+   Die Schraube deckt den Buegel nicht mehr mit einer weissen Flaeche ab, sondern
+   `.mark__clip` stanzt die Schraubensilhouette per Maske aus dem Buegel aus.
+   Der Rahmen dreht sich nicht mit, die Aussparung bleibt also an Ort und Stelle,
+   waehrend der Buegel darunter durchlaeuft. So wirkt die Schraube auf jedem
+   Hintergrund als Koerper davor. */
 .brand__link { display: block; }
 .mark {
   position: relative;
   display: block;
   width: 84px; height: 84px;
-  background: #fff;
-  border-radius: 50%;
-  overflow: hidden;
-  clip-path: circle(50% at 50% 50%);
-  isolation: isolate;
 }
-.mark__frame, .mark__bolt {
+.mark__clip, .mark__frame, .mark__bolt {
   position: absolute; inset: 0;
   display: block;
   width: 100%; height: 100%;
+}
+.mark__clip {
+  -webkit-mask-image: url(../assets/img/logo-bolt-mask.png);
+          mask-image: url(../assets/img/logo-bolt-mask.png);
+  -webkit-mask-size: 100% 100%;
+          mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+          mask-mode: alpha;
 }
 .mark__frame {
   transform-origin: 50% 50%;
@@ -1014,7 +1021,7 @@ textarea:focus-visible, [tabindex]:focus-visible {
 
 @media (max-width: 980px) {
   :root { --hh: 84px; }
-  .mark { width: 62px; height: 62px; }        /* Kreis 62 px in 84-px-Kopfzeile */
+  .mark { width: 62px; height: 62px; }        /* Marke 62 px in 84-px-Kopfzeile */
   .brand { gap: 12px; }
 
   .adv { grid-template-columns: repeat(2, 1fr); gap: clamp(28px, 4vw, 44px); }
