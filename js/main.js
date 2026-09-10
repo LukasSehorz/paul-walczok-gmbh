@@ -94,37 +94,41 @@
   initJobs();
 
   /* ============================================================== LOGO ==
-     Die Bildmarke ist ein Sprite aus 72 gerenderten Lagen der Kundendatei
-     3d-logo.STEP, die einen geschlossenen Taumelpfad abfahren (Nicken, Gieren
-     und Rollen ueberlagert). Gesetzt wird nur die background-position.
+     Die Bildmarke ist ein Sprite aus 120 gerenderten Lagen der Kundendatei
+     3d-logo.STEP: eine volle Umdrehung um die senkrechte Achse in Schritten
+     von 3 Grad, wie in der SOLIDWORKS-Aufnahme des Kunden (dort dreht sich
+     das Bauteil wie auf einem Drehteller, ohne jedes Kippen; die Seite mit
+     der Messtrommel kommt zuerst auf den Betrachter zu). Gesetzt wird nur
+     die background-position.
 
-     Beim Scrollen folgt die Lage dem Scrollweg (ein halber Durchlauf je
+     Beim Scrollen folgt die Lage dem Scrollweg (eine halbe Umdrehung je
      Bildschirmhoehe; abwaerts vorwaerts, aufwaerts rueckwaerts), gedaempft,
      damit nichts springt. Wird 1,2 s lang nicht gescrollt, laeuft die Marke in
      1,5 s mit weichem Auslauf (kubisches Ease-out, ohne Ueberschwingen) zum
-     naechsten Vielfachen eines vollen Durchlaufs zurueck. Lage 0 ist die
+     naechsten Vielfachen einer vollen Umdrehung zurueck. Lage 0 ist die
      Frontansicht: in Ruhe zeigt die Marke exakt das Original, beim Laden
      ebenso. Bei reduzierter Bewegung passiert nichts, dann bleibt Lage 0 aus
      dem CSS stehen.
 
      window.__markHold (Zahl) friert eine Lage ein, nur fuer Bildschirmfotos —
-     erwartet wird jetzt ein Lagenindex 0..71, frueher waren es Grad. */
+     erwartet wird ein Lagenindex 0..119 (Lage k = k * 3 Grad). */
   var mark = document.getElementById('mark');
   if (mark && !reduce) {
-    /* Rasterdaten des Sprites: 72 Lagen in 9 Spalten und 8 Zeilen. Die beiden
-       Zahlen stehen fest, weil sie im Bild selbst stecken.
+    /* Rasterdaten des Sprites: 120 Lagen in 11 Spalten und 11 Zeilen (der
+       letzte Platz bleibt leer). Die beiden Zahlen stehen fest, weil sie im
+       Bild selbst stecken.
 
        Die Kachelgroesse steht bewusst NICHT hier: css/styles.css setzt sie in
        --mark-kachel und verkleinert sie unter 980 px auf 62 px. Ein fester
        Wert an dieser Stelle wuerde bei jedem Breakpoint auseinanderlaufen und
        Nachbarkacheln ins Bild ziehen. Deshalb wird die Kante aus dem Element
        gelesen und bei resize neu bestimmt. */
-    var LAGEN = 72, SPALTEN = 9;
+    var LAGEN = 120, SPALTEN = 11;
 
     var RUHE_MS = 1200, RUECKKEHR_MS = 1500;
     var jetzt = function () { return (window.performance && performance.now) ? performance.now() : Date.now(); };
-    /* Gerechnet wird in Lagen (Kommazahl), nicht in Grad: ein voller Durchlauf
-       des Taumelpfades sind LAGEN Schritte. */
+    /* Gerechnet wird in Lagen (Kommazahl), nicht in Grad: eine volle
+       Umdrehung sind LAGEN Schritte. */
     var scrollLage = 0, lage = 0, gesetzt = null, tVor = null, letzterScroll = -1e9;
     var ruheStart = null, ruheVon = 0;
     var letzterY = window.pageYOffset || 0;
@@ -167,8 +171,8 @@
 
     window.addEventListener('scroll', function () {
       var y = window.pageYOffset || 0;
-      /* Eine Bildschirmhoehe Scrollweg entspricht einem halben Durchlauf —
-         dieselbe Uebersetzung wie zuvor (dort 180 Grad je Bildschirmhoehe). */
+      /* Eine Bildschirmhoehe Scrollweg entspricht einer halben Umdrehung
+         (180 Grad = LAGEN/2 Lagen). */
       scrollLage += (y - letzterY) * ((LAGEN / 2) / Math.max(320, window.innerHeight));
       letzterY = y;
       letzterScroll = jetzt();

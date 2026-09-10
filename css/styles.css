@@ -195,10 +195,12 @@ textarea:focus-visible, [tabindex]:focus-visible {
 
 /* Bildmarke als echtes 3D-Bauteil (Kantenlaenge 84 px in der 112-px-Zeile).
 
-   Gerendert aus der Kundendatei 3d-logo.STEP: 72 Lagen entlang eines
-   geschlossenen Taumelpfades, abgelegt als 9 x 8 Raster in einem einzigen
-   WebP. Beim Scrollen wird nur die background-position umgeschaltet — kein
-   Video, kein WebGL, keine Dekodierung pro Bild.
+   Gerendert aus der Kundendatei 3d-logo.STEP: 120 Lagen einer vollen
+   Umdrehung um die senkrechte Achse (3 Grad je Lage), wie in der
+   SOLIDWORKS-Aufnahme des Kunden — ein Drehteller, kein Kippen. Abgelegt
+   als 11 x 11 Raster in einem einzigen WebP, Kachel 168 px = exakt die
+   doppelte Anzeigekante fuer Retina-Bildschirme. Beim Scrollen wird nur die
+   background-position umgeschaltet — kein Video, kein WebGL.
 
    Warum ein Sprite und keine CSS-3D-Transformation: das Bauteil ist ein
    Koerper mit Gewinde, Sechskant und Bohrungen. Eine transformierte Flaeche
@@ -209,7 +211,7 @@ textarea:focus-visible, [tabindex]:focus-visible {
    rastet js/main.js genau dorthin zurueck: das Logo steht dann still und
    zeigt das Original.
 
-   Raster: 9 Spalten x 8 Zeilen. Die Anzeigekante steht EINMAL in --mark-kachel;
+   Raster: 11 Spalten x 11 Zeilen. Die Anzeigekante steht EINMAL in --mark-kachel;
    Breite, Hoehe und background-size leiten sich daraus ab. Ein Breakpoint aendert
    also nur diese eine Zahl, sonst zerfaellt das Raster (background-size und
    Schrittweite muessen immer zusammenpassen). js/main.js liest die Kachelgroesse
@@ -222,7 +224,7 @@ textarea:focus-visible, [tabindex]:focus-visible {
   height: var(--mark-kachel);
   background-image: url(../assets/img/logo-spin3d.webp);
   background-repeat: no-repeat;
-  background-size: calc(var(--mark-kachel) * 9) calc(var(--mark-kachel) * 8);
+  background-size: calc(var(--mark-kachel) * 11) calc(var(--mark-kachel) * 11);
   background-position: 0 0;       /* Lage 0 = Frontansicht */
   /* Kein will-change: background-position ist keine Compositor-Eigenschaft, der
      Hinweis spart hier keinen Paint, haelt aber dauerhaft eine Ebene mit der

@@ -12,3 +12,6 @@ desktop.ini
 
 # Anschauungsmaterial der Logo-Animation (nicht auf der Seite verlinkt)
 assets/video/logo-veo-*.mp4
+
+# Python-Bytecode der Sprite-Werkzeuge
+__pycache__/
