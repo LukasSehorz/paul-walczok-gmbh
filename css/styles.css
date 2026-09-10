@@ -193,42 +193,48 @@ textarea:focus-visible, [tabindex]:focus-visible {
 
 .brand { display: flex; align-items: center; gap: 16px; margin-right: auto; }
 
-/* Bildmarke als reine Strichzeichnung in der Akzentfarbe, ohne Flaeche, direkt
-   auf dem dunklen Grund der Kopfzeile (Kantenlaenge 84 px in der 112-px-Zeile).
-   Beide Ebenen sind quadratisch; das Drehzentrum (Schraubenachse = Mittelpunkt
-   des inneren Bogens) liegt in der Bildmitte. Der Buegel dreht sich in der
-   Bildebene um dieses Zentrum und bleibt dabei innerhalb des Quadrats.
+/* Bildmarke als echtes 3D-Bauteil (Kantenlaenge 84 px in der 112-px-Zeile).
 
-   Die Schraube deckt den Buegel nicht mehr mit einer weissen Flaeche ab, sondern
-   `.mark__clip` stanzt die Schraubensilhouette per Maske aus dem Buegel aus.
-   Der Rahmen dreht sich nicht mit, die Aussparung bleibt also an Ort und Stelle,
-   waehrend der Buegel darunter durchlaeuft. So wirkt die Schraube auf jedem
-   Hintergrund als Koerper davor. */
+   Gerendert aus der Kundendatei 3d-logo.STEP: 72 Lagen entlang eines
+   geschlossenen Taumelpfades, abgelegt als 9 x 8 Raster in einem einzigen
+   WebP. Beim Scrollen wird nur die background-position umgeschaltet — kein
+   Video, kein WebGL, keine Dekodierung pro Bild.
+
+   Warum ein Sprite und keine CSS-3D-Transformation: das Bauteil ist ein
+   Koerper mit Gewinde, Sechskant und Bohrungen. Eine transformierte Flaeche
+   kaeme nur an eine gekippte Scheibe heran, nie an die Verdeckungen, die
+   sich beim Drehen ergeben.
+
+   Lage 0 (links oben) ist exakt die Frontansicht der Kundendatei. In Ruhe
+   rastet js/main.js genau dorthin zurueck: das Logo steht dann still und
+   zeigt das Original.
+
+   Raster: 9 Spalten x 8 Zeilen. Die Anzeigekante steht EINMAL in --mark-kachel;
+   Breite, Hoehe und background-size leiten sich daraus ab. Ein Breakpoint aendert
+   also nur diese eine Zahl, sonst zerfaellt das Raster (background-size und
+   Schrittweite muessen immer zusammenpassen). js/main.js liest die Kachelgroesse
+   zur Laufzeit aus dem Element und rechnet nicht mit einem eigenen Wert. */
 .brand__link { display: block; }
 .mark {
-  position: relative;
+  --mark-kachel: 84px;            /* einzige Stellschraube fuer die Groesse */
   display: block;
-  width: 84px; height: 84px;
+  width: var(--mark-kachel);
+  height: var(--mark-kachel);
+  background-image: url(../assets/img/logo-spin3d.webp);
+  background-repeat: no-repeat;
+  background-size: calc(var(--mark-kachel) * 9) calc(var(--mark-kachel) * 8);
+  background-position: 0 0;       /* Lage 0 = Frontansicht */
+  /* Kein will-change: background-position ist keine Compositor-Eigenschaft, der
+     Hinweis spart hier keinen Paint, haelt aber dauerhaft eine Ebene mit der
+     1800 x 1600 grossen Textur im Grafikspeicher — auch bei reduzierter
+     Bewegung, wo gar nichts animiert wird. */
 }
-.mark__clip, .mark__frame, .mark__bolt {
-  position: absolute; inset: 0;
-  display: block;
-  width: 100%; height: 100%;
+
+/* Hintergrundbilder druckt der Browser von sich aus nicht. Ohne diese Regel
+   bliebe im Ausdruck der Startseite eine Luecke neben dem Schriftzug. */
+@media print {
+  .mark { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
-.mark__clip {
-  -webkit-mask-image: url(../assets/img/logo-bolt-mask.png);
-          mask-image: url(../assets/img/logo-bolt-mask.png);
-  -webkit-mask-size: 100% 100%;
-          mask-size: 100% 100%;
-  -webkit-mask-repeat: no-repeat;
-          mask-repeat: no-repeat;
-          mask-mode: alpha;
-}
-.mark__frame {
-  transform-origin: 50% 50%;
-  will-change: transform;
-}
-.mark__bolt { z-index: 2; pointer-events: none; }
 
 .brand__word {
   font-family: var(--ff-dis);
@@ -1021,7 +1027,10 @@ textarea:focus-visible, [tabindex]:focus-visible {
 
 @media (max-width: 980px) {
   :root { --hh: 84px; }
-  .mark { width: 62px; height: 62px; }        /* Marke 62 px in 84-px-Kopfzeile */
+  /* Nur die Kachelgroesse setzen: Breite, Hoehe und background-size haengen
+     per calc() daran. Wuerde hier width/height direkt gesetzt, bliebe das
+     Kachelraster bei 84 px stehen und das Sprite zerfiele. */
+  .mark { --mark-kachel: 62px; }              /* Marke 62 px in 84-px-Kopfzeile */
   .brand { gap: 12px; }
 
   .adv { grid-template-columns: repeat(2, 1fr); gap: clamp(28px, 4vw, 44px); }

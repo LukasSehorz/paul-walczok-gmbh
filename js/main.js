@@ -94,57 +94,129 @@
   initJobs();
 
   /* ============================================================== LOGO ==
-     Die Schraube steht fest, der Messbuegel dreht sich in der Bildebene um die
-     Schraubenachse (Bildmitte der Ebene). Beim Scrollen folgt der Winkel dem
-     Scrollweg (eine halbe Umdrehung je Bildschirmhoehe; abwaerts vorwaerts,
-     aufwaerts rueckwaerts), gedaempft, damit nichts springt. Wird 1,2 s lang
-     nicht gescrollt, kehrt der Buegel in 1,5 s mit weichem Auslauf (kubisches
-     Ease-out, ohne Ueberschwingen) zum naechsten Vielfachen von 360 Grad
-     zurueck, also in die Originallage, und bleibt dort stehen: in Ruhe ist
-     das Logo exakt die Kundendatei. Beim
-     Laden steht er bei 0 Grad. Bei reduzierter Bewegung passiert nichts.
-     window.__markHold (Zahl) friert einen Winkel ein, nur fuer Bildschirmfotos. */
-  var markFrame = document.getElementById('markFrame');
-  if (markFrame && !reduce) {
+     Die Bildmarke ist ein Sprite aus 72 gerenderten Lagen der Kundendatei
+     3d-logo.STEP, die einen geschlossenen Taumelpfad abfahren (Nicken, Gieren
+     und Rollen ueberlagert). Gesetzt wird nur die background-position.
+
+     Beim Scrollen folgt die Lage dem Scrollweg (ein halber Durchlauf je
+     Bildschirmhoehe; abwaerts vorwaerts, aufwaerts rueckwaerts), gedaempft,
+     damit nichts springt. Wird 1,2 s lang nicht gescrollt, laeuft die Marke in
+     1,5 s mit weichem Auslauf (kubisches Ease-out, ohne Ueberschwingen) zum
+     naechsten Vielfachen eines vollen Durchlaufs zurueck. Lage 0 ist die
+     Frontansicht: in Ruhe zeigt die Marke exakt das Original, beim Laden
+     ebenso. Bei reduzierter Bewegung passiert nichts, dann bleibt Lage 0 aus
+     dem CSS stehen.
+
+     window.__markHold (Zahl) friert eine Lage ein, nur fuer Bildschirmfotos —
+     erwartet wird jetzt ein Lagenindex 0..71, frueher waren es Grad. */
+  var mark = document.getElementById('mark');
+  if (mark && !reduce) {
+    /* Rasterdaten des Sprites: 72 Lagen in 9 Spalten und 8 Zeilen. Die beiden
+       Zahlen stehen fest, weil sie im Bild selbst stecken.
+
+       Die Kachelgroesse steht bewusst NICHT hier: css/styles.css setzt sie in
+       --mark-kachel und verkleinert sie unter 980 px auf 62 px. Ein fester
+       Wert an dieser Stelle wuerde bei jedem Breakpoint auseinanderlaufen und
+       Nachbarkacheln ins Bild ziehen. Deshalb wird die Kante aus dem Element
+       gelesen und bei resize neu bestimmt. */
+    var LAGEN = 72, SPALTEN = 9;
+
     var RUHE_MS = 1200, RUECKKEHR_MS = 1500;
     var jetzt = function () { return (window.performance && performance.now) ? performance.now() : Date.now(); };
-    var scrollWinkel = 0, winkel = 0, gesetzt = null, tVor = null, letzterScroll = -1e9;
+    /* Gerechnet wird in Lagen (Kommazahl), nicht in Grad: ein voller Durchlauf
+       des Taumelpfades sind LAGEN Schritte. */
+    var scrollLage = 0, lage = 0, gesetzt = null, tVor = null, letzterScroll = -1e9;
     var ruheStart = null, ruheVon = 0;
     var letzterY = window.pageYOffset || 0;
 
+    var kachel = 0;
+    function kachelMessen() {
+      /* getBoundingClientRect statt offsetWidth: liefert auch bei fraktionaler
+         Skalierung den Wert, mit dem der Browser den Hintergrund wirklich
+         rechnet. */
+      var b = mark.getBoundingClientRect().width;
+      kachel = b > 0 ? b : parseFloat(getComputedStyle(mark).width) || 84;
+    }
+    kachelMessen();
+    function kachelNeu() {
+      kachelMessen();
+      gesetzt = null;   /* Lage neu schreiben, sonst bleibt der alte Versatz stehen */
+      wecken();
+    }
+    /* ResizeObserver misst das Element selbst und faengt damit auch Aenderungen,
+       die kein resize-Ereignis ausloesen — etwa wenn --mark-kachel spaeter einmal
+       aus einer Container Query oder einem vw-Ausdruck kaeme. Wo es ihn nicht
+       gibt, tut es das Fensterereignis. */
+    if (typeof ResizeObserver === 'function') {
+      new ResizeObserver(kachelNeu).observe(mark);
+    } else {
+      window.addEventListener('resize', kachelNeu, { passive: true });
+    }
+
+    /* Der Takt laeuft nur, solange sich etwas bewegt. Steht die Marke auf ihrer
+       Ruhelage, haelt er an und wird vom naechsten Scrollen wieder geweckt.
+       Sonst liefe ein rAF-Callback dauerhaft mit 60 Bildern je Sekunde mit,
+       ohne je etwas zu zeichnen — auf dem Notebook im Akkubetrieb umsonst. */
+    var laeuft = false;
+    function wecken() {
+      if (laeuft) return;
+      laeuft = true;
+      tVor = null;            /* sonst ist dt der ganze Schlafzeitraum */
+      requestAnimationFrame(takt);
+    }
+
     window.addEventListener('scroll', function () {
       var y = window.pageYOffset || 0;
-      scrollWinkel += (y - letzterY) * (180 / Math.max(320, window.innerHeight));
+      /* Eine Bildschirmhoehe Scrollweg entspricht einem halben Durchlauf —
+         dieselbe Uebersetzung wie zuvor (dort 180 Grad je Bildschirmhoehe). */
+      scrollLage += (y - letzterY) * ((LAGEN / 2) / Math.max(320, window.innerHeight));
       letzterY = y;
       letzterScroll = jetzt();
+      wecken();
     }, { passive: true });
 
-    (function takt(t) {
+    function takt(t) {
       t = t || jetzt();
       if (tVor === null) tVor = t;
       var dt = Math.min(0.1, (t - tVor) / 1000); tVor = t;   /* s, gedeckelt (Tab-Wechsel) */
+      var ruht = false;
       if (t - letzterScroll > RUHE_MS) {
-        /* Ruhe: Ziel auf die Originallage einrasten und in RUECKKEHR_MS mit
-           kubischem Ease-out dorthin laufen (endet exakt, kein Ueberschwingen) */
+        /* Ruhe: auf das naechste Vielfache eines vollen Durchlaufs einrasten
+           und in RUECKKEHR_MS mit kubischem Ease-out dorthin laufen. Lage 0
+           ist die Frontansicht der Kundendatei, in Ruhe steht also das
+           Original. */
         if (ruheStart === null) {
-          ruheStart = t; ruheVon = winkel;
-          scrollWinkel = Math.round(scrollWinkel / 360) * 360;
+          ruheStart = t; ruheVon = lage;
+          scrollLage = Math.round(scrollLage / LAGEN) * LAGEN;
         }
         var p = Math.min(1, (t - ruheStart) / RUECKKEHR_MS);
         p = 1 - Math.pow(1 - p, 3);
-        winkel = ruheVon + (scrollWinkel - ruheVon) * p;
+        lage = ruheVon + (scrollLage - ruheVon) * p;
+        /* Erst anhalten, wenn der Auslauf durch ist UND die Lage wirklich
+           steht. Ohne die zweite Bedingung koennte ein halbes Bild fehlen. */
+        ruht = p >= 1 && Math.abs(scrollLage - lage) < 0.01;
       } else {
         ruheStart = null;
-        winkel += (scrollWinkel - winkel) * Math.min(1, dt * 7);   /* Daempfung ~140 ms */
+        lage += (scrollLage - lage) * Math.min(1, dt * 7);   /* Daempfung ~140 ms */
       }
-      var w = Math.round(winkel * 10) / 10;
-      if (typeof window.__markHold === 'number') w = window.__markHold;  /* nur fuer Bildschirmfotos */
-      if (w !== gesetzt) {
-        gesetzt = w;
-        markFrame.style.transform = 'rotate(' + w + 'deg)';
+      var n = Math.round(lage);
+      if (typeof window.__markHold === 'number') n = window.__markHold;  /* nur fuer Bildschirmfotos */
+      /* Negative Werte sauber in den Bereich holen: % ist in JS vorzeichenbehaftet. */
+      n = ((n % LAGEN) + LAGEN) % LAGEN;
+      if (n !== gesetzt) {
+        gesetzt = n;
+        var sx = (n % SPALTEN) * kachel;
+        var sy = Math.floor(n / SPALTEN) * kachel;
+        mark.style.backgroundPosition = (-sx) + 'px ' + (-sy) + 'px';
+      }
+      if (ruht) {
+        lage = scrollLage;    /* exakt auf die Ruhelage setzen, kein Rest */
+        laeuft = false;
+        return;               /* Takt anhalten, bis wieder gescrollt wird */
       }
       requestAnimationFrame(takt);
-    }());
+    }
+    wecken();
   }
 
   if (!hasGsap || reduce) { initForm(); return; }

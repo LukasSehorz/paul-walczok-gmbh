@@ -88,26 +88,21 @@
 
     <div class="brand">
       <a class="brand__link" href="#top" aria-label="Paul Walczok GmbH, zum Seitenanfang">
-        <!-- Die Bildmarke 1:1 aus der Kundendatei (Unterlagen Kunden/Logo_1.JPG),
-             in zwei Ebenen geschnitten: die Schraube (logo-bolt.png, ihre eigene
-             Silhouette, immer obenauf) steht fest, der Messbuegel (logo-frame.png)
-             dreht sich beim Scrollen in der Bildebene um den Mittelpunkt seines
-             inneren Bogens, der zugleich die Schraubenachse ist. Beide Ebenen sind
-             300 x 300 px (dreifache Anzeigegroesse), das Drehzentrum liegt exakt in
-             der Bildmitte; uebereinandergelegt ergeben sie das Original. Die weisse
-             Flaeche ist ein Kreis um dieses Zentrum, der Buegel bleibt in jeder
-             Drehlage mit Luft darin. js/main.js setzt nur den Drehwinkel. -->
-        <span class="mark" id="mark" role="img" aria-label="Bildmarke der Paul Walczok GmbH">
-          <!-- Der Buegel liegt in einem Rahmen, der sich NICHT mitdreht und die
-               Silhouette der Schraube ausstanzt (mask-image). Dadurch laeuft der
-               Buegel sichtbar hinter der Schraube durch, ohne dass die Schraube
-               eine deckende Flaeche braucht. Beide Ebenen sind reine Linien in
-               der Akzentfarbe und stehen direkt auf dem dunklen Grund. -->
-          <span class="mark__clip">
-            <img class="mark__frame" id="markFrame" src="assets/img/logo-frame.png" width="300" height="300" alt="" decoding="async">
-          </span>
-          <img class="mark__bolt" src="assets/img/logo-bolt.png" width="300" height="300" alt="" decoding="async">
-        </span>
+        <!-- Die Bildmarke als echtes 3D-Bauteil, gerendert aus der Kundendatei
+             Unterlagen Kunden/3d-logo.STEP (SolidWorks 2026). 72 Lagen entlang
+             eines geschlossenen Taumelpfades liegen als 9 x 8 Raster in einer
+             einzigen WebP-Datei; beim Scrollen wechselt nur die
+             background-position. Ein Video waere hier falsch: es liesse sich
+             nicht sauber endlos schliessen und muesste auf jeder Seite
+             mitgeladen werden.
+
+             Lage 0 ist exakt die Frontansicht des Originals. Bleibt das Rad
+             stehen, rastet js/main.js dorthin zurueck — in Ruhe zeigt die
+             Marke also unveraendert die Kundendatei.
+
+             Ohne JavaScript oder bei reduzierter Bewegung bleibt Lage 0
+             stehen; die Marke ist dann ein normales Standbild. -->
+        <span class="mark" id="mark" aria-hidden="true"></span>
       </a>
       <!-- Bei 390 px bleibt nur "WALCZOK" stehen — Vorname und Rechtsform blenden aus,
            die Marke selbst bleibt in jeder Breite sichtbar. -->
