@@ -260,7 +260,7 @@ a[href^="mailto:"], a[href^="tel:"] { white-space: nowrap; }
   display: block;
   width: var(--mark-kachel);
   height: var(--mark-kachel);
-  background-image: url(../assets/img/logo-spin3d.webp);
+  background-image: url(../assets/img/logo-spin3d.webp?v=20260930b);
   background-repeat: no-repeat;
   background-size: calc(var(--mark-kachel) * 11) calc(var(--mark-kachel) * 11);
   background-position: 0 0;       /* Lage 0 = Frontansicht */
@@ -276,10 +276,14 @@ a[href^="mailto:"], a[href^="tel:"] { white-space: nowrap; }
   .mark { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
 
+/* 30.09.2026: Dunkel-Version des CI-Schriftzugs (logo-wordmark-dunkel.webp):
+   gleiche Form und Buchstaben, Band im Akzentblau der Seite, das weisse Band
+   als blau umrandetes Band mit heller Schrift. Das Original mit grellweisser
+   Flaeche wirkte auf dem dunklen Grund wie ein Fremdkoerper. */
 /* Original-Schriftzug aus der CI (Kundenwunsch 29.09.2026), als Bild, weil
    die Schrift der Firma keine Webschrift ist und Band und Rahmen dazugehoeren.
    Die Hoehe steuert alles, die Breite folgt dem Seitenverhaeltnis 1047:189. */
-.brand__wm { display: block; height: 52px; width: auto; max-width: none; }
+.brand__wm { display: block; height: 44px; width: auto; max-width: none; }
 
 /* Sechs Eintraege plus Knopf brauchen mehr Platz als die frueheren vier, die
    Abstaende sind deshalb enger gefasst. */
@@ -1045,7 +1049,7 @@ a[href^="mailto:"], a[href^="tel:"] { white-space: nowrap; }
    ueber diese Grenze wechselt (gleicher Wert dort). */
 @media (min-width: 1260px) and (max-width: 1379px) {
   .mark { --mark-kachel: 72px; }      /* main.js liest die Kachel zur Laufzeit */
-  .brand__wm { height: 44px; }
+  .brand__wm { height: 40px; }
   .nav { gap: 18px; }
 }
 @media (max-width: 1259px) {
@@ -1123,7 +1127,7 @@ a[href^="mailto:"], a[href^="tel:"] { white-space: nowrap; }
      per calc() daran. Wuerde hier width/height direkt gesetzt, bliebe das
      Kachelraster bei 84 px stehen und das Sprite zerfiele. */
   .mark { --mark-kachel: 62px; }              /* Marke 62 px in 84-px-Kopfzeile */
-  .brand__wm { height: 38px; }
+  .brand__wm { height: 34px; }
   .brand { gap: 12px; }
 
   /* Kontakt einspaltig: das Formular kommt direkt nach dem Kopf, Foto und
@@ -1190,7 +1194,7 @@ a[href^="mailto:"], a[href^="tel:"] { white-space: nowrap; }
      und bei 390 rechts 62 px ungenutzt. */
   .hdr__in { gap: 12px; }
   .brand { gap: 10px; }
-  .brand__wm { height: clamp(24px, calc((100vw - 172px) * .17), 38px); }
+  .brand__wm { height: clamp(22px, calc((100vw - 172px) * .15), 34px); }
   /* Die Referenzen bleiben auch auf dem Handy zweispaltig. Einspaltig waren
      sechs quadratische Kacheln allein gut 2000 px lang. */
   .ref__i figcaption { padding-top: 8px; font-size: 13px; }
@@ -1540,7 +1544,7 @@ figcaption {
 @media (orientation: landscape) and (max-height: 500px) {
   :root { --hh: 64px; --sp: 48px; }
   .mark { --mark-kachel: 48px; }
-  .brand__wm { height: 30px; }
+  .brand__wm { height: 26px; }
   /* Rahmen mit festem Seitenverhaeltnis werden dadurch schmaler statt hoeher
      (die Hoehengrenze uebertraegt sich ueber aspect-ratio auf die Breite):
      das Foto bleibt ganz und passt unter die Kopfzeile. */
