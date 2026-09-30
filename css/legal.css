@@ -1,80 +1,123 @@
-/* ═══════════════════════════════════════════════════════════════════════════
-   Paul Walczok GmbH — Rechtsseiten (Impressum, Datenschutz)
-   Ergänzt css/styles.css; nutzt dieselben Tokens.
-   ═══════════════════════════════════════════════════════════════════════════ */
+/* ==========================================================================
+   Paul Walczok GmbH — Rechtsseiten (Impressum, Datenschutz) und Danke-Seite
+   Ergaenzt css/styles.css und nutzt nur dessen Tokens (--wrap, --gut, --hh,
+   --ff-txt, --ff-dis, --ease, --r ...). Kopf- und Fusszeile sind die der
+   Startseite, hier nur mit festem Grund, weil kein Hero-Video darunter liegt.
+   Stil wie die Startseite: keine Nummern-Etiketten, Etiketten in der
+   Fliesstextschrift, eine Rundung (--r).
+   ========================================================================== */
 
-.legal-hdr{
-  position:sticky; top:0; z-index:50;
-  background:rgba(8,9,11,.88);
-  border-bottom:1px solid var(--line);
-  backdrop-filter:blur(14px);
-  -webkit-backdrop-filter:blur(14px);
+/* --- Kopfzeile ------------------------------------------------------------ */
+/* Auf der Startseite ist die Kopfzeile fest und wird erst beim Scrollen
+   deckend (main.js). Hier gibt es kein main.js: sie klebt oben und ist von
+   Anfang an deckend. */
+.hdr--legal {
+  position: sticky;
+  background: rgba(var(--bg-rgb), .92);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border-bottom-color: var(--line);
 }
-.legal-hdr__in{
-  width:100%; max-width:var(--maxw); margin-inline:auto;
-  padding:0 var(--pad);
-  min-height:var(--hdr-h);
-  display:flex; align-items:center; justify-content:space-between; gap:1.5rem;
-}
+/* Ruhebild statt Bildraster: .mark liefert nur noch die Groesse */
+.mark--still { background-image: none; object-fit: contain; }
+.hdr__cta { flex: none; padding-inline: 20px; }
+/* Unter 420 px reicht der Platz neben Marke und Schriftzug nicht; der Weg zur
+   Anfrage steht dann im Link "Zurueck zur Startseite" und in der Fusszeile. */
+@media (max-width: 420px) { .hdr__cta { display: none; } }
 
-.legal-main{ padding-block:clamp(3.5rem,7vw,6.5rem) clamp(4rem,8vw,8rem); }
+/* --- Inhalt --------------------------------------------------------------- */
+.legal-main { padding-block: clamp(40px, 6vw, 96px) clamp(64px, 8vw, 128px); }
 
-.legal-back{
-  display:inline-flex; align-items:center; gap:.6rem;
-  font:400 .74rem/1 var(--f-mono);
-  letter-spacing:.16em; text-transform:uppercase;
-  color:var(--muted);
-  transition:color .3s var(--ease-o);
+.legal-back {
+  display: inline-flex; align-items: center; gap: 8px;
+  min-height: 44px;
+  font-size: 14px; font-weight: 600;
+  color: var(--muted);
+  transition: color .25s var(--ease);
 }
-.legal-back:hover{ color:var(--accent-hi); }
-.legal-back svg{ width:1em; height:1em; }
-.legal-back:hover svg{ transform:translateX(-4px); }
-.legal-back svg{ transition:transform .35s var(--ease-o); }
+.legal-back:hover { color: var(--accent-hi); }
+.legal-back svg {
+  width: 16px; height: 16px;
+  fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+  transition: transform .3s var(--ease);
+}
+.legal-back:hover svg { transform: translateX(-4px); }
 
-.legal-title{
-  margin:2.2rem 0 .8rem;
-  font-size:clamp(2.4rem,6vw,4.6rem);
-  text-transform:uppercase;
+.legal-title {
+  margin: 16px 0 0;
+  font-family: var(--ff-dis);
+  font-weight: 700;
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  line-height: 1.05;
+  letter-spacing: -.015em;
+  hyphens: manual;
+  color: var(--fg);
 }
-.legal-sub{
-  color:var(--muted);
-  font:400 .78rem/1.5 var(--f-mono);
-  letter-spacing:.14em; text-transform:uppercase;
-  padding-bottom:clamp(2.5rem,5vw,4rem);
-  border-bottom:1px solid var(--line);
-}
-
-.legal-body{ max-width:70ch; padding-top:clamp(2.5rem,5vw,4rem); }
-.legal-body section + section{ margin-top:clamp(2.2rem,4vw,3.4rem); }
-.legal-body h2{
-  font-size:clamp(1.05rem,1.7vw,1.4rem);
-  text-transform:uppercase; letter-spacing:-.01em;
-  margin-bottom:.9rem;
-  display:flex; align-items:baseline; gap:.85rem;
-}
-.legal-body h2::before{
-  content:attr(data-idx);
-  font:400 .72rem/1 var(--f-mono);
-  letter-spacing:.1em; color:var(--accent); flex:none;
-}
-.legal-body p{ margin:0 0 1rem; color:var(--fg-dim); }
-.legal-body p:last-child{ margin-bottom:0; }
-.legal-body ul{ margin:0 0 1rem; padding-left:1.1rem; color:var(--fg-dim); }
-.legal-body li{ margin-bottom:.4rem; }
-.legal-body a{ color:var(--accent-hi); text-underline-offset:.22em; text-decoration:underline; }
-.legal-body a:hover{ color:var(--fg); }
-.legal-body strong{ color:var(--fg); font-weight:700; }
-
-.legal-note{
-  margin-top:clamp(2.5rem,5vw,4rem);
-  padding:1.4rem 1.6rem;
-  border:1px solid var(--line);
-  background:var(--surface);
-  color:var(--muted);
-  font-size:.92rem;
+.legal-sub {
+  margin: 14px 0 0;
+  padding-bottom: clamp(28px, 4vw, 52px);
+  border-bottom: 1px solid var(--line);
+  font-size: 14px; font-weight: 600; letter-spacing: .01em;
+  color: var(--muted);
 }
 
-@media (max-width:640px){
-  .legal-hdr__in{ min-height:68px; }
-  .legal-body h2{ flex-direction:column; gap:.35rem; }
+/* 36rem (576 px) = rund 74 Zeichen je Zeile. 68ch rechnete mit der Breite
+   der Ziffer 0 und ergab 86 bis 90 Zeichen, zu lang fuer Rechtstext. */
+.legal-body { max-width: 36rem; padding-top: clamp(28px, 4vw, 52px); }
+.legal-body section + section { margin-top: clamp(32px, 4vw, 48px); }
+.legal-body h2 {
+  margin: 0 0 12px;
+  font-family: var(--ff-dis);
+  font-weight: 600;
+  font-size: clamp(1.15rem, .6vw + 1rem, 1.4rem);
+  line-height: 1.25;
+  letter-spacing: -.01em;
+  color: var(--fg);
+  text-wrap: balance;
 }
+.legal-body p { margin: 0 0 1rem; color: var(--fg-dim); }
+.legal-body p:last-child { margin-bottom: 0; }
+.legal-body ul { margin: 0 0 1rem; padding-left: 1.1rem; list-style: disc; color: var(--fg-dim); }
+.legal-body li { margin-bottom: .4rem; }
+.legal-body a:not(.btn) {
+  color: var(--accent-hi);
+  text-decoration: underline; text-underline-offset: .22em;
+  transition: color .25s var(--ease);
+}
+.legal-body a:not(.btn):hover { color: var(--fg); }
+
+/* Tippflaechen auf Touch-Geraeten und schmal. Kontaktzeilen (Telefon, E-Mail
+   untereinander): jede Zeile 44 px hoch, der Link fuellt seine Zeile. So
+   ueberlappen sich die Flaechen benachbarter Links nicht. Links im Fliesstext
+   bekommen unsichtbar Luft nach oben und unten, die Zeilen bleiben stehen. */
+@media (max-width: 760px), (pointer: coarse) {
+  .legal-kontakt { line-height: 44px; }
+  .legal-kontakt a { display: inline-block; }
+  .legal-body p:not(.legal-kontakt) a:not(.btn) { display: inline-block; padding-block: 10px; margin-block: -10px; }
+}
+.legal-body strong { color: var(--fg); font-weight: 700; }
+
+/* Interner Pruefvermerk (bleibt bis zur Freigabe durch den Kunden stehen) */
+.legal-body .legal-note {
+  margin: clamp(40px, 5vw, 64px) 0 0;
+  padding: 20px 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  background: var(--surface);
+  color: var(--muted);
+  font-size: .92rem;
+}
+
+/* Pruefvermerk direkt in einem Abschnitt (Entwurf), mit kleinem Abstand */
+.legal-body .legal-note--abschnitt { margin-top: 16px; padding: 14px 18px; }
+
+/* Danke-Seite: Knopf zurueck zur Startseite */
+.legal-body .legal-act { margin-top: 32px; }
+
+/* Kurze Fusszeile (Danke-Seite): nur die untere Leiste */
+.ftr--kurz .ftr__bar { margin-top: 0; padding-top: 0; border-top: 0; }
+
+/* Kurze Seite (Danke): mindestens so hoch wie der Bildschirm, die Fusszeile
+   steht unten statt in der Bildmitte (Tablet hoch: 456 px leer darunter). */
+.page-short { min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; }
+.page-short .legal-main { flex: 1 0 auto; }

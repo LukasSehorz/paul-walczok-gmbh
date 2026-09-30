@@ -1,0 +1,31 @@
+# Netlify-Einstellungen fuer die Webseite der Paul Walczok GmbH
+# Statische Seite ohne Build: veroeffentlicht wird der Projektordner selbst.
+
+[build]
+  publish = "."
+
+# Werkzeuge und Arbeitsdateien, die im Repo liegen, aber nicht zur Seite
+# gehoeren (Pruefrunde 2, X-29). force = true, weil die Dateien existieren:
+# ohne force lieferte Netlify sie trotz Regel aus.
+# Ziel /404.html: gibt es sie nicht, antwortet Netlify mit seiner eigenen
+# Seite "Page not found", in jedem Fall mit Status 404.
+# Nach dem ersten Deploy pruefen: /tools/logo-sprite/mesh.py muss 404 liefern,
+# /index.html, /css/styles.css und /assets/img/hero-poster.jpg weiter 200.
+
+[[redirects]]
+  from = "/tools/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/.claude/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/.gitignore"
+  to = "/404.html"
+  status = 404
+  force = true

@@ -15,3 +15,9 @@ assets/video/logo-veo-*.mp4
 
 # Python-Bytecode der Sprite-Werkzeuge
 __pycache__/
+
+# Kundenunterlagen und Office-Sperrdateien: nie veroeffentlichen (Netlify liefert das Repo aus)
+*.docx
+*.doc
+*.pdf
+~$*

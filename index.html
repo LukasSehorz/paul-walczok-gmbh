@@ -2,10 +2,12 @@
 <html lang="de">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- Ohne viewport-fit=cover: die Seite bleibt im Querformat aus der
+     Kamera-Aussparung heraus, Safe-Area-Abstaende sind damit nicht noetig. -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Paul Walczok GmbH · CNC-Präzisionsteile aus Essenbach bei Landshut</title>
-<meta name="description" content="Präzisionsteile, bei denen es auf jedes Hundertstel ankommt: Drehen, Fräsen, Laserschweißen, Schleifen, Zugproben nach DIN 50125 und Konstruktion. Einzelteile, Prototypen und Kleinserien aus Essenbach bei Landshut, gemessen im eigenen Haus, seit 1984.">
-<meta name="theme-color" content="#08090B">
+<meta name="description" content="CNC-Drehen, Fräsen, Schleifen, Laserschweißen und Konstruktion aus Essenbach bei Landshut. Einzelteile, Prototypen und Kleinserien, im eigenen Haus gemessen.">
+<meta name="theme-color" content="#111317">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="https://www.walczok-gmbh.de/">
 
@@ -24,7 +26,7 @@
 <link rel="icon" type="image/png" sizes="64x64" href="assets/img/favicon-64.png">
 <link rel="apple-touch-icon" href="assets/img/favicon-180.png">
 
-<!-- Archivo (Display) · Manrope (Fliesstext) · Fragment Mono (Labels) — lokal, kein Google-Aufruf -->
+<!-- Archivo (Display) · Manrope (Fliesstext) · Fragment Mono (nur Masse und Normen) — lokal, kein Google-Aufruf -->
 <link rel="preload" as="font" type="font/woff2" href="fonts/k3kQo8UDI-1M0wlSfdnoLg.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="fonts/xn7gYHE41ni1AdIRggexSg.woff2" crossorigin>
 <link rel="stylesheet" href="fonts/fonts.css">
@@ -104,28 +106,34 @@
              Ohne JavaScript oder bei reduzierter Bewegung bleibt Lage 0
              stehen; die Marke ist dann ein normales Standbild. -->
         <span class="mark" id="mark" aria-hidden="true"></span>
+        <!-- Rechts neben der Marke der Original-Schriftzug aus der CI des Kunden
+             (Hinweise Homepage, 29.09.2026: "genau so, das gehoert zu unserer CI").
+             Ausgeschnitten aus assets/img/logo-full.png, Farben unveraendert. Er
+             steht mit im Link, damit auch ein Tipp auf den Namen nach oben fuehrt.
+             Der Link traegt den Namen im aria-label, das Bild ist deshalb alt="". -->
+        <img class="brand__wm" src="assets/img/logo-wordmark.webp" width="1047" height="189"
+             alt="" aria-hidden="true" decoding="async">
       </a>
-      <!-- Bei 390 px bleibt nur "WALCZOK" stehen — Vorname und Rechtsform blenden aus,
-           die Marke selbst bleibt in jeder Breite sichtbar. -->
-      <span class="brand__word"><span class="brand__word--opt">Paul </span>Walczok<span class="brand__word--opt brand__word--gm"> GmbH</span></span>
     </div>
 
-    <nav class="nav" id="nav" aria-label="Hauptnavigation">
-      <!-- Sechs Eintraege plus Knopf. Vorteile und Branchen sind ueber die
-           Fusszeile erreichbar, sonst passt die Zeile nicht mehr in 1280 px. -->
-      <a href="#leistungen">Leistungen</a>
-      <a href="#eigenentwicklungen">Eigenentwicklungen</a>
-      <a href="#referenzen">Referenzen</a>
-      <a href="#unternehmen">Unternehmen</a>
-      <a href="#karriere">Karriere</a>
-      <a href="#kontakt">Kontakt</a>
-      <a class="btn btn--solid nav__cta" href="#kontakt">Anfrage</a>
-    </nav>
-
+    <!-- Der Burger steht im HTML vor dem Menue: nach dem Oeffnen fuehrt Tab
+         direkt in die Eintraege. Rechts haelt ihn das CSS (order). -->
     <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="nav">
       <span class="burger__bars" aria-hidden="true"><i></i><i></i></span>
       <span class="sr">Menü</span>
     </button>
+
+    <nav class="nav" id="nav" aria-label="Hauptnavigation">
+      <!-- Sechs Eintraege plus Knopf, Reihenfolge laut Kunde. Vorteile und
+           Branchen sind ueber die Fusszeile erreichbar. -->
+      <a href="#leistungen">Leistungen</a>
+      <a href="#unternehmen">Unternehmen</a>
+      <a href="#referenzen">Referenzen</a>
+      <a href="#karriere">Karriere</a>
+      <a href="#kontakt">Kontakt</a>
+      <a href="#eigenentwicklungen">Eigenentwicklungen</a>
+      <a class="btn btn--solid nav__cta" href="#kontakt">Anfrage</a>
+    </nav>
 
   </div>
 </header>
@@ -146,12 +154,14 @@
     <!-- Geschuetztes Leerzeichen: sonst bricht der Kicker auf dem Handy zwischen
          "seit" und der Jahreszahl um. -->
     <p class="kicker hero__kicker">Zerspanungstechnik · Essenbach · seit&nbsp;1984</p>
-    <h1 class="hero__h1" id="heroH1">Präzision ist unsere<br>Leidenschaft<span class="dot">.</span></h1>
-    <!-- Gekuerzt von vier auf zwei Saetze. Der erste Satz setzt die Abgrenzung
-         zum Lohnfertiger, der zweite nennt Leistung und Messung. Die Aussage
-         "bis das Teil passt" stand hier und steht weiterhin im Zitat des
-         Geschaeftsfuehrers in Section 06. -->
-    <p class="hero__sub">Kein Lohnfertiger: Wir arbeiten nicht nach Stückzahl, sondern nach Ihrer Anforderung. Einzelteile, Prototypen und Kleinserien nach Zeichnung, Muster oder Skizze, gemessen im eigenen Haus.</p>
+    <!-- Leerzeichen vor dem Umbruch: SplitText bildet das aria-label aus dem
+         Text, ohne Leerzeichen hiess es "unsereLeidenschaft". -->
+    <h1 class="hero__h1" id="heroH1">Präzision ist unsere <br>Leidenschaft</h1>
+    <!-- Kundenwunsch 29.09.2026: "Kein Lohnfertiger" stimmt so nicht, der
+         Betrieb IST Lohnfertiger, aber mit Vorzuegen. Deshalb die Kombination
+         aus seinem eigenen Satz ("Mehr als Lohnfertigung ...") und dem
+         bisherigen zweiten Satz. -->
+    <p class="hero__sub">Mehr als Lohnfertigung: Wir denken mit, entwickeln Lösungen und setzen sie schnell und pragmatisch um. Einzelteile, Prototypen und Kleinserien nach Zeichnung, Muster oder Skizze, gemessen im eigenen Haus.</p>
     <p class="hero__act">
       <a class="btn btn--solid btn--lg" href="#kontakt">Anfrage senden</a>
       <a class="btn btn--ghost btn--lg" href="#leistungen">Leistungen ansehen</a>
@@ -165,33 +175,27 @@
   </div>
 </section>
 
-<!-- Laufband: die Verfahren als ruhiger Endlosstreifen. Reine CSS-Animation,
-     steht bei reduzierter Bewegung still. Zweimal derselbe Inhalt, damit der
-     Uebergang nahtlos ist. -->
-<div class="ticker" aria-hidden="true">
-  <div class="ticker__track">
-    <div class="ticker__set"><span>Drehen</span><i></i><span>Fräsen</span><i></i><span>Laserschweißen</span><i></i><span>Rund- und Flachschleifen</span><i></i><span>Zugproben nach DIN 50125</span><i></i><span>Konstruktion</span><i></i><span>Messprotokoll auf Wunsch</span><i></i><span>Einzelteile, Prototypen, Kleinserien</span><i></i></div>
-    <div class="ticker__set" aria-hidden="true"><span>Drehen</span><i></i><span>Fräsen</span><i></i><span>Laserschweißen</span><i></i><span>Rund- und Flachschleifen</span><i></i><span>Zugproben nach DIN 50125</span><i></i><span>Konstruktion</span><i></i><span>Messprotokoll auf Wunsch</span><i></i><span>Einzelteile, Prototypen, Kleinserien</span><i></i></div>
-  </div>
-</div>
+<!-- Das Laufband mit den Verfahren ist entfallen (Optik-Check 29.09.2026): es
+     wiederholte die Leistungskarten direkt darunter und zog den Blick vom
+     Anfrage-Knopf weg. -->
 
 <!-- ═══════════════════════ 2 · LEISTUNGEN ═══════════════════════
      Kartendarstellung nach der teccad-Prozessseite: gleich hohe Karten, grosse
-     versale Ueberschrift, darunter Einleitungssatz und Absatz. Genau eine Karte
-     traegt die Akzentfarbe. Bei uns ist das Laserschweissen, weil es seit
-     Anfang 2026 neu im Portfolio steht. Die Akzentkarte bleibt bildlos, damit
-     die Hervorhebung traegt; die uebrigen Karten sind im oberen Drittel mit
-     einem Foto unterlegt, das nach unten in den Kartengrund auslaeuft. -->
+     versale Ueberschrift, darunter Einleitungssatz und Absatz. Acht Karten in
+     vier Spalten. Oben das Foto mit harter Unterkante, der Titel steht darunter
+     im Kartengrund, nicht mehr auf einem Verlauf (Optik-Check 29.09.2026).
+     Die fruehere blaue Akzentkarte (Laserschweissen, "Neu 2026") ist auf
+     Kundenwunsch entfallen. -->
 <section class="sec sec--svc" id="leistungen" aria-labelledby="svcH">
   <div class="wrap">
 
-    <div class="head rv">
-      <p class="kicker">01 — Leistungen</p>
-      <h2 class="h2" id="svcH">Was wir fertigen<span class="dot">.</span></h2>
-      <!-- "Unter einem Dach" und der Satz zur Verantwortung waren Floskel und
-           Wiederholung. Stattdessen die Angabe, die der Kunde wissen will:
-           welche Verfahren, und dass nichts das Haus verlaesst. -->
-      <p class="lead">Sechs Verfahren im eigenen Haus, von der Konstruktion bis zur Messung. Kein Zulieferer in der Kette.</p>
+    <div class="head head--split rv">
+      <p class="kicker">Leistungen</p>
+      <h2 class="h2" id="svcH">Was wir fertigen</h2>
+      <!-- "Kein Zulieferer in der Kette" stand hier. Seit dem Vorteil "Alles aus
+           einer Hand" (Partnernetzwerk fuer Blechteile, Abkantteile u. a.) waere
+           das ein Widerspruch. Der Satz bleibt bei dem, was im Haus passiert. -->
+      <p class="lead">Von der Konstruktion bis zur Messung im eigenen Haus. Einzelteil, Prototyp oder Kleinserie.</p>
       <!-- Saegen, Gleitschleifen und Strahlen standen hier frueher mit Massangabe.
            Beides ist im freigegebenen Faktenbestand nicht belegt und deshalb raus.
            Angaben vom Kunden nachfordern. -->
@@ -201,67 +205,125 @@
 
       <li class="svc__i rv">
         <div class="svc__top">
-          <img src="assets/img/leistung-drehen.jpg" width="1440" height="1080" loading="lazy" decoding="async"
+          <!-- style="pos": Ausschnitt im 16:9-Rahmen, so dass das Werkstueck
+               moeglichst ganz zu sehen ist (Ring oben vollstaendig) -->
+          <img src="assets/img/leistung-drehen.jpg" width="1440" height="1080" loading="lazy" decoding="async" style="--pos: 50% 25%"
                alt="CNC-Drehmaschine bei der Bearbeitung eines Rundteils">
-          <h3 class="svc__h">Drehen</h3>
         </div>
         <div class="svc__body">
+          <h3 class="svc__h">Drehen</h3>
           <!-- Die frueher genannte Drehlaenge von 800 mm steht nicht im freigegebenen
                Faktenbestand und ist deshalb raus. Angaben vom Kunden nachfordern. -->
-          <p class="svc__intro">Rundteile bis <span class="nb">Ø 250 mm</span>.</p>
+          <p class="svc__intro">Rundteile bis <span class="nb mass">Ø 250 mm</span>.</p>
           <!-- Fruehere Fassung nannte "CNC und konventionell" und den Maschinenstart am
                selben Tag. Beides steht nicht im freigegebenen Faktenbestand.
                Angaben vom Kunden nachfordern. -->
-          <p>Wir drehen Rundteile bis Ø 250 mm, auch in Stückzahl 1. Passung, Rundlauf und Oberfläche richten sich nach Ihrer Zeichnung, nicht nach dem schnellsten Weg. Das Rundmaterial liegt im eigenen Lager.</p>
+          <!-- Das Mass steht schon in der Zeile darueber, das eigene Lager bei den
+               Vorteilen ("Fuenf Leute, kurze Wege"). Hier nur, was das Drehen ausmacht. -->
+          <p>Wir drehen auch in Stückzahl 1. Passung, Rundlauf und Oberfläche richten sich nach Ihrer Zeichnung, nicht nach dem schnellsten Weg.</p>
         </div>
       </li>
 
       <li class="svc__i rv">
         <div class="svc__top">
           <img src="assets/img/leistung-fraesen.jpg" width="1440" height="1080" loading="lazy" decoding="async"
-               alt="Fräsbearbeitung im 5-Achs-Bearbeitungszentrum">
+               alt="Fräsbearbeitung im fünfachsigen Bearbeitungszentrum">
+        </div>
+        <div class="svc__body">
           <h3 class="svc__h">Fräsen</h3>
-        </div>
-        <div class="svc__body">
-          <p class="svc__intro">Bauraum bis <span class="nb">800 × 600 × 400 mm</span>.</p>
-          <p>Wir fräsen dreiachsig und fünfachsig simultan. Freiformflächen und Hinterschnitte entstehen in einer Aufspannung. Das hält die Toleranzkette kurz und die Genauigkeit dort, wo Ihre Zeichnung sie verlangt.</p>
+          <!-- "Arbeitsraum" statt "Bauraum" (Begriff aus dem 3D-Druck), gleich
+               wie im Zahlenband. Achsen ueberall als "drei- und fuenfachsig". -->
+          <p class="svc__intro">Arbeitsraum bis <span class="nb mass">800 × 600 × 400 mm</span>.</p>
+          <p>Wir fräsen drei- und fünfachsig simultan. Freiformflächen und Hinterschnitte entstehen in einer Aufspannung. Das hält die Toleranzkette kurz und die Genauigkeit dort, wo Ihre Zeichnung sie verlangt.</p>
         </div>
       </li>
 
-      <li class="svc__i svc__i--hi rv">
+      <!-- Laserschweissen: frueher die blaue Akzentkarte mit "Neu 2026". Der
+           Kunde moechte das ausdruecklich NICHT als neu hervorheben (Eindruck
+           von Unerfahrenheit). Deshalb eine normale Karte mit Foto der Anlage
+           und ohne Jahreszahl. -->
+      <li class="svc__i rv">
         <div class="svc__top">
-          <p class="svc__flag">Neu 2026</p>
-          <h3 class="svc__h">Laser-<br>schweißen</h3>
+          <img src="assets/img/leistung-laser.jpg" width="457" height="343" loading="lazy" decoding="async"
+               alt="Laserschweißanlage mit Mikroskop in der Fertigung">
         </div>
         <div class="svc__body">
-          <p class="svc__intro">Seit Anfang 2026 im Portfolio.</p>
-          <p>Wir verschweißen Gehäuseteile und tragen Material wieder auf. Ein ausgeschlagener Lagersitz wird so aufgebaut und danach im Haus auf Maß gebracht. Das Bauteil bleibt im Einsatz, statt ersetzt zu werden.</p>
+          <h3 class="svc__h">Laser&shy;schweißen</h3>
+          <!-- Die Karte beschreibt das Verfahren. Den Nutzen (Reparatur statt
+               Neuteil) traegt der Vorteil "Reparatur statt Schrottcontainer". -->
+          <p class="svc__intro">Fügen und Material auftragen.</p>
+          <!-- Die Nacharbeit nach dem Auftragen beschreibt der Vorteil "Reparatur
+               statt Schrottcontainer" (Kundentext); hier stand sie ein zweites Mal. -->
+          <p>Wir verschweißen Gehäuseteile und tragen Material gezielt wieder auf, etwa an einem ausgeschlagenen Lagersitz.</p>
+        </div>
+      </li>
+
+      <!-- Schleifen ist auf Kundenwunsch in zwei Karten geteilt. Die Fotos sind
+           Platzhalter und werden mit dem Kunden abgestimmt: Rundschleifen zeigt
+           rundgeschliffene Stifte, Flachschleifen vorerst das Materiallager.
+           Angaben vom Kunden nachfordern: passende Fotos, Schleiflaenge,
+           Durchmesser, Tischmass. -->
+      <li class="svc__i rv">
+        <div class="svc__top">
+          <img src="assets/img/mp-materiallager.jpg" width="1400" height="1400" loading="lazy" decoding="async"
+               alt="Rund- und Flachmaterial im eigenen Lager">
+        </div>
+        <div class="svc__body">
+          <h3 class="svc__h">Flach&shy;schleifen</h3>
+          <p class="svc__intro">Ebene Flächen, im eigenen Haus.</p>
+          <p>Wo Ebenheit und Parallelität über die Funktion entscheiden, schleifen wir nach der Zerspanung selbst nach. Kein Qualitätsbruch in der Kette, und Ihr Liefertermin hängt an keinem Fremdbetrieb.</p>
         </div>
       </li>
 
       <li class="svc__i rv">
         <div class="svc__top">
-          <img src="assets/img/leistung-schleifen.jpg" width="1040" height="780" loading="lazy" decoding="async"
-               alt="Flachschleifmaschine bei der Bearbeitung eines Werkstücks">
-          <h3 class="svc__h">Schleifen</h3>
+          <!-- Stifte oben und unten nur minimal angeschnitten statt drei Spitzen ab -->
+          <img src="assets/img/leistung-schleifen.jpg" width="1040" height="780" loading="lazy" decoding="async" style="--pos: 50% 24%"
+               alt="Rundgeschliffene Stifte aus eigener Fertigung">
         </div>
         <div class="svc__body">
-          <p class="svc__intro">Flach und rund, im eigenen Haus.</p>
-          <p>Wo Ebenheit und Rundlauf über die Funktion entscheiden, schleifen wir nach der Zerspanung selbst nach. Kein Zulieferer dazwischen, kein Qualitätsbruch in der Kette, Ihr Termin bleibt bei uns.</p>
+          <h3 class="svc__h">Rund&shy;schleifen</h3>
+          <!-- Pruefrunde 2: "im eigenen Haus" stand hier wie in der Nachbarkarte,
+               "Haus" dreimal in der Karte. Inhalt gleich, nur umgestellt. -->
+          <p class="svc__intro">Lagersitze, Wellen und Stifte.</p>
+          <p>Wir schleifen sie auf das Maß, das Ihre Passung verlangt. Gedreht und geschliffen wird unter einem Dach.</p>
+        </div>
+      </li>
+
+      <!-- Neu auf Kundenwunsch: eigene Karte "Messen" mit einem Foto des
+           Messraums. Inhalt belegt: 3D-Koordinatenmessmaschine, Messprotokoll
+           auf Wunsch, Chefkontrolle vor jeder Auslieferung. -->
+      <li class="svc__i rv">
+        <div class="svc__top">
+          <img src="assets/img/halle-messraum.jpg" width="1400" height="569" loading="lazy" decoding="async"
+               alt="Messraum der Paul Walczok GmbH mit Koordinatenmessmaschine">
+        </div>
+        <div class="svc__body">
+          <h3 class="svc__h">Messen</h3>
+          <!-- Messprotokoll nur einmal je Karte; der Nachbau nach Muster steht
+               bei Konstruktion und im ersten Vorteil. -->
+          <p class="svc__intro">Eigener Messraum, bildgeführte 3D-Messung.</p>
+          <p>Jedes Teil geht vor der Auslieferung auf die Koordinatenmessmaschine. Auf Wunsch liegt das Messprotokoll bei.</p>
         </div>
       </li>
 
       <li class="svc__i rv">
         <div class="svc__top">
-          <img src="assets/img/leistung-zugproben.jpg" width="864" height="1152" loading="lazy" decoding="async"
+          <!-- Das Original (leistung-zugproben.jpg) ist hochkant, im 16:9-Rahmen
+               blieben nur 42 % und drei von sieben Proben fehlten. Die Aufsicht
+               ist deshalb um 90 Grad gedreht abgelegt: alle sieben Proben
+               stehen vollstaendig nebeneinander. -->
+          <img src="assets/img/leistung-zugproben-quer.jpg" width="1152" height="864" loading="lazy" decoding="async" style="--pos: 50% 40%"
                alt="Gefertigte Zugproben nach DIN 50125">
-          <h3 class="svc__h">Zug-<br>proben</h3>
         </div>
         <div class="svc__body">
-          <p class="svc__intro">Prüfkörper nach <span class="nb">DIN 50125</span>.</p>
+          <h3 class="svc__h">Zug&shy;proben</h3>
+          <p class="svc__intro">Prüfkörper nach <span class="nb mass">DIN 50125</span>.</p>
           <!-- Der Satz "Pruefinstitute und Werkstofflabore beziehen ihre Proben bei uns"
                war eine Kundenaussage ohne Beleg und ist entfallen. -->
-          <p>Die Norm gibt die Geometrie vor, wir halten sie ein. Auf Wunsch liegt jeder Probe das Messprotokoll bei, damit Ihr Prüfergebnis auf einer sauberen Probe steht.</p>
+          <!-- Das Messprotokoll auf Wunsch steht in der Nachbarkarte "Messen" und
+               gilt fuer jedes Teil, auch fuer Proben. -->
+          <p>Die Norm gibt die Geometrie vor, wir halten sie ein, damit Ihr Prüfergebnis auf einer sauberen Probe steht.</p>
         </div>
       </li>
 
@@ -269,9 +331,9 @@
         <div class="svc__top">
           <img src="assets/img/leistung-cad.jpg" width="1200" height="887" loading="lazy" decoding="async"
                alt="CAD-Modell eines Bauteils am Bildschirm">
-          <h3 class="svc__h">Konstruk-<br>tion</h3>
         </div>
         <div class="svc__body">
+          <h3 class="svc__h">Konstruk&shy;tion</h3>
           <!-- "Reverse Engineering" stand hier frueher. Der Vorgang ist ueber den
                Lichtmaschinenhalter belegt, der englische Begriff faellt aber unter
                die Anglizismen-Regel und ist deshalb ausgeschrieben. -->
@@ -286,15 +348,18 @@
 </section>
 
 <!-- ═══════════════════════ 3 · VORTEILE ═══════════════════════
-     Geschaerft auf die drei Botschaften des Auftraggebers: Individualitaet,
-     Qualitaet im eigenen Haus und Naehe zum Kunden. Der vierte Punkt belegt
-     die Reaktionszeit mit dem Materiallager. -->
+     Acht Punkte in zwei Reihen. 01 bis 05 aus dem Kundenmeeting vom
+     10.09.2026, 06 bis 08 aus dem Kundenfeedback vom 29.09.2026. -->
 <section class="sec sec--adv" id="vorteile" aria-labelledby="advH">
   <div class="wrap">
 
     <div class="head rv">
-      <p class="kicker">02 — Vorteile</p>
-      <h2 class="h2" id="advH">Qualität vor Stückzahl<span class="dot">.</span></h2>
+      <!-- Kundenwunsch 29.09.2026: "02 — Vorteile" verwirrte, weil es in der
+           Navigation keinen Reiter "Vorteile" gibt. Das Etikett traegt deshalb
+           den Satz des Kunden. Ueberschrift ebenfalls nach seinem Vorschlag.
+           Nummern gibt es seit dem Optik-Check 29.09.2026 nirgends mehr. -->
+      <p class="kicker">Das schätzen unsere Kunden</p>
+      <h2 class="h2" id="advH">Qualität bei jeder Stückzahl</h2>
       <!-- Die Abgrenzung zum Lohnfertiger steht jetzt im Hero und im Zitat des
            Geschaeftsfuehrers. Hier stand sie ein drittes Mal fast wortgleich.
            Der Lead nennt deshalb nur noch, was diese Sektion beantwortet:
@@ -305,35 +370,33 @@
     <!-- Der Ersatzteil-Nachbau stand bisher nur als Nebensatz in Section 04.
          Im Kundengespraech war er das tragende Beispiel und steht deshalb hier
          an erster Stelle. Die vier bestehenden Punkte sind unveraendert und
-         ruecken auf 02 bis 05. Nichts entfernt. -->
-    <ol class="adv">
+         ruecken auf 02 bis 05. Nichts entfernt.
+         Ungeordnete Liste ohne Nummern: die Vorteile sind keine Reihenfolge. -->
+    <ul class="adv">
       <li class="adv__i rv">
         <span class="adv__rule" aria-hidden="true"></span>
-        <span class="idx">01</span>
         <h3>Das Teil, das es nicht mehr gibt</h3>
-        <p>Gibt es für eine Maschine keine Ersatzteile mehr, bauen wir sie nach. Vorlage kann ein Muster sein, eine alte Zeichnung oder das ausgebaute Teil selbst. Wir messen es auf, konstruieren es neu und fertigen es, damit die Maschine weiterläuft.</p>
+        <p>Gibt es ein Ersatzteil für Ihre Maschine nicht mehr, bauen wir es nach. Vorlage kann ein Muster sein, eine alte Zeichnung oder das ausgebaute Teil selbst. Wir messen es auf, konstruieren es neu und fertigen es, damit die Maschine weiterläuft.</p>
       </li>
       <li class="adv__i rv">
         <span class="adv__rule" aria-hidden="true"></span>
-        <span class="idx">02</span>
         <h3>Individuell statt Katalog</h3>
         <p>Braucht Ihr Teil eine andere Geometrie, eine engere Toleranz oder einen anderen Werkstoff, richten wir die Fertigung danach aus. Einzelstücke und Prototypen sind bei uns kein Sonderfall, sondern Tagesgeschäft.</p>
       </li>
       <li class="adv__i rv">
         <span class="adv__rule" aria-hidden="true"></span>
-        <span class="idx">03</span>
         <h3>Qualität, die wir selbst messen</h3>
-        <p>Vor der Auslieferung geht jedes Teil auf die bildgeführte 3D-Koordinatenmessmaschine und über den Tisch der Geschäftsführung. Auf Wunsch liegt das Messprotokoll der Lieferung bei.</p>
+        <!-- Frueher fast wortgleich mit der Karte "Messen". Hier jetzt der Nutzen,
+             die Maschine und das Protokoll stehen bei der Karte. -->
+        <p>Gemessen wird im eigenen Messraum, bevor ein Teil zu Ihnen geht. Ob es der Zeichnung entspricht, prüfen wir selbst und nicht erst Ihr Wareneingang.</p>
       </li>
       <li class="adv__i rv">
         <span class="adv__rule" aria-hidden="true"></span>
-        <span class="idx">04</span>
         <h3>Wir bleiben dran, bis es passt</h3>
         <p>Ein Teil, das nicht funktioniert, verlässt unser Haus nicht. Passt etwas nicht, klären wir es mit Ihnen und ändern Konstruktion oder Fertigung, bis das Ergebnis stimmt. Auch nach der Lieferung bleiben wir Ihr Ansprechpartner.</p>
       </li>
       <li class="adv__i rv">
         <span class="adv__rule" aria-hidden="true"></span>
-        <span class="idx">05</span>
         <h3>Fünf Leute, kurze Wege</h3>
         <p>Ihre Rückfrage landet direkt bei dem, der Ihr Teil fertigt. Rundmaterial und Zuschnitte liegen im eigenen Lager, ein Eilauftrag kann damit sofort auf die Maschine.</p>
         <!-- Angaben vom Kunden nachfordern: welche Werkstoffe liegen im Lager?
@@ -341,12 +404,297 @@
              Die Referenzseite fuehrt "Service vor Ort" als dritten Vorteil,
              bei uns ist das bislang nirgends belegt. -->
       </li>
-    </ol>
+      <!-- 06 bis 08: Texte vom Kunden (Hinweise Homepage, 29.09.2026), nur
+           sprachlich geglaettet. Mit acht Punkten fuellen sie zwei volle
+           Reihen zu je vier. -->
+      <li class="adv__i rv">
+        <span class="adv__rule" aria-hidden="true"></span>
+        <h3>Reparatur statt Schrottcontainer</h3>
+        <p>Mit unserer Laserschweißanlage tragen wir verschlissene Bereiche verzugsfrei auf. Anschließend arbeiten wir die Teile nach. Ergebnis: Die Passung ist wieder maßhaltig.</p>
+      </li>
+      <li class="adv__i rv">
+        <span class="adv__rule" aria-hidden="true"></span>
+        <h3>Erfahrung</h3>
+        <ul class="adv__facts">
+          <li><b>Über 40 Jahre</b> spanende Fertigung</li>
+          <li><b>Über 15 Jahre</b> Entwicklung und Konstruktion</li>
+        </ul>
+      </li>
+      <li class="adv__i rv">
+        <span class="adv__rule" aria-hidden="true"></span>
+        <h3>Alles aus einer Hand</h3>
+        <p>Mit unserem breiten Partnernetzwerk bearbeiten wir Ihre Anfrage komplett. Gelaserte Blechteile, Abkantteile, Schweißbaugruppen und vieles mehr bieten wir mit an. Sie haben nur einen Ansprechpartner und sparen viel Zeit.</p>
+      </li>
+    </ul>
 
   </div>
 </section>
 
-<!-- ═══════════════════════ 4 · BRANCHEN ═══════════════════════
+<!-- ═══════════════════════ 4 · UNTERNEHMEN ═══════════════════════
+     Kundenwunsch 29.09.2026: Platz fuers Team, Chronik und Leitsatz.
+     Aufbau: links das Teamfoto, rechts Ueberschrift, Leitsatz, Zitat des
+     Geschaeftsfuehrers und die Chronik. Darunter der Blick in die Halle.
+
+     Das Zitat ist ein ENTWURF in seinem Namen und muss vor Veroeffentlichung
+     von Georg Fleischmann freigegeben oder ersetzt werden. Der Leitsatz ist
+     der Claim aus der Fusszeile (Wortlaut der alten Webseite).
+     Angaben vom Kunden nachfordern: Gruppenfoto aller fuenf Mitarbeiter (das
+     jetzige Bild zeigt einen Mitarbeiter und steht bis dahin als Platzhalter),
+     Portraet des Geschaeftsfuehrers, weitere Jahreszahlen fuer die Chronik. -->
+<section class="sec sec--ceo" id="unternehmen" aria-labelledby="ceoH">
+  <div class="wrap ceo">
+
+    <!-- Bildunterschriften stehen seit dem Optik-Check 29.09.2026 unter dem
+         Bild. Der Rahmen (.frame) fasst deshalb nur noch das Bild, die figure
+         darum herum traegt Bild und Unterschrift. -->
+    <figure class="ceo__img rv">
+      <div class="frame">
+        <img src="assets/img/team-mitarbeiter.jpg" width="1080" height="1440" loading="lazy" decoding="async"
+             alt="Mitarbeiter der Paul Walczok GmbH am Eingang des Betriebs in Essenbach">
+      </div>
+      <figcaption>Unser Team in Essenbach</figcaption>
+    </figure>
+
+    <div class="ceo__txt">
+      <div class="head rv">
+        <p class="kicker">Unternehmen</p>
+        <h2 class="h2" id="ceoH">Qualität ist bei uns Chefsache</h2>
+      </div>
+
+      <div class="ceo__motto rv">
+        <p class="ceo__label">Unser Leitsatz</p>
+        <p class="ceo__mottoT">Präzision ist unsere Leidenschaft. Unser Ansporn ist es, jeden Tag aufs Neue das beste Teil zu fertigen.</p>
+      </div>
+
+      <blockquote class="ceo__quote rv">
+        <!-- Das oeffnende Zeichen haengt links vor dem Block (.ceo__qm), der
+             erste Satz steht hell (.ceo__qLead), der Rest grau. -->
+        <p><span class="ceo__qLead"><span class="ceo__qm">„</span>Jedes Teil, das unser Haus verlässt, geht vorher über meinen Tisch.</span> Nicht aus Misstrauen gegenüber meinen Leuten, sondern weil ich dem Kunden gegenüber dafür geradestehe. Wir sind mehr als ein Lohnfertiger für die schnelle Serie. Wenn eine Anforderung vom Standard abweicht, ist das für uns kein Hindernis, sondern der Grund, warum man zu uns kommt.“</p>
+        <!-- Der fruehere Schlusssatz "Und wir bleiben dran, bis das Teil passt."
+             wiederholte den Vorteil "Wir bleiben dran, bis es passt". -->
+        <footer>
+          <b>Georg Fleischmann</b>
+          <span>Geschäftsführer, führt den Betrieb seit&nbsp;2023</span>
+        </footer>
+      </blockquote>
+
+      <h3 class="ceo__label ceo__label--facts rv">Chronik</h3>
+      <ol class="ceo__facts">
+        <li class="rv">
+          <span class="ceo__year">1984</span>
+          <p>Paul Walczok gründet den Betrieb in Essenbach. Sein Name steht bis heute für das Haus und seinen Anspruch.</p>
+        </li>
+        <li class="rv">
+          <span class="ceo__year">2023</span>
+          <p>Georg Fleischmann übernimmt die Geschäftsführung und führt den Betrieb mit fünf hochqualifizierten Mitarbeitern weiter.</p>
+        </li>
+        <li class="rv">
+          <span class="ceo__year">2026</span>
+          <p>Investition in eine Laserschweißanlage: fügen, reparieren, Material auftragen, alles im eigenen Haus.</p>
+        </li>
+      </ol>
+    </div>
+
+  </div>
+
+  <!-- Blick in die Halle. Kundenhinweis 29.09.2026: hier standen Fotos von
+       Schweisstisch und Schraubstock, die passten nicht zur Ueberschrift.
+       Jetzt echte Hallenaufnahmen aus dem Bestand. Die Aufnahmen sind quer,
+       deshalb traegt der Lauf die Variante own__gal--quer (4:3 statt 5:7).
+       Markup und Steuerung ueber [data-gal] sonst unveraendert; js/main.js
+       bindet genau ein [data-gal] im Dokument.
+       Das Motiv "Maschinenpark" (mp-halle.jpg) ist entfallen, ebenso seit
+       Pruefrunde 2 "Fertigungshalle" (cta-bg.jpg): beide zeigen dieselbe Szene
+       wie der Hintergrund der Zahlen direkt darunter. Ein Ersatzmotiv ist
+       Bildauswahl und wird mit dem Kunden abgestimmt. Solange nur drei Bilder
+       da sind, passen sie ab 981 px ohne Lauf nebeneinander; die Pfeile
+       blendet main.js dann aus. -->
+  <div class="own__gal own__gal--quer rv" data-gal>
+    <div class="wrap own__galHead">
+      <h3 class="own__galH">Ein Blick in unsere Halle</h3>
+      <div class="own__galNav">
+        <button class="galbtn" type="button" data-gal-prev aria-label="Vorheriges Bild">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5 8 12l7 7"/></svg>
+        </button>
+        <button class="galbtn" type="button" data-gal-next aria-label="Nächstes Bild">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 5 7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+    <ul class="own__track" data-gal-track tabindex="0" aria-label="Aufnahmen aus unserer Halle">
+      <li class="own__shot">
+        <figure>
+          <div class="frame">
+            <img src="assets/img/halle-dreherei.jpg" width="1400" height="570" loading="lazy" decoding="async"
+                 alt="Dreherei mit CNC-Drehmaschinen">
+          </div>
+          <figcaption>Dreherei</figcaption>
+        </figure>
+      </li>
+      <li class="own__shot">
+        <figure>
+          <div class="frame">
+            <img src="assets/img/halle-fraeserei.jpg" width="1400" height="569" loading="lazy" decoding="async"
+                 alt="Fräserei mit Bearbeitungszentren">
+          </div>
+          <figcaption>Fräserei</figcaption>
+        </figure>
+      </li>
+      <li class="own__shot">
+        <figure>
+          <div class="frame">
+            <img src="assets/img/mp-voreinstellung.jpg" width="1400" height="1400" loading="lazy" decoding="async"
+                 alt="Mitarbeiter am Werkzeugvoreinstellgerät">
+          </div>
+          <figcaption>Werkzeugvoreinstellung</figcaption>
+        </figure>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════════════════════ 5 · ZAHLEN ═══════════════════════ -->
+<!-- Hier gehoeren Kundenstimmen hin, sobald der Kunde drei bis vier O-Toene
+     geliefert hat, ebenso die Zertifikate. Angaben vom Kunden nachfordern. -->
+<section class="stats" aria-label="Zahlen und Kapazitäten">
+  <div class="stats__bg" aria-hidden="true">
+    <img src="assets/img/mp-halle.jpg" width="1440" height="960" loading="lazy" decoding="async" alt="">
+  </div>
+  <div class="wrap stats__in">
+    <!-- Keine Zahl wird hochgezaehlt: waehrend des Zaehlens stuenden sonst
+         plausible, aber falsche Angaben auf dem Bildschirm. Alle Werte stehen
+         fertig im HTML. Die Einheit steht im Label. -->
+    <dl class="stats__grid">
+      <div class="stat rv">
+        <dt>Gegründet</dt>
+        <dd><span class="num">1984</span></dd>
+      </div>
+      <div class="stat rv">
+        <dt>Mitarbeiter</dt>
+        <dd><span class="num">5</span></dd>
+      </div>
+      <div class="stat rv">
+        <dt>Drehdurchmesser in mm</dt>
+        <dd><span class="num">Ø 250</span></dd>
+      </div>
+      <div class="stat rv">
+        <dt>Arbeitsraum Fräsen in mm</dt>
+        <dd><span class="num">800 × 600 × 400</span></dd>
+      </div>
+    </dl>
+  </div>
+</section>
+
+<!-- ═══════════════════════ 6 · REFERENZEN ═══════════════════════ -->
+<section class="sec sec--ref" id="referenzen" aria-labelledby="refH">
+  <div class="wrap">
+
+    <div class="head head--split rv">
+      <p class="kicker">Referenzen</p>
+      <h2 class="h2" id="refH">Aus unserer Fertigung</h2>
+      <p class="lead">Bauteile für Automobil, Luft- und Raumfahrt, Medizintechnik, Maschinenbau und Motorsport. Jedes davon nach Zeichnung oder Muster gefertigt, gemessen und freigegeben. Kundennamen nennen wir nicht.</p>
+    </div>
+
+    <!-- Der Lichtmaschinenhalter ist die belegte Individualitaets-Geschichte aus
+         der Firmenpraesentation und steht deshalb vor dem Raster.
+         Kundenhinweis 29.09.2026: Die Teile sollen komplett zu sehen sein. Die
+         Bilder stehen deshalb im eigenen Seitenverhaeltnis (kein Zuschnitt) und
+         die Unterschrift liegt unter statt auf dem Bild. Die Quellfotos selbst
+         schneiden die Teile an; Angaben vom Kunden nachfordern: vollstaendige
+         Aufnahmen von Dummy und fertigem Halter. -->
+    <article class="refx refx--ganz rv">
+      <div class="refx__imgs">
+        <figure>
+          <div class="frame">
+            <img src="assets/img/ref-lima-vorher.jpg" width="644" height="859" loading="lazy" decoding="async"
+                 alt="Geschweißter Funktionsdummy des Lichtmaschinenhalters, wie ihn der Kunde beistellte">
+          </div>
+          <figcaption>Beigestellter Dummy</figcaption>
+        </figure>
+        <figure>
+          <div class="frame">
+            <img src="assets/img/ref-lima-nachher.jpg" width="644" height="644" loading="lazy" decoding="async"
+                 alt="Gefräster Lichtmaschinenhalter aus eigener Fertigung">
+          </div>
+          <figcaption>Gefertigter Halter</figcaption>
+        </figure>
+      </div>
+      <div class="refx__txt">
+        <p class="kicker">Lichtmaschinenhalter</p>
+        <h3>Aus einem geschweißten Dummy wurde ein gefrästes Teil</h3>
+        <p>Der Kunde stellte einen geschweißten Funktionsdummy bei, mehr nicht. Wir haben ihn auf der <span class="nb">3D-Koordinaten</span>&shy;messmaschine vermessen, Form und Gewicht optimiert und den Halter anschließend aus dem Vollen gefertigt. So sieht individuelle Fertigung bei uns aus.</p>
+      </div>
+    </article>
+
+    <!-- Kundenhinweis "Teile komplett zeigen": Titan und Baugruppe sind im
+         Original quer. Als -q.jpg liegen quadratische Kopien, oben und unten
+         aus dem eigenen Fotogrund erweitert (Baugruppe seitlich etwas
+         beschnitten, Teile vollstaendig). So fuellen sie die Kachel randlos wie
+         die uebrigen vier. Besser waeren quadratische Aufnahmen mit Rand;
+         beim Fototermin abstimmen. -->
+    <ul class="ref">
+      <li class="ref__i rv">
+        <figure>
+          <div class="frame">
+            <img src="assets/img/ref-bremstopf.jpg" width="420" height="420" loading="lazy" decoding="async"
+                 alt="Gefräster Bremsscheibentopf aus Aluminium">
+          </div>
+          <figcaption>Bremsscheibentopf</figcaption>
+        </figure>
+      </li>
+      <li class="ref__i rv">
+        <figure>
+          <div class="frame">
+            <img src="assets/img/ref-titan-q.jpg" width="1028" height="1028" loading="lazy" decoding="async"
+                 alt="Gabelköpfe mit Gewindeschaft aus Titan Grade 5">
+          </div>
+          <figcaption>Titan Grade 5</figcaption>
+        </figure>
+      </li>
+      <li class="ref__i rv">
+        <figure>
+          <div class="frame">
+            <img src="assets/img/ref-riemenscheibe.jpg" width="571" height="571" loading="lazy" decoding="async"
+                 alt="Zweiteiliges Riemenrad mit Rillenprofil und verzahnter Nabe">
+          </div>
+          <figcaption>Zweiteiliges Riemenrad</figcaption>
+        </figure>
+      </li>
+      <li class="ref__i rv">
+        <figure>
+          <div class="frame">
+            <img src="assets/img/ref-baugruppe-q.jpg" width="1200" height="1200" loading="lazy" decoding="async"
+                 alt="Komplettbaugruppe mit gefrästen Taschen auf dem Maschinentisch">
+          </div>
+          <figcaption>Komplettbaugruppe</figcaption>
+        </figure>
+      </li>
+      <li class="ref__i rv">
+        <figure>
+          <div class="frame">
+            <!-- Frueher ref-motorsport.jpg: das war derselbe Lichtmaschinenhalter
+                 wie oben. Jetzt echte Motorsportteile. -->
+            <img src="assets/img/ref-motorsport-2.jpg" width="1200" height="1200" loading="lazy" decoding="async"
+                 alt="Gedrehte Motorsport-Bauteile mit eingesetzten Lagern">
+          </div>
+          <figcaption>Motorsporttechnik</figcaption>
+        </figure>
+      </li>
+      <li class="ref__i rv">
+        <figure>
+          <div class="frame">
+            <img src="assets/img/ref-zahnrad.jpg" width="1080" height="1080" loading="lazy" decoding="async"
+                 alt="Außenverzahntes Zahnrad mit großer Mittelbohrung">
+          </div>
+          <figcaption>Zahnrad</figcaption>
+        </figure>
+      </li>
+    </ul>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════ 7 · BRANCHEN ═══════════════════════
      3D-Zylinder: 14 Ringplaetze, nur sechs sind belegt. Der Ring dreht beim
      Scrollen von -102 auf -25 Grad. Die Ringplaetze und die Transforms setzt
      erst js/main.js — ohne GSAP und unter 768 px bleibt es ein Raster. -->
@@ -355,9 +703,8 @@
 <section class="sec sec--ind" id="branchen" aria-labelledby="indH">
   <div class="wrap">
     <div class="head rv">
-      <p class="kicker">03 — Branchen</p>
-      <!-- Reihenfolge und Nummerierung neu, der Zylinder selbst bleibt unangetastet. -->
-      <h2 class="h2" id="indH">Zuhause in anspruchsvollen Branchen<span class="dot">.</span></h2>
+      <p class="kicker">Branchen</p>
+      <h2 class="h2" id="indH">Zuhause in anspruchsvollen Branchen</h2>
       <!-- "Toleranzen sind keine Empfehlung" war eine Behauptung ohne Information.
            Ersetzt durch das, was die Sektion zeigt: die sechs Branchen. -->
       <p class="lead">Unsere Teile arbeiten in diesen sechs Branchen.</p>
@@ -377,13 +724,13 @@
           <img class="cyl__img" src="assets/img/branche-motorsport.jpg" width="1200" height="1200"
                loading="lazy" decoding="async" alt="Rennwagen in einer Box der Boxengasse">
           <span class="cyl__veil" aria-hidden="true"></span>
-          <span class="cyl__cap">Motor- &amp; Rennsport</span>
+          <span class="cyl__cap">Motor- und Rennsport</span>
         </li>
         <li class="cyl__c">
           <img class="cyl__img" src="assets/img/branche-luftfahrt.jpg" width="1200" height="1200"
                loading="lazy" decoding="async" alt="Verkehrsflugzeug in einer Wartungshalle">
           <span class="cyl__veil" aria-hidden="true"></span>
-          <span class="cyl__cap">Luft- &amp; Raumfahrt</span>
+          <span class="cyl__cap">Luft- und Raumfahrt</span>
         </li>
         <li class="cyl__c">
           <img class="cyl__img" src="assets/img/branche-maschinenbau.jpg" width="1200" height="1200"
@@ -408,10 +755,212 @@
   </div>
 </section>
 
-<!-- ═══════════════════════ 5 · EIGENENTWICKLUNGEN ═══════════════════════
-     Aufbau nach der teccad-Seite "3D-Druck": Kopf mit Produktbild, Erklaerblock,
-     Kartenreihe mit Pfeillisten, horizontaler Bilderlauf, zwei Spalten mit Icon,
-     schmales Abschlussband.
+<!-- ═══════════════════════ 8 · KARRIERE ═══════════════════════
+     Laut Checkliste gewuenscht: Stellen fuer Dreher und Fraeser fest hinterlegt,
+     aber vom Kunden selbst ein- und ausblendbar. Dazu die Vorteile: keine
+     Schichtarbeit, moderne Raeume, kurze Entscheidungswege, attraktives Gehalt
+     und Arbeitszeiten, Firmenevents.
+
+     STELLE AUSBLENDEN: dem jeweiligen <li class="job"> das Attribut `hidden`
+     geben, z. B. <li class="job" id="jobFraeser" hidden>. Zum Einblenden das
+     Attribut wieder entfernen. Sind alle Stellen ausgeblendet, zeigt die Seite
+     automatisch den Hinweis "Aktuell keine Stelle ausgeschrieben" und die
+     Initiativbewerbung bleibt stehen. -->
+<section class="sec sec--car" id="karriere" aria-labelledby="carH">
+  <div class="wrap">
+
+    <div class="head head--split rv">
+      <p class="kicker">Karriere</p>
+      <h2 class="h2" id="carH">Präzision braucht Leute, die sie ernst nehmen</h2>
+      <p class="lead">Fünf Leute, moderne Maschinen, kein Schichtbetrieb. Wer bei uns anfängt, fertigt Einzelteile und Prototypen und trägt die Verantwortung für das eigene Teil.</p>
+    </div>
+
+    <div class="car">
+
+      <div class="car__l">
+        <figure class="car__img rv">
+          <div class="frame">
+            <img src="assets/img/mp-fraeszentrum.jpg" width="1400" height="1400" loading="lazy" decoding="async"
+                 alt="Mitarbeiter rüstet ein Bearbeitungszentrum in der Fertigung in Essenbach">
+          </div>
+          <!-- Die Schicht-Aussage steht schon im Lead und im ersten Vorteil darunter. -->
+          <figcaption>Rüsten am Bearbeitungszentrum</figcaption>
+        </figure>
+
+        <ul class="car__ben">
+          <li class="rv">
+            <h3>Keine Schichtarbeit</h3>
+            <p>Gearbeitet wird tagsüber. Feierabend ist montags bis donnerstags um 16.15&nbsp;Uhr, freitags um 12.00&nbsp;Uhr.</p>
+          </li>
+          <li class="rv">
+            <h3>Moderne Räume und Maschinen</h3>
+            <p>Fünfachsiges Bearbeitungszentrum, <span class="nb">CNC-Drehmaschinen</span>, Laserschweißanlage und ein eigener Messraum.</p>
+          </li>
+          <li class="rv">
+            <h3>Kurze Entscheidungswege</h3>
+            <p>Eine Idee muss durch keine Abteilung. Sie sprechen direkt mit der Geschäftsführung.</p>
+          </li>
+          <li class="rv">
+            <h3>Attraktives Gehalt, gute Arbeitszeiten</h3>
+            <p>Leistung wird bezahlt, und der Feierabend gehört Ihnen.</p>
+          </li>
+          <li class="rv">
+            <h3>Firmenevents</h3>
+            <p>Im kleinen Team ist Zusammenhalt kein Schlagwort. Wir feiern auch gemeinsam.</p>
+          </li>
+          <li class="rv">
+            <h3>Abwechslung statt Serie</h3>
+            <p>Einzelteile, Prototypen, Kleinserien. Kaum ein Tag gleicht dem anderen.</p>
+          </li>
+        </ul>
+      </div>
+
+      <div class="car__r">
+        <h3 class="car__jobsH rv">Offene Stellen</h3>
+
+        <ul class="jobs" id="jobs">
+          <li class="job rv" id="jobDreher">
+            <p class="job__meta">Vollzeit · Essenbach</p>
+            <h4>CNC-Dreher (m/w/d)</h4>
+            <p>Sie richten ein, programmieren an der Steuerung und drehen Einzelteile, Prototypen und Kleinserien bis <span class="nb">Ø 250 mm</span>.</p>
+            <ul class="arrow">
+              <li>Abgeschlossene Ausbildung als Zerspanungsmechaniker oder vergleichbar</li>
+              <li>Erfahrung im Rüsten und Programmieren an der Steuerung</li>
+              <li>Sorgfalt, Eigenverantwortung und Freude an wechselnden Teilen</li>
+            </ul>
+            <a class="btn btn--solid" href="mailto:info@walczok-gmbh.de?subject=Bewerbung%20CNC-Dreher%20(m%2Fw%2Fd)">Jetzt bewerben</a>
+          </li>
+          <li class="job rv" id="jobFraeser">
+            <p class="job__meta">Vollzeit · Essenbach</p>
+            <h4>CNC-Fräser (m/w/d)</h4>
+            <p>Sie fräsen drei- und fünfachsig simultan bis <span class="nb">800 × 600 × 400 mm</span>, vom Einzelteil bis zur Kleinserie.</p>
+            <ul class="arrow">
+              <li>Abgeschlossene Ausbildung als Zerspanungsmechaniker oder vergleichbar</li>
+              <li>Erfahrung im dreiachsigen, idealerweise auch im fünfachsigen Fräsen</li>
+              <li>Sicherer Umgang mit Zeichnung und Messmitteln, CAM von Vorteil</li>
+            </ul>
+            <a class="btn btn--solid" href="mailto:info@walczok-gmbh.de?subject=Bewerbung%20CNC-Fr%C3%A4ser%20(m%2Fw%2Fd)">Jetzt bewerben</a>
+          </li>
+        </ul>
+
+        <p class="jobs__none" id="jobsNone" hidden>Aktuell ist keine Stelle ausgeschrieben. Eine Initiativbewerbung ist jederzeit willkommen.</p>
+
+        <div class="job job--init rv">
+          <p class="job__meta">Jederzeit willkommen</p>
+          <h4>Initiativbewerbung</h4>
+          <p>Keine passende Stelle dabei? Bei uns zählt der Mensch mehr als die Ausschreibung. Schreiben Sie uns, was Sie können.</p>
+          <a class="btn btn--ghost" href="mailto:info@walczok-gmbh.de?subject=Initiativbewerbung">Bewerbung senden</a>
+        </div>
+
+        <!-- "direkt mit der Geschaeftsfuehrung" steht schon bei den Vorteilen -->
+        <p class="car__call">Fragen zu den Stellen? Rufen Sie an: <a href="tel:+49870393310">08703 9331-0</a></p>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════ 9 · KONTAKT ═══════════════════════ -->
+<section class="sec sec--con" id="kontakt" aria-labelledby="conH">
+  <div class="wrap con">
+
+    <div class="head head--split con__head rv">
+      <p class="kicker">Kontakt</p>
+      <h2 class="h2" id="conH">Schicken Sie uns Ihre Zeichnung</h2>
+      <!-- Von drei auf zwei Saetze gekuerzt. "Belastbare Aussage" und "zuegig"
+           waren Fuellwoerter; was wir pruefen, sagt der zweite Satz konkreter. -->
+      <p class="lead">Für eine erste Einschätzung genügt eine Zeichnung, ein Muster oder ein <span class="nb">CAD-Datensatz</span>. Sie haben nur das Problem und noch keine Lösung? Beschreiben Sie es uns, wir prüfen die Machbarkeit.</p>
+    </div>
+
+    <!-- Formular steht im HTML vor den Kontaktdaten: so fuehrt die
+         Tab-Reihenfolge nach dem Sprung zu #kontakt direkt ins Formular
+         (WCAG 2.4.3). Die Plaetze im Zweispalter vergibt css/styles.css. -->
+    <!-- Versand ueber Netlify Forms (die Seite laeuft auf Netlify). Netlify
+         erkennt das Formular beim Deploy an data-netlify und legt es unter dem
+         Namen "kontakt" an. Mit JavaScript geht die Anfrage per fetch raus; die
+         Erfolgsmeldung erscheint erst, wenn Netlify den Empfang bestaetigt, sonst
+         eine Fehlermeldung mit Telefon und E-Mail. Ohne JavaScript schickt der
+         Browser das Formular normal per POST, danach zeigt Netlify danke.html.
+         bot-field ist die Honigtopf-Falle gegen Spam: Menschen sehen es nicht.
+         novalidate setzt erst main.js; ohne Skript prueft der Browser selbst. -->
+    <form class="form rv" id="form" name="kontakt" method="POST" action="/danke.html" data-netlify="true" netlify-honeypot="bot-field">
+      <input type="hidden" name="form-name" value="kontakt">
+      <p class="hp" aria-hidden="true">
+        <label>Dieses Feld bitte leer lassen: <input name="bot-field" tabindex="-1" autocomplete="off"></label>
+      </p>
+      <p class="form__req"><span aria-hidden="true">*</span> Pflichtfeld</p>
+      <div class="f">
+        <label for="fName">Name <span aria-hidden="true">*</span></label>
+        <input id="fName" name="name" type="text" autocomplete="name" required>
+        <p class="f__err" id="fNameErr" hidden></p>
+      </div>
+      <div class="f">
+        <label for="fFirma">Firma</label>
+        <input id="fFirma" name="firma" type="text" autocomplete="organization">
+      </div>
+      <div class="f">
+        <label for="fMail">E-Mail <span aria-hidden="true">*</span></label>
+        <input id="fMail" name="email" type="email" autocomplete="email" required>
+        <p class="f__err" id="fMailErr" hidden></p>
+      </div>
+      <div class="f">
+        <label for="fTel">Telefon</label>
+        <input id="fTel" name="telefon" type="tel" autocomplete="tel">
+      </div>
+      <div class="f f--full">
+        <label for="fMsg">Nachricht <span aria-hidden="true">*</span></label>
+        <textarea id="fMsg" name="nachricht" rows="5" required></textarea>
+        <p class="f__err" id="fMsgErr" hidden></p>
+      </div>
+      <div class="f f--full f--check">
+        <input id="fDsg" name="datenschutz" type="checkbox" value="gelesen" required>
+        <!-- Neuer Tab: sonst gehen die schon getippten Angaben verloren -->
+        <label for="fDsg">Ich habe die <a href="datenschutz.html" target="_blank" rel="noopener">Datenschutzerklärung</a> gelesen und stimme der Verarbeitung meiner Daten zu. <span aria-hidden="true">*</span></label>
+        <p class="f__err" id="fDsgErr" hidden></p>
+      </div>
+      <div class="f f--full form__foot">
+        <button class="btn btn--solid btn--lg" type="submit">Anfrage absenden</button>
+        <p class="form__hint">Zeichnungen bitte per E-Mail an <a href="mailto:info@walczok-gmbh.de">info@walczok-gmbh.de</a></p>
+      </div>
+      <p class="form__note" id="formNote" role="status" aria-live="polite" tabindex="-1"></p>
+    </form>
+
+    <div class="con__l">
+      <figure class="frame con__img">
+        <img src="assets/img/mp-messtechnik.jpg" width="1400" height="1400" loading="lazy" decoding="async"
+             alt="Messtechnik im Messraum der Paul Walczok GmbH">
+      </figure>
+
+      <div class="con__meta rv">
+        <div>
+          <h3>Direktkontakt</h3>
+          <!-- Rufnummern in der Schreibweise nach DIN 5008, ueberall gleich -->
+          <ul>
+            <li>Telefon <a href="tel:+49870393310">08703 9331-0</a></li>
+            <li>Fax <span class="nb">08703 9331-90</span></li>
+            <li><a href="mailto:info@walczok-gmbh.de">info@walczok-gmbh.de</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Adresse</h3>
+          <address>Ahrainer Str. 12, <span class="nb">84051 Essenbach</span></address>
+          <h3>Geschäftszeiten</h3>
+          <!-- Zwei Zeilen wie in der Fusszeile: sonst stand "Freitag" am
+               Zeilenende und seine Uhrzeit allein darunter -->
+          <p>Montag bis Donnerstag <span class="nb">7.00 bis 16.15 Uhr</span><br>Freitag <span class="nb">7.00 bis 12.00 Uhr</span></p>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+</section>
+
+<!-- ═══════════════════════ 10 · EIGENENTWICKLUNGEN ═══════════════════════
+     Seit dem Kundenfeedback vom 29.09.2026: kurzer Kopf, die beiden Produkte
+     je mit Foto, Kartenreihe mit Pfeillisten, schmales Abschlussband. Steht
+     auf Kundenwunsch als letzter Abschnitt hinter dem Kontakt.
 
      Gezeigt werden nur die beiden Geraete, die es wirklich gibt. Der in der
      Kundencheckliste genannte Transportwagen fuer Gasflaschen existiert noch
@@ -422,83 +971,27 @@
      wo eine technische Angabe stehen muesste, steht ein Kommentar. -->
 <section class="sec sec--own" id="eigenentwicklungen" aria-labelledby="ownH">
 
-  <!-- 1 · Kopf -->
-  <div class="wrap own__head rv">
-    <div class="own__headText">
-      <p class="kicker">04 — Eigenentwicklungen</p>
-      <!-- Das Leerzeichen vor dem Umbruch muss stehenbleiben: unter 760 px wird
-           das <br> ausgeblendet, ohne Leerzeichen klebten die Woerter zusammen. -->
-      <h2 class="h2" id="ownH">Zwei Geräte aus <br>eigener Werkstatt<span class="dot">.</span></h2>
-      <!-- Zweite tragende Stelle fuer die Positionierung. Der Ersatzteil-Nachbau
-           kam im Kundengespraech als konkretes Beispiel und stand bisher nirgends
-           auf der Seite. Er passt hier, weil der Abschnitt ohnehin davon handelt,
-           dass wir bauen, was es nicht zu kaufen gibt. Der Vorgang selbst ist
-           ueber den Lichtmaschinenhalter in Section 05 belegt. -->
-      <!-- Der Ersatzteil-Nachbau steht seit dem Feinschliff als eigener Punkt 01
-           im Vorteilsblock 02 und ist hier wieder herausgenommen, damit die
-           Aussage nicht zweimal fast wortgleich auf der Seite steht.
-           Der Lead bleibt bei seinem eigenen Gegenstand: den zwei Geraeten. -->
-      <p class="lead">Ein höhenverstellbarer Schweißtisch und ein Laborschraubstock stehen bei uns in der Halle. Beide haben wir selbst konstruiert, gefertigt und zusammengebaut, weil es sie so nicht zu kaufen gab. Was wir für uns selbst bauen, bauen wir auch für Sie.</p>
-      <p class="own__act"><a class="btn btn--solid" href="#kontakt">Eigenes Bauteil anfragen</a></p>
-    </div>
-    <figure class="frame own__headImg">
-      <img src="assets/img/eigen-tisch-1.jpg" width="900" height="1200" loading="lazy" decoding="async"
-           alt="Höhenverstellbarer Schweißtisch aus eigener Fertigung, schräg von vorn">
-    </figure>
-  </div>
-
-  <!-- 2 · Kartenreihe mit Pfeillisten
-       Der fruehere Erklaerblock stand hier und sagte in einem Absatz dasselbe,
-       was die drei Karten darunter als Listen zeigen. Seine Ueberschrift ist
-       geblieben und fuehrt jetzt die Kartenreihe an, der Absatz und das zweite
-       Produktbild sind entfallen. -->
+  <!-- 1 · Kopf. Kundenhinweis 29.09.2026: Der fruehere Kopf mit Lead,
+       Knopf und grossem Foto des Schweisstisches "kann raus". Stehen bleiben
+       Kicker und Ueberschrift, damit der Abschnitt einen Namen hat und der
+       Menuepunkt ein Ziel. Die Produkte darunter tragen jetzt je ein Foto. -->
   <div class="wrap">
-    <h3 class="own__whyH rv">Was wir für uns selbst <br>bauen, bauen wir auch für Sie.</h3>
-    <ul class="own__steps">
-      <li class="own__step rv">
-        <h3>Konstruktion</h3>
-        <ul class="arrow">
-          <li>Anforderung aufnehmen</li>
-          <li>3D-Modell im CAD</li>
-          <li>Zeichnung ableiten</li>
-          <li>Machbarkeit prüfen</li>
-        </ul>
-      </li>
-      <li class="own__step own__step--hi rv">
-        <h3>Fertigung</h3>
-        <p>Alle Teile entstehen an unseren eigenen Maschinen.</p>
-        <ul class="arrow">
-          <li>Drehen</li>
-          <li>Fräsen, 3achs und 5achs simultan</li>
-          <li>Flach- und Rundschleifen</li>
-          <li>Laserschweißen</li>
-        </ul>
-      </li>
-      <li class="own__step rv">
-        <h3>Montage und Prüfung</h3>
-        <p>Zusammengebaut und gemessen wird ebenfalls im Haus.</p>
-        <ul class="arrow">
-          <li>Baugruppe montieren</li>
-          <li>Funktion prüfen</li>
-          <li>3D-Koordinatenmessmaschine</li>
-          <li>Messprotokoll auf Wunsch</li>
-        </ul>
-      </li>
-    </ul>
+    <div class="head rv">
+      <p class="kicker">Eigenentwicklungen</p>
+      <h2 class="h2" id="ownH">Zwei Geräte aus eigener Werkstatt</h2>
+    </div>
   </div>
 
-  <!-- Der Bilderlauf stand hier und ist nach Section 06 Unternehmen gewandert.
-       Die Aufnahmen zeigen Schweisstisch und Schraubstock, also die Geraete, die
-       unten im Abschnitt "Die beiden Produkte" ohnehin beschrieben werden. Als
-       Blick in die Halle tragen sie dort besser. -->
-
-  <!-- 5 · Die beiden Produkte im Einzelnen -->
+  <!-- 2 · Die beiden Produkte, je mit Produktfoto (Kundenwunsch). Die Fotos
+       zeigen das ganze Geraet; die fruehere Bildergalerie mit Detailaufnahmen
+       ist entfallen. -->
   <div class="wrap">
     <ul class="own__prod">
       <li class="own__p rv">
-        <span class="own__ico" aria-hidden="true">
-          <svg viewBox="0 0 24 24" focusable="false"><path d="M3 9h18M6 9v10M18 9v10M12 3v6M9 6l3-3 3 3"/></svg>
-        </span>
+        <figure class="frame own__pImg">
+          <img src="assets/img/eigen-schweisstisch.jpg" width="1400" height="1050" loading="lazy" decoding="async"
+               alt="Höhenverstellbarer Schweißtisch aus eigener Fertigung mit Fußschalter">
+        </figure>
         <h3>Schweißtisch</h3>
         <p>Die Platte trägt ein durchgehendes Raster aus Gewindebohrungen, darunter sitzen zwei Hubsäulen. Über das Bedienpanel fährt der Tisch auf Arbeitshöhe, die eingestellte Höhe steht in Zentimetern im Display und lässt sich auf vier Tasten ablegen. Gefahren wird zusätzlich über einen Fußschalter. Der Tisch steht bei uns an der Laserschweißanlage.</p>
         <!-- Die frueher eigene Unterspalte "Im Einsatz" trug einen einzigen Punkt
@@ -516,11 +1009,12 @@
         </div>
       </li>
       <li class="own__p rv">
-        <span class="own__ico" aria-hidden="true">
-          <svg viewBox="0 0 24 24" focusable="false"><path d="M4 20h16M8 8h3v8H8zM13 8h3v8h-3zM2 12h6M16 12h6"/></svg>
-        </span>
+        <figure class="frame own__pImg">
+          <img src="assets/img/eigen-schraubstock.jpg" width="1200" height="900" loading="lazy" decoding="async"
+               alt="Laborschraubstock aus eigener Fertigung auf runder Grundplatte">
+        </figure>
         <h3>Laborschraubstock</h3>
-        <p>Ein kleiner Schraubstock auf runder Grundplatte, mit dem sich Kleinteile am Arbeitsplatz spannen lassen. Gespannt wird über zwei Rändelschrauben, die Backen laufen auf durchgehenden Führungsstangen. Gedreht, gefräst und montiert wurde er bei uns.</p>
+        <p>Der kleine Schraubstock sitzt auf einer runden Grundplatte und spannt Kleinteile am Arbeitsplatz. Gespannt wird über zwei Rändelschrauben, die Backen laufen auf durchgehenden Führungsstangen. Gedreht, gefräst und montiert wurde er bei uns.</p>
         <div class="own__sub">
           <h4>Aufbau</h4>
           <ul class="arrow">
@@ -535,8 +1029,56 @@
     </ul>
   </div>
 
-  <!-- 6 · Abschlussband. Bewusst schmal und ohne zweites Formular: die
-       Kontaktsektion weiter unten nimmt die Anfrage entgegen. -->
+
+  <!-- 3 · Kartenreihe mit Pfeillisten
+       Der fruehere Erklaerblock stand hier und sagte in einem Absatz dasselbe,
+       was die drei Karten darunter als Listen zeigen. Seine Ueberschrift ist
+       geblieben und fuehrt jetzt die Kartenreihe an, der Absatz und das zweite
+       Produktbild sind entfallen. -->
+  <div class="wrap">
+    <!-- Ohne festen Umbruch und ohne Schlusspunkt wie alle Ueberschriften; die
+         Karten darunter sind h4, damit sie unter dieser h3 haengen. -->
+    <h3 class="own__whyH rv">Was wir für uns selbst bauen, bauen wir auch für&nbsp;Sie</h3>
+    <ul class="own__steps">
+      <li class="own__step rv">
+        <h4>Konstruktion</h4>
+        <ul class="arrow">
+          <li>Anforderung aufnehmen</li>
+          <li>3D-Modell im CAD aufbauen</li>
+          <li>Zeichnung ableiten</li>
+          <li>Machbarkeit prüfen</li>
+        </ul>
+      </li>
+      <!-- Fertigung frueher als blaue Mittelkarte hervorgehoben; wirkte wie der
+           "beliebteste Tarif" einer Preistabelle. Jetzt alle drei gleich.
+           "Alle Teile an eigenen Maschinen" stand hier; das widersprach dem
+           Partnernetzwerk bei "Alles aus einer Hand". -->
+      <li class="own__step rv">
+        <h4>Fertigung</h4>
+        <p>Dreh- und Frästeile fertigen wir an unseren eigenen Maschinen.</p>
+        <ul class="arrow">
+          <li>Drehen</li>
+          <li>Fräsen, drei- und fünfachsig simultan</li>
+          <li>Flach- und Rundschleifen</li>
+          <li>Laserschweißen</li>
+        </ul>
+      </li>
+      <li class="own__step rv">
+        <h4>Montage und Prüfung</h4>
+        <p>Zusammengebaut und gemessen wird ebenfalls bei uns.</p>
+        <ul class="arrow">
+          <li>Baugruppe montieren</li>
+          <li>Funktion prüfen</li>
+          <li>Auf der Koordinaten&shy;messmaschine messen</li>
+          <li>Messprotokoll auf Wunsch beilegen</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <!-- 6 · Abschlusszeile. Bewusst schmal und ohne zweites Formular: die
+       Kontaktsektion nimmt die Anfrage entgegen. Seit dem Optik-Check
+       29.09.2026 eine ruhige Textzeile mit Link statt eines blauen Kastens. -->
   <div class="own__band rv">
     <div class="own__bandIn">
       <p class="own__bandK">Eigenbau</p>
@@ -547,425 +1089,6 @@
 
 </section>
 
-<!-- ═══════════════════════ 6 · REFERENZEN ═══════════════════════ -->
-<section class="sec sec--ref" id="referenzen" aria-labelledby="refH">
-  <div class="wrap">
-
-    <div class="head rv">
-      <p class="kicker">05 — Referenzen</p>
-      <h2 class="h2" id="refH">Aus unserer Fertigung<span class="dot">.</span></h2>
-      <p class="lead">Bauteile für Automobil, Luft- und Raumfahrt, Medizintechnik, Maschinenbau und Motorsport. Jedes davon nach Zeichnung oder Muster gefertigt, gemessen und freigegeben. Kundennamen nennen wir nicht.</p>
-    </div>
-
-    <!-- Der Lichtmaschinenhalter ist die belegte Individualitaets-Geschichte aus
-         der Firmenpraesentation und steht deshalb vor dem Raster. -->
-    <article class="refx rv">
-      <div class="refx__imgs">
-        <figure class="frame">
-          <img src="assets/img/ref-lima-vorher.jpg" width="1200" height="900" loading="lazy" decoding="async"
-               alt="Geschweißter Funktionsdummy des Lichtmaschinenhalters, wie ihn der Kunde beistellte">
-          <figcaption>Beigestellter Dummy</figcaption>
-        </figure>
-        <figure class="frame">
-          <img src="assets/img/ref-lima-nachher.jpg" width="1200" height="900" loading="lazy" decoding="async"
-               alt="Gefräster Lichtmaschinenhalter aus eigener Fertigung">
-          <figcaption>Gefertigter Halter</figcaption>
-        </figure>
-      </div>
-      <div class="refx__txt">
-        <p class="kicker">Lichtmaschinenhalter</p>
-        <h3>Aus einem geschweißten Dummy wurde ein gefrästes Teil.</h3>
-        <p>Der Kunde stellte einen geschweißten Funktionsdummy bei, mehr nicht. Wir haben ihn auf der 3D-Koordinatenmessmaschine vermessen, Form und Gewicht optimiert und den Halter anschließend aus dem Vollen gefertigt. So sieht individuelle Fertigung bei uns aus.</p>
-      </div>
-    </article>
-
-    <ul class="ref">
-      <li class="ref__i rv">
-        <figure class="frame">
-          <img src="assets/img/ref-bremstopf.jpg" width="420" height="420" loading="lazy" decoding="async"
-               alt="Gefräster Bremsscheibentopf aus Aluminium">
-          <figcaption><span class="idx">01</span>Bremsscheibentopf</figcaption>
-        </figure>
-      </li>
-      <li class="ref__i rv">
-        <figure class="frame">
-          <img src="assets/img/ref-titan.jpg" width="1028" height="771" loading="lazy" decoding="async"
-               alt="Bauteil aus Titan Grade 5">
-          <figcaption><span class="idx">02</span>Titan Grade 5</figcaption>
-        </figure>
-      </li>
-      <li class="ref__i rv">
-        <figure class="frame">
-          <img src="assets/img/ref-riemenscheibe.jpg" width="571" height="571" loading="lazy" decoding="async"
-               alt="Zweiteiliges Riemenrad">
-          <figcaption><span class="idx">03</span>Zweiteiliges Riemenrad</figcaption>
-        </figure>
-      </li>
-      <li class="ref__i rv">
-        <figure class="frame">
-          <img src="assets/img/ref-baugruppe.jpg" width="1600" height="1067" loading="lazy" decoding="async"
-               alt="Montierte Komplettbaugruppe">
-          <figcaption><span class="idx">04</span>Komplettbaugruppe</figcaption>
-        </figure>
-      </li>
-      <li class="ref__i rv">
-        <figure class="frame">
-          <img src="assets/img/ref-motorsport.jpg" width="1200" height="1200" loading="lazy" decoding="async"
-               alt="Bauteil für den Motorsport">
-          <figcaption><span class="idx">05</span>Motorsporttechnik</figcaption>
-        </figure>
-      </li>
-      <li class="ref__i rv">
-        <figure class="frame">
-          <img src="assets/img/ref-zahnrad.jpg" width="1080" height="1080" loading="lazy" decoding="async"
-               alt="Gefertigtes Zahnrad">
-          <figcaption><span class="idx">06</span>Zahnrad</figcaption>
-        </figure>
-      </li>
-    </ul>
-
-  </div>
-</section>
-
-<!-- ═══════════════════════ 7 · UNTERNEHMEN ═══════════════════════
-     Der Geschaeftsfuehrer wollte laut Checkliste selbst formulieren, worauf es
-     der Firma ankommt. Das Zitat unten ist ein ENTWURF in seinem Namen und
-     muss vor Veroeffentlichung von Georg Fleischmann freigegeben oder ersetzt
-     werden. Belegt sind: Gruendung 1984 durch Paul Walczok, Uebernahme 2023,
-     fuenf Mitarbeiter, Chefkontrolle, Laserschweissen seit Anfang 2026.
-     Angaben vom Kunden nachfordern: Portraet des Geschaeftsfuehrers und das
-     Gruppenfoto der fuenf Mitarbeiter fuer diese Sektion. -->
-<section class="sec sec--ceo" id="unternehmen" aria-labelledby="ceoH">
-  <div class="wrap ceo">
-
-    <figure class="frame ceo__img rv">
-      <img src="assets/img/mp-voreinstellung.jpg" width="1400" height="1400" loading="lazy" decoding="async"
-           alt="Mitarbeiter am Werkzeugvoreinstellgerät in der Fertigung der Paul Walczok GmbH">
-      <figcaption>Gemessen wird bei uns zweimal: bevor die Maschine anläuft und bevor ein Teil das Haus verlässt.</figcaption>
-    </figure>
-
-    <div class="ceo__txt">
-      <div class="head rv">
-        <p class="kicker">06 — Unternehmen</p>
-        <h2 class="h2" id="ceoH">Qualität ist bei uns Chefsache<span class="dot">.</span></h2>
-      </div>
-
-      <blockquote class="ceo__quote rv">
-        <p>„Jedes Teil, das unser Haus verlässt, geht vorher über meinen Tisch. Nicht aus Misstrauen gegenüber meinen Leuten, sondern weil ich dem Kunden gegenüber gerade stehe. Wir sind kein Lohnfertiger für die schnelle Serie. Wenn eine Anforderung vom Standard abweicht, ist das für uns kein Hindernis, sondern der Grund, warum man zu uns kommt. Und wir bleiben dran, bis das Teil passt.“</p>
-        <footer>
-          <b>Georg Fleischmann</b>
-          <span>Geschäftsführer, führt den Betrieb seit 2023</span>
-        </footer>
-      </blockquote>
-
-      <ol class="ceo__facts">
-        <li class="rv">
-          <span class="ceo__year">1984</span>
-          <p>Paul Walczok gründet den Betrieb in Essenbach. Sein Name steht bis heute für das Haus und seinen Anspruch.</p>
-        </li>
-        <li class="rv">
-          <span class="ceo__year">2023</span>
-          <p>Georg Fleischmann übernimmt die Geschäftsführung und führt den Betrieb mit fünf hochqualifizierten Mitarbeitern weiter.</p>
-        </li>
-        <li class="rv">
-          <span class="ceo__year">2026</span>
-          <p>Laserschweißen erweitert das Portfolio: fügen, reparieren, Material auftragen, alles im eigenen Haus.</p>
-        </li>
-      </ol>
-    </div>
-
-  </div>
-
-  <!-- Blick in die Halle. Der Bilderlauf stand vorher in Section 04
-       Eigenentwicklungen und sitzt hier bewusst AUSSERHALB des .ceo-Rasters:
-       .own__track rechnet seinen Innenabstand aus der Fensterbreite und laeuft
-       randlos ueber die volle Breite. Innerhalb der zweispaltigen .ceo-Bahn
-       waere der Lauf auf eine Spalte eingesperrt.
-       Markup, Klassen und die Steuerung ueber [data-gal] sind unveraendert
-       uebernommen; js/main.js bindet genau ein [data-gal] im Dokument. -->
-  <div class="own__gal rv" data-gal>
-    <div class="wrap own__galHead">
-      <h3 class="own__galH">Ein Blick in unsere Halle</h3>
-      <div class="own__galNav">
-        <button class="galbtn" type="button" data-gal-prev aria-label="Vorherige Bilder">
-          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5 8 12l7 7"/></svg>
-        </button>
-        <button class="galbtn" type="button" data-gal-next aria-label="Weitere Bilder">
-          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 5 7 7-7 7"/></svg>
-        </button>
-      </div>
-    </div>
-    <!-- Werkstattaufnahmen mit dem Telefon, bewusst nicht als Studiofotos ausgegeben. -->
-    <ul class="own__track" data-gal-track tabindex="0" aria-label="Aufnahmen aus unserer Fertigung">
-      <li class="own__shot">
-        <figure class="frame">
-          <img src="assets/img/eigen-tisch-1.jpg" width="900" height="1200" loading="lazy" decoding="async"
-               alt="Schweißtisch schräg von vorn, dahinter die Laserzelle">
-          <figcaption>Schweißtisch, Gesamtansicht</figcaption>
-        </figure>
-      </li>
-      <li class="own__shot">
-        <figure class="frame">
-          <img src="assets/img/eigen-tisch-panel.jpg" width="900" height="1200" loading="lazy" decoding="async"
-               alt="Bedienpanel unter der Tischplatte, die Höhenanzeige steht auf 80,6 Zentimeter">
-          <figcaption>Bedienpanel mit Höhenanzeige</figcaption>
-        </figure>
-      </li>
-      <li class="own__shot">
-        <figure class="frame">
-          <img src="assets/img/eigen-tisch-4.jpg" width="900" height="1200" loading="lazy" decoding="async"
-               alt="Tischplatte von oben mit gerastertem Bohrbild">
-          <figcaption>Gerasterte Tischplatte</figcaption>
-        </figure>
-      </li>
-      <li class="own__shot">
-        <figure class="frame">
-          <img src="assets/img/eigen-tisch-2.jpg" width="900" height="1200" loading="lazy" decoding="async"
-               alt="Schweißtisch von der Seite, Fußschalter am Boden">
-          <figcaption>Fußschalter am Boden</figcaption>
-        </figure>
-      </li>
-      <li class="own__shot">
-        <figure class="frame">
-          <img src="assets/img/eigen-tisch-5.jpg" width="900" height="1200" loading="lazy" decoding="async"
-               alt="Untergestell des Schweißtisches mit den beiden Hubsäulen">
-          <figcaption>Untergestell mit Hubsäulen</figcaption>
-        </figure>
-      </li>
-      <li class="own__shot">
-        <figure class="frame">
-          <img src="assets/img/eigen-stock-1.jpg" width="900" height="1200" loading="lazy" decoding="async"
-               alt="Laborschraubstock mit runder Grundplatte und zwei Rändelschrauben">
-          <figcaption>Laborschraubstock</figcaption>
-        </figure>
-      </li>
-      <!-- Vom Schraubstock existiert beim Kunden genau eine Aufnahme. Die beiden
-           Dateien eigen-stock-1 und eigen-stock-2 sind zwei Ausschnitte daraus,
-           ein weiter gefasster und ein enger. Die Bildunterschriften benennen
-           deshalb den Ausschnitt und behaupten keine zweite Ansicht.
-           Angaben vom Kunden nachfordern: weitere Aufnahmen des Schraubstocks. -->
-      <li class="own__shot">
-        <figure class="frame">
-          <img src="assets/img/eigen-stock-2.jpg" width="900" height="1200" loading="lazy" decoding="async"
-               alt="Laborschraubstock, näherer Ausschnitt auf Backen und Rändelschrauben">
-          <figcaption>Backen und Rändelschrauben</figcaption>
-        </figure>
-      </li>
-    </ul>
-  </div>
-</section>
-
-<!-- ═══════════════════════ 8 · ZAHLEN ═══════════════════════ -->
-<!-- Hier gehoeren Kundenstimmen hin, sobald der Kunde drei bis vier O-Toene
-     geliefert hat, ebenso die Zertifikate. Angaben vom Kunden nachfordern. -->
-<section class="stats" aria-label="Zahlen und Kapazitäten">
-  <div class="stats__bg" aria-hidden="true">
-    <img src="assets/img/mp-halle.jpg" width="1440" height="960" loading="lazy" decoding="async" alt="">
-  </div>
-  <div class="wrap stats__in">
-    <!-- Maschinendaten werden NICHT hochgezaehlt: waehrend des Zaehlens stuenden
-         sonst plausible, aber falsche Angaben auf dem Bildschirm. Nur die
-         Mitarbeiterzahl laeuft kurz an. Die Einheit steht im Label. -->
-    <dl class="stats__grid">
-      <div class="stat rv">
-        <dt>gegründet</dt>
-        <dd><span class="num">1984</span></dd>
-      </div>
-      <div class="stat rv">
-        <dt>Mitarbeiter</dt>
-        <dd><span class="num" data-count="5">5</span></dd>
-      </div>
-      <div class="stat rv">
-        <dt>Drehdurchmesser in mm</dt>
-        <dd><span class="num">Ø 250</span></dd>
-      </div>
-      <div class="stat rv">
-        <dt>Fräsraum in mm</dt>
-        <dd><span class="num">800 × 600 × 400</span></dd>
-      </div>
-    </dl>
-  </div>
-</section>
-
-<!-- ═══════════════════════ 9 · KARRIERE ═══════════════════════
-     Laut Checkliste gewuenscht: Stellen fuer Dreher und Fraeser fest hinterlegt,
-     aber vom Kunden selbst ein- und ausblendbar. Dazu die Vorteile: keine
-     Schichtarbeit, moderne Raeume, kurze Entscheidungswege, attraktives Gehalt
-     und Arbeitszeiten, Firmenevents.
-
-     STELLE AUSBLENDEN: dem jeweiligen <li class="job"> das Attribut `hidden`
-     geben, z. B. <li class="job" id="jobFraeser" hidden>. Zum Einblenden das
-     Attribut wieder entfernen. Sind alle Stellen ausgeblendet, zeigt die Seite
-     automatisch den Hinweis "Aktuell keine Stelle ausgeschrieben" und die
-     Initiativbewerbung bleibt stehen. -->
-<section class="sec sec--car" id="karriere" aria-labelledby="carH">
-  <div class="wrap">
-
-    <div class="head rv">
-      <p class="kicker">07 — Karriere</p>
-      <h2 class="h2" id="carH">Präzision braucht Leute, die sie ernst nehmen<span class="dot">.</span></h2>
-      <p class="lead">Fünf Leute, moderne Maschinen, kein Schichtbetrieb. Wer bei uns anfängt, fertigt Einzelteile und Prototypen, jeden Tag etwas anderes, und trägt die Verantwortung für das eigene Teil.</p>
-    </div>
-
-    <div class="car">
-
-      <div class="car__l">
-        <figure class="frame car__img rv">
-          <img src="assets/img/mp-fraeszentrum.jpg" width="1400" height="1400" loading="lazy" decoding="async"
-               alt="Mitarbeiter rüstet ein Bearbeitungszentrum in der Fertigung in Essenbach">
-          <figcaption>Gearbeitet wird an modernen Bearbeitungszentren, im Tagbetrieb, ohne Schicht.</figcaption>
-        </figure>
-
-        <ul class="car__ben">
-          <li class="rv">
-            <span class="idx">01</span>
-            <h3>Keine Schichtarbeit</h3>
-            <p>Gearbeitet wird tagsüber: Montag bis Donnerstag bis 16.15 Uhr, freitags bis 12 Uhr.</p>
-          </li>
-          <li class="rv">
-            <span class="idx">02</span>
-            <h3>Moderne Räume und Maschinen</h3>
-            <p>Fünfachs-Bearbeitungszentrum, CNC-Drehmaschinen, Laserschweißanlage und ein eigener Messraum.</p>
-          </li>
-          <li class="rv">
-            <span class="idx">03</span>
-            <h3>Kurze Entscheidungswege</h3>
-            <p>Eine Idee muss durch keine Abteilung. Sie sprechen direkt mit der Geschäftsführung.</p>
-          </li>
-          <li class="rv">
-            <span class="idx">04</span>
-            <h3>Attraktives Gehalt und Arbeitszeiten</h3>
-            <p>Leistung wird bezahlt, und der Feierabend gehört Ihnen.</p>
-          </li>
-          <li class="rv">
-            <span class="idx">05</span>
-            <h3>Firmenevents</h3>
-            <p>Bei fünf Leuten ist das Team kein Schlagwort. Wir feiern auch gemeinsam.</p>
-          </li>
-          <li class="rv">
-            <span class="idx">06</span>
-            <h3>Abwechslung statt Serie</h3>
-            <p>Einzelteile, Prototypen, Kleinserien. Kaum ein Tag gleicht dem anderen.</p>
-          </li>
-        </ul>
-      </div>
-
-      <div class="car__r">
-        <h3 class="car__jobsH rv">Offene Stellen</h3>
-
-        <ul class="jobs" id="jobs">
-          <li class="job rv" id="jobDreher">
-            <p class="job__meta">Vollzeit · Essenbach</p>
-            <h4>CNC-Dreher (m/w/d)</h4>
-            <p>Sie richten ein, programmieren an der Steuerung und drehen Einzelteile, Prototypen und Kleinserien bis Ø 250 mm.</p>
-            <ul class="arrow">
-              <li>Abgeschlossene Ausbildung als Zerspanungsmechaniker oder vergleichbar</li>
-              <li>Erfahrung im Rüsten und Programmieren an der Steuerung</li>
-              <li>Sorgfalt, Eigenverantwortung und Freude an wechselnden Teilen</li>
-            </ul>
-            <a class="btn btn--solid" href="mailto:info@walczok-gmbh.de?subject=Bewerbung%20CNC-Dreher%20(m%2Fw%2Fd)">Jetzt bewerben</a>
-          </li>
-          <li class="job rv" id="jobFraeser">
-            <p class="job__meta">Vollzeit · Essenbach</p>
-            <h4>CNC-Fräser (m/w/d)</h4>
-            <p>Sie fräsen dreiachsig und fünfachsig simultan bis 800 × 600 × 400 mm, vom Einzelteil bis zur Kleinserie.</p>
-            <ul class="arrow">
-              <li>Abgeschlossene Ausbildung als Zerspanungsmechaniker oder vergleichbar</li>
-              <li>Erfahrung im Dreiachs-, idealerweise im Fünfachs-Fräsen</li>
-              <li>Sicherer Umgang mit Zeichnung und Messmitteln, CAM von Vorteil</li>
-            </ul>
-            <a class="btn btn--solid" href="mailto:info@walczok-gmbh.de?subject=Bewerbung%20CNC-Fr%C3%A4ser%20(m%2Fw%2Fd)">Jetzt bewerben</a>
-          </li>
-        </ul>
-
-        <p class="jobs__none" id="jobsNone" hidden>Aktuell ist keine Stelle ausgeschrieben. Eine Initiativbewerbung ist jederzeit willkommen.</p>
-
-        <div class="job job--init rv">
-          <p class="job__meta">Jederzeit willkommen</p>
-          <h4>Initiativbewerbung</h4>
-          <p>Keine passende Stelle dabei? Bei fünf Mitarbeitern entscheidet der Mensch mehr als die Ausschreibung. Schreiben Sie uns, was Sie können.</p>
-          <a class="btn btn--ghost" href="mailto:info@walczok-gmbh.de?subject=Initiativbewerbung">Bewerbung senden</a>
-        </div>
-
-        <p class="car__call">Fragen zur Stelle? Rufen Sie an, Sie sprechen direkt mit der Geschäftsführung: <a href="tel:+49870393310">0 87 03 / 93 31 - 0</a></p>
-      </div>
-
-    </div>
-
-  </div>
-</section>
-
-<!-- ═══════════════════════ 10 · KONTAKT ═══════════════════════ -->
-<section class="sec sec--con" id="kontakt" aria-labelledby="conH">
-  <div class="wrap con">
-
-    <div class="head con__head rv">
-      <p class="kicker">08 — Kontakt</p>
-      <h2 class="h2" id="conH">Schicken Sie uns Ihre Zeichnung<span class="dot">.</span></h2>
-      <!-- Von drei auf zwei Saetze gekuerzt. "Belastbare Aussage" und "zuegig"
-           waren Fuellwoerter; was wir pruefen, sagt der zweite Satz konkreter. -->
-      <p class="lead">Für eine erste Einschätzung genügt eine Zeichnung, ein Muster oder ein CAD-Datensatz. Sie haben nur das Problem und noch keine Lösung? Beschreiben Sie es uns, wir prüfen die Machbarkeit.</p>
-    </div>
-
-    <div class="con__l">
-      <figure class="frame con__img">
-        <img src="assets/img/mp-messtechnik.jpg" width="1400" height="1400" loading="lazy" decoding="async"
-             alt="Messtechnik im Messraum der Paul Walczok GmbH">
-      </figure>
-
-      <div class="con__meta rv">
-        <div>
-          <h3>Direktkontakt</h3>
-          <ul>
-            <li>Telefon <a href="tel:+49870393310">0 87 03 / 93 31 - 0</a></li>
-            <li>Fax 0 87 03 / 93 31 - 90</li>
-            <li><a href="mailto:info@walczok-gmbh.de">info@walczok-gmbh.de</a></li>
-          </ul>
-        </div>
-        <div>
-          <h3>Adresse</h3>
-          <address>Ahrainer Str. 12, 84051 Essenbach</address>
-          <h3>Geschäftszeiten</h3>
-          <p><span class="nb">Montag bis Donnerstag 7.00 bis 16.15 Uhr</span>, <span class="nb">Freitag 7.00 bis 12.00 Uhr</span></p>
-        </div>
-      </div>
-    </div>
-
-    <form class="form rv" id="form" novalidate>
-      <div class="f">
-        <label for="fName">Name <span aria-hidden="true">*</span></label>
-        <input id="fName" name="name" type="text" autocomplete="name" required>
-      </div>
-      <div class="f">
-        <label for="fFirma">Firma</label>
-        <input id="fFirma" name="firma" type="text" autocomplete="organization">
-      </div>
-      <div class="f">
-        <label for="fMail">E-Mail <span aria-hidden="true">*</span></label>
-        <input id="fMail" name="email" type="email" autocomplete="email" required>
-      </div>
-      <div class="f">
-        <label for="fTel">Telefon</label>
-        <input id="fTel" name="telefon" type="tel" autocomplete="tel">
-      </div>
-      <div class="f f--full">
-        <label for="fMsg">Nachricht <span aria-hidden="true">*</span></label>
-        <textarea id="fMsg" name="nachricht" rows="5" required></textarea>
-      </div>
-      <div class="f f--full f--check">
-        <input id="fDsg" name="datenschutz" type="checkbox" required>
-        <label for="fDsg">Ich habe die <a href="datenschutz.html">Datenschutzerklärung</a> gelesen und stimme der Verarbeitung meiner Daten zu. <span aria-hidden="true">*</span></label>
-      </div>
-      <div class="f f--full form__foot">
-        <button class="btn btn--solid btn--lg" type="submit">Anfrage absenden</button>
-        <p class="form__hint">Zeichnungen bitte per E-Mail an <a href="mailto:info@walczok-gmbh.de">info@walczok-gmbh.de</a></p>
-      </div>
-      <p class="form__note" id="formNote" role="status" aria-live="polite"></p>
-    </form>
-
-  </div>
-</section>
-
 </main>
 
 <!-- ═══════════════════════ 11 · FOOTER ═══════════════════════ -->
@@ -974,7 +1097,9 @@
 
     <div class="ftr__grid">
       <div class="ftr__brand">
-        <img src="assets/img/logo-mark-blue.png" width="256" height="256" loading="lazy" decoding="async"
+        <!-- Ruhebild der 3D-Marke aus dem Kopf (Lage 0 aus logo-spin3d.webp),
+             damit das Zeichen ueberall in derselben Qualitaet steht. -->
+        <img src="assets/img/logo-mark-3d.webp" width="168" height="168" loading="lazy" decoding="async"
              alt="Bildmarke der Paul Walczok GmbH">
         <p class="ftr__claim">Präzision ist unsere Leidenschaft. Unser Ansporn ist es, jeden Tag aufs Neue das beste Teil zu fertigen. Seit 1984 in Essenbach.</p>
       </div>
@@ -985,8 +1110,8 @@
       <div>
         <h2>Kontakt</h2>
         <ul>
-          <li><a href="tel:+49870393310">0 87 03 / 93 31 - 0</a></li>
-          <li>Fax 0 87 03 / 93 31 - 90</li>
+          <li><a href="tel:+49870393310">08703 9331-0</a></li>
+          <li>Fax <span class="nb">08703 9331-90</span></li>
           <li><a href="mailto:info@walczok-gmbh.de">info@walczok-gmbh.de</a></li>
           <li><a href="https://www.facebook.com/paulwalczokgmbh" target="_blank" rel="noopener">Facebook</a></li>
         </ul>
@@ -994,8 +1119,9 @@
       <div>
         <h2>Geschäftszeiten</h2>
         <ul>
-          <li>Montag bis Donnerstag 7.00 bis 16.15 Uhr</li>
-          <li>Freitag 7.00 bis 12.00 Uhr</li>
+          <!-- Zeitspannen bleiben zusammen, sonst steht "Uhr" allein in der Zeile -->
+          <li>Montag bis Donnerstag <span class="nb">7.00 bis 16.15 Uhr</span></li>
+          <li>Freitag <span class="nb">7.00 bis 12.00 Uhr</span></li>
         </ul>
       </div>
       <div>
@@ -1003,12 +1129,13 @@
         <ul>
           <li><a href="#leistungen">Leistungen</a></li>
           <li><a href="#vorteile">Vorteile</a></li>
-          <li><a href="#branchen">Branchen</a></li>
-          <li><a href="#eigenentwicklungen">Eigenentwicklungen</a></li>
-          <li><a href="#referenzen">Referenzen</a></li>
           <li><a href="#unternehmen">Unternehmen</a></li>
+          <li><a href="#referenzen">Referenzen</a></li>
+          <li><a href="#branchen">Branchen</a></li>
           <li><a href="#karriere">Karriere</a></li>
           <li><a href="#kontakt">Kontakt</a></li>
+          <!-- Weiche Trennung: bei 320 px ragte das Wort 13 px aus der Spalte -->
+          <li><a href="#eigenentwicklungen">Eigen&shy;entwicklungen</a></li>
         </ul>
       </div>
     </div>

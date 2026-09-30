@@ -7,6 +7,11 @@ OCP-Bindings, die im venv liegen.
 Rueckgabe von load_mesh():
     V  (n,3) float64  Knoten in Modellkoordinaten
     F  (m,3) int32    Dreiecksindizes, gegen den Uhrzeigersinn von aussen
+    FID (m,)  int32   nur mit face_ids=True: Nummer der OCCT-Flaeche (Face),
+                      aus der das Dreieck stammt. Daraus zeichnet render3.py
+                      die Kanten wie in SOLIDWORKS: Linie nur dort, wo zwei
+                      B-Rep-Flaechen aneinanderstossen, nicht zwischen den
+                      Dreiecken einer glatten Flaeche.
 """
 import numpy as np
 
@@ -26,8 +31,11 @@ STEP_PATH = os.environ.get("LOGO_STEP") or os.path.normpath(os.path.join(
     "..", "..", "..", "Unterlagen Kunden", "3d-logo.STEP"))
 
 
-def load_mesh(path=STEP_PATH, deflection=0.12, angular=0.25):
+def load_mesh(path=STEP_PATH, deflection=0.12, angular=0.25, face_ids=False):
     """Vernetzt das Modell und sammelt alle Faces zu einem Netz.
+
+    Ohne face_ids kommt (V, F) zurueck wie bisher, mit face_ids=True
+    zusaetzlich FID (siehe oben): (V, F, FID).
 
     deflection ist die Sehnentoleranz in mm. 0.12 bei 135 mm Bauteilgroesse
     ergibt an den Rundungen keine sichtbaren Facetten mehr, wenn das Bild am
@@ -42,7 +50,9 @@ def load_mesh(path=STEP_PATH, deflection=0.12, angular=0.25):
 
     verts = []
     faces = []
+    fids = []
     offset = 0
+    face_no = 0
 
     exp = TopExp_Explorer(shape, TopAbs_FACE)
     while exp.More():
@@ -69,12 +79,18 @@ def load_mesh(path=STEP_PATH, deflection=0.12, angular=0.25):
                 if reversed_face:
                     a, c = c, a
                 faces.append((a - 1 + offset, b - 1 + offset, c - 1 + offset))
+                fids.append(face_no)
 
             offset += n
+        # Jedes Face bekommt eine Nummer, auch ohne Vernetzung, damit die
+        # Nummern stabil der Reihenfolge im STEP folgen.
+        face_no += 1
         exp.Next()
 
     V = np.concatenate(verts, axis=0)
     F = np.asarray(faces, dtype=np.int32)
+    if face_ids:
+        return V, F, np.asarray(fids, dtype=np.int32)
     return V, F
 
 

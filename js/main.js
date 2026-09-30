@@ -1,9 +1,13 @@
 /* ==========================================================================
    Paul Walczok GmbH — Bewegung
-   Sparsam und strukturstuetzend: 3D-Logo, Hero-Intro mit leichter Parallax,
-   Zeilenmasken der Ueberschriften, gebuendelte Reveals, Zaehler, Bild-Reveal,
-   Stellen-Schalter. Kein Pinning, kein Preloader, keine Parallax-Schwaerme.
-   Nur transform und opacity. Ohne GSAP bleibt die Seite vollstaendig sichtbar.
+   Wenig, dafuer gezielt. Drei Bewegungen tragen die Seite:
+     1. Hero-Intro (Zeilen der H1 aus der Maske, Rest in einer Timeline)
+     2. Bildschieber: jede Bildbox oeffnet sich einmal von oben nach unten
+     3. Masslinien der Vorteile ziehen sich auf
+   Dazu die Bildmarke im Kopf und der Branchen-Ring (nur Drehung). Text,
+   Listen, Ueberschriften und Karten stehen einfach da. Kein Pinning, kein
+   Preloader. Nur transform, opacity und clip-path. Ohne GSAP bleibt die Seite
+   vollstaendig sichtbar.
    ========================================================================== */
 (function () {
   'use strict';
@@ -21,6 +25,20 @@
      Startzustaende greifen. main.js laeuft vor dem ersten Paint. */
   if (hasGsap && !reduce) root.classList.add('gsap');
   root.classList.add('anim-ready');
+
+  /* Bildboxen fuer den Schieber: Rahmen (.frame) und die Fotoflaeche der
+     Leistungskarten (.svc__top). Nur die aeusserste Box bekommt die Klasse,
+     damit verschachtelte Rahmen nicht doppelt aufgehen. Den Startzustand
+     (zu) setzt das CSS ueber .gsap .wipe — also nur fuer genau die Boxen,
+     die weiter unten auch wieder geoeffnet werden. */
+  var boxen = [];
+  if (hasGsap && !reduce) {
+    Array.prototype.forEach.call(document.querySelectorAll('.frame, .svc__top'), function (el) {
+      if (el.parentElement && el.parentElement.closest('.frame, .svc__top')) return;
+      el.classList.add('wipe');
+      boxen.push(el);
+    });
+  }
 
   /* ------------------------------------------------------------ Jahreszahl */
   var yr = document.getElementById('year');
@@ -41,11 +59,22 @@
   var nav    = document.getElementById('nav');
   /* Bei offenem Menue steht die Seite dahinter still. Ohne die Sperre scrollt
      das Dokument unter dem Menue weiter, sobald man ueber die Liste wischt. */
+  var mainEl = document.querySelector('main');
+  var ftrEl  = document.querySelector('.ftr');
   function sperreSeite(an) {
     document.body.style.overflow = an ? 'hidden' : '';
+    /* Inhalt hinter dem Menue fuer Tastatur und Vorlesefunktion sperren:
+       Tab bleibt in Kopfzeile und Menue. */
+    if (mainEl) mainEl.inert = an;
+    if (ftrEl) ftrEl.inert = an;
     if (lenis) { if (an) lenis.stop(); else lenis.start(); }
+    /* Das offene Menue muss selbst scrollen koennen (Querformat). Der
+       gestoppte Lenis wuerde Rad und Wischen sonst auch dort abfangen. */
+    if (nav) { if (an) nav.setAttribute('data-lenis-prevent', ''); else nav.removeAttribute('data-lenis-prevent'); }
   }
+  function navOffen() { return !!(nav && nav.classList.contains('is-open')); }
   function closeNav() {
+    if (!nav || !burger) return;
     nav.classList.remove('is-open');
     if (hdr) hdr.classList.remove('is-navopen');
     burger.setAttribute('aria-expanded', 'false');
@@ -61,9 +90,22 @@
     nav.addEventListener('click', function (e) {
       if (e.target.closest('a')) closeNav();
     });
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && nav.classList.contains('is-open')) { closeNav(); burger.focus(); }
+    /* Ein Tipp ausserhalb von Menue und Burger (etwa auf die Kopfzeile)
+       schliesst das Menue ebenfalls. */
+    document.addEventListener('click', function (e) {
+      if (navOffen() && !e.target.closest('#nav, #burger')) closeNav();
     });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && navOffen()) { closeNav(); burger.focus(); }
+    });
+    /* Wechselt die Breite ueber die Menue-Grenze (Drehen des Tablets, groesseres
+       Fenster), verschwindet der Burger. Ein offenes Menue samt Seitensperre
+       bliebe sonst haengen und die Seite scrollte nicht mehr. Der Wert muss
+       zum Umschaltpunkt in css/styles.css passen. */
+    var mqNav = window.matchMedia('(max-width: 1259px)');
+    var aufBreite = function (e) { if (!e.matches && navOffen()) closeNav(); };
+    if (mqNav.addEventListener) mqNav.addEventListener('change', aufBreite);
+    else if (mqNav.addListener) mqNav.addListener(aufBreite);
   }
 
   /* ---------------------------------------------------- Sanftes Scrollen */
@@ -76,7 +118,10 @@
     G.ticker.lagSmoothing(0);
   }
 
-  /* Ankerspruenge: Kopfzeilenhoehe beruecksichtigen */
+  /* Ankerspruenge: Kopfzeilenhoehe beruecksichtigen. Ein offenes Menue wird
+     zuerst geschlossen — sonst ist Lenis noch gestoppt und ignoriert den
+     Sprung. Die Adresse bekommt den Anker, damit Links teilbar sind und die
+     Zurueck-Taste funktioniert. */
   document.addEventListener('click', function (e) {
     var a = e.target.closest('a[href^="#"]');
     if (!a) return;
@@ -84,8 +129,20 @@
     if (!id || id === '#') return;
     var t = document.querySelector(id);
     if (!t) return;
+    if (navOffen()) closeNav();
     var off = -(hdr ? hdr.offsetHeight : 0) - 8;
-    if (lenis) { e.preventDefault(); lenis.scrollTo(t, { offset: off, duration: 1.1 }); }
+    if (lenis) {
+      e.preventDefault();
+      /* Ziel absolut aus der echten Scrollposition (siehe insBild) */
+      lenis.scrollTo(Math.max(0, t.getBoundingClientRect().top + window.pageYOffset + off), { duration: 1.1 });
+      if (window.history && history.pushState && location.hash !== id) history.pushState(null, '', id);
+      /* preventDefault nimmt dem Browser auch den Fokuswechsel. Ohne ihn
+         bliebe der Tastaturfokus am Link, und der naechste Tab spraenge
+         zurueck (Sprunglink wirkungslos). Das Ziel bekommt den Fokus, ohne
+         dass es selbst scrollt; der Rahmen bleibt per CSS aus. */
+      if (!t.hasAttribute('tabindex')) t.setAttribute('tabindex', '-1');
+      t.focus({ preventScroll: true });
+    }
   });
 
   /* Der Bilderlauf haengt an keiner Bibliothek und laeuft deshalb vor dem
@@ -232,12 +289,14 @@
      Scroll-Aufbau starten deshalb gemeinsam nach document.fonts.ready; Kicker,
      Sub und Act laufen so weiterhin in einer Timeline mit der Ueberschrift.
      Sicherheitsnetz: spaetestens nach 1,5 s geht es auch ohne Aufloesung los;
-     fehlt document.fonts, sofort. */
+     fehlt document.fonts, sofort. Stehen die Schriften dann noch nicht,
+     blendet die H1 nur ein, ohne SplitText (heroIntro prueft das). */
   var gestartet = false;
   function startAnim() {
     if (gestartet) return;
     gestartet = true;
-    heroIntro();
+    try { heroIntro(); }
+    catch (e) { root.classList.remove('gsap'); root.classList.add('no-anim'); }
     /* Der Scroll-Aufbau haengt sich hinter den ersten Bildwechsel: so faellt
        der Intro-Aufbau nicht in eine einzige lange Aufgabe, und die
        Hero-Bewegung laeuft auf schwachen Geraeten von Anfang an sauber. */
@@ -260,8 +319,11 @@
   function heroIntro() {
     var h1 = document.querySelector('.hero__h1');
     var tl = G.timeline({ defaults: { ease: 'power3.out' }, delay: 0.12 });
+    /* Zeilen erst teilen, wenn die Webfonts stehen: sonst stimmen die
+       Umbrueche nicht und GSAP warnt ("SplitText called before fonts loaded"). */
+    var schriftenDa = !document.fonts || document.fonts.status === 'loaded';
 
-    if (Split && h1) {
+    if (Split && h1 && schriftenDa) {
       var split = new Split(h1, { type: 'lines', mask: 'lines', linesClass: 'hl' });
       G.set(h1, { opacity: 1 });
       tl.from(split.lines, { yPercent: 112, duration: 1.0, stagger: 0.09 }, 0.1);
@@ -282,59 +344,26 @@
     catch (e) { root.classList.remove('gsap'); root.classList.add('no-anim'); }
   }
 
-  /* ======================================================= SCROLL-REVEALS ==
+  /* ======================================================== SCROLL-AUFBAU ==
      Gebuendelt ueber ScrollTrigger.batch — ein Trigger je Gruppe, nicht je
-     Element. Alles nur einmal (once). */
+     Element. Alles nur einmal (once). Ueberschriften, Fliesstext, Listen und
+     Karten bekommen bewusst keinen Auftritt: wenn alles einschwebt, wirkt
+     nichts mehr besonders, und beim Scrollen stuenden staendig halb
+     durchsichtige Absaetze im Bild. Die Mitarbeiterzahl zaehlt nicht mehr
+     hoch, sie steht fertig im HTML. */
   function initScroll() {
 
-  /* Hero-Video faehrt beim Verlassen langsam mit, der Text etwas schneller.
-     Nur transform, kein Filter. */
+  /* Hero-Video faehrt beim Verlassen ruhig mit (leichte Parallax). Der Text
+     bleibt stehen und voll deckend. Nur transform, kein Filter. */
   var heroMedia = document.querySelector('.hero__media');
   if (heroMedia) {
     G.to(heroMedia, {
       yPercent: 16, ease: 'none',
       scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true, invalidateOnRefresh: true }
     });
-    G.to('.hero__in', {
-      yPercent: -8, opacity: .25, ease: 'none',
-      scrollTrigger: { trigger: '.hero', start: '40% top', end: 'bottom top', scrub: true, invalidateOnRefresh: true }
-    });
   }
 
-  /* Sektionsueberschriften: jede Zeile faehrt aus einer eigenen Maske hoch.
-     autoSplit teilt bei Breitenwechsel neu und ruft onSplit erneut auf. Ohne
-     SplitText bleibt die Ueberschrift einfach sichtbar, der umgebende .rv-Block
-     blendet sie dann mit ein. */
-  var h2s = document.querySelectorAll('.h2');
-  if (Split && h2s.length) {
-    h2s.forEach(function (h) {
-      G.set(h, { opacity: 1 });
-      Split.create(h, {
-        type: 'lines', mask: 'lines', linesClass: 'hl', autoSplit: true,
-        onSplit: function (self) {
-          return G.from(self.lines, {
-            yPercent: 110, duration: .95, ease: 'power3.out', stagger: .09,
-            scrollTrigger: { trigger: h, start: 'top 88%', once: true }
-          });
-        }
-      });
-    });
-  } else {
-    G.set(h2s, { opacity: 1 });
-  }
-
-  ST.batch('.rv', {
-    start: 'top 88%',
-    once: true,
-    batchMax: 6,
-    onEnter: function (els) {
-      G.fromTo(els,
-        { opacity: 0, y: 26 },
-        { opacity: 1, y: 0, duration: .85, ease: 'power3.out', stagger: 0.08, overwrite: true });
-    }
-  });
-
-  /* Akzentlinien der Vorteile-Spalten wachsen von links auf */
+  /* Masslinien der Vorteile: ziehen sich von links auf wie eine Bemassung */
   ST.batch('.adv__rule', {
     start: 'top 92%',
     once: true,
@@ -343,44 +372,24 @@
     }
   });
 
-  /* ========================================================= BILD-REVEAL ==
-     Leichte Skalierung 1.04 -> 1, hoechstens drei gleichzeitig. */
-  ST.batch('.frame > img', {
-    start: 'top 92%',
-    once: true,
-    batchMax: 3,
-    onEnter: function (els) {
-      els.forEach(function (el) { el.style.willChange = 'transform'; });
-      G.to(els, {
-        scale: 1, duration: 1.25, ease: 'power2.out', stagger: 0.1, overwrite: true,
-        onComplete: function () { els.forEach(function (el) { el.style.willChange = ''; }); }
-      });
-    }
-  });
-
-  /* ============================================================= ZAEHLER ==
-     Maschinendaten und Gruendungsjahr werden NICHT gezaehlt — waehrend des
-     Hochlaufens stuenden sonst plausibel aussehende, aber falsche Angaben
-     ueber den Betrieb auf dem Bildschirm. Nur die Mitarbeiterzahl laeuft an,
-     und die in 0,6 s. */
-  var nums = document.querySelectorAll('[data-count]');
-  if (nums.length) {
-    var stats = document.querySelector('.stats');
-    ST.create({
-      trigger: stats,
-      start: 'top 78%',
+  /* ========================================================= BILDSCHIEBER ==
+     Jede Bildbox oeffnet sich einmal von oben nach unten, wie ein Schieber an
+     der Maschine: clip-path inset(0 0 100% 0) -> inset(0), 0,9 s, weich ein-
+     und auslaufend. Gesetzt am Rahmen, nicht am Bild — das Bild selbst bleibt
+     frei fuer den Hover-Zoom per CSS. Danach faellt die Klasse weg und
+     clip-path ist wieder none: nichts bleibt dauerhaft beschnitten. */
+  if (boxen.length) {
+    var ZU = 'inset(0% 0% 100% 0%)', AUF = 'inset(0% 0% 0% 0%)';
+    ST.batch(boxen, {
+      start: 'top 92%',
       once: true,
-      onEnter: function () {
-        nums.forEach(function (el) {
-          var target = parseInt(el.getAttribute('data-count'), 10);
-          if (isNaN(target)) return;
-          var obj = { v: 0 };
-          el.textContent = '0';
-          G.to(obj, {
-            v: target, duration: 0.6, ease: 'power2.out',
-            onUpdate: function () { el.textContent = String(Math.round(obj.v)); },
-            onComplete: function () { el.textContent = String(target); }
-          });
+      batchMax: 4,
+      onEnter: function (els) {
+        G.fromTo(els, { clipPath: ZU }, {
+          clipPath: AUF, duration: .9, ease: 'power2.inOut', stagger: 0.08, overwrite: true,
+          onComplete: function () {
+            els.forEach(function (el) { el.classList.remove('wipe'); el.style.clipPath = ''; });
+          }
         });
       }
     });
@@ -389,9 +398,10 @@
   /* ================================================== BRANCHEN-ZYLINDER ==
      14 Ringplaetze, sechs davon belegt — die uebrigen bleiben leer, damit die
      Karten einen offenen Bogen bilden statt eines geschlossenen Rads. Der Ring
-     dreht beim Scrollen von -102 auf -25 Grad und schiebt sich nach unten,
-     waehrend die Bilder in den Karten gegenlaeufig wandern. Erst ab 768 px;
-     darunter (und ohne GSAP) bleibt die Sektion ein schlichtes Raster. */
+     dreht beim Scrollen, waehrend die Bilder in den Karten gegenlaeufig
+     wandern. Er faehrt NICHT mehr nach unten: die Abwaertsfahrt liess oben
+     einen leeren Block stehen. Erst ab 768 px; darunter (und ohne GSAP) bleibt
+     die Sektion ein schlichtes Raster. */
   var cyl      = document.getElementById('cyl');
   var cylWrap  = document.getElementById('cylWrap');
   var cylStage = document.getElementById('cylStage');
@@ -410,36 +420,40 @@
     });
 
     G.matchMedia().add('(min-width: 768px)', function () {
-      root.classList.add('gsap-cyl');   /* Hoehe des Scrollwegs kommt aus dem CSS */
+      root.classList.add('gsap-cyl');   /* Ringhoehe kommt aus dem CSS */
 
-      var base = {
-        trigger: cylWrap, start: 'top 75%', end: 'bottom 25%',
-        scrub: true, invalidateOnRefresh: true,
-        onToggle: function (self) { cyl.style.willChange = self.isActive ? 'transform' : ''; }
-      };
+      /* Der Ring laeuft jetzt mit der Seite mit. Die Drehung beginnt wie
+         frueher, wenn seine Oberkante bei 75 % der Fensterhoehe steht, und
+         endet, wenn seine Unterkante bei 25 % steht. Damit zeigt jede
+         Ringlage im Fenster dasselbe Bild wie vorher, nur ohne Abwaertsfahrt.
+         Linear statt power1.inOut: gleichmaessige Drehung ohne Spitze in der
+         Bildmitte. */
+      function weg(start, end) {
+        return { trigger: cylWrap, start: start, end: end, scrub: true, invalidateOnRefresh: true };
+      }
       var imgs = cyl.querySelectorAll('.cyl__img');
+      var ringWeg = weg('top 75%', 'bottom 25%');
+      ringWeg.onToggle = function (self) { cyl.style.willChange = self.isActive ? 'transform' : ''; };
 
-      /* Startwinkel: die Vorlage beginnt bei -102 Grad, hat aber nur vier belegte
-         Ringplaetze. Sechs Karten spannen einen Bogen von 5 x 25,7 = 128,6 Grad
-         und stuenden bei -102 schon quer ueber den Schirm. Bei -180 liegt die
-         letzte Karte links der Mitte, die rechte Bildhaelfte ist frei, und die
-         Karten schwenken beim Scrollen dort hinein. Bis -25 Grad wandert damit
-         jede der sechs Karten genau einmal durch die Bildmitte. */
-      /* Startwinkel: Die Referenz startet mit vier belegten Ringplätzen bei -102°.
-         Wir haben sechs, also 51,4° mehr Bogen (25,7° je Platz) — der gleiche
-         Bildeindruck beim Eintritt ergibt sich deshalb bei -153°: links stehen
-         zweieinhalb Karten, die rechte Hälfte ist frei, dann schwenken sie ein. */
+      /* Startwinkel: Die Referenz startet mit vier belegten Ringplaetzen bei
+         -102 Grad. Wir haben sechs, also 51,4 Grad mehr Bogen (25,7 je Platz) —
+         der gleiche Bildeindruck beim Eintritt ergibt sich deshalb bei -153:
+         links stehen zweieinhalb Karten, die rechte Haelfte ist frei, dann
+         schwenken sie ein. Bis -25 wandert jede Karte genau einmal durch die
+         Bildmitte. */
       G.fromTo(cyl, { rotateY: -153 }, {
-        rotateY: -25, yPercent: 100, ease: 'power1.inOut',
-        scrollTrigger: base
+        rotateY: -25, ease: 'none',
+        scrollTrigger: ringWeg
       });
+      /* Bilder wandern in den Karten gegenlaeufig: waagrecht mit der Drehung,
+         senkrecht ueber die ganze Sichtzeit. */
       G.fromTo(imgs, { x: 100 }, {
-        x: -100, ease: 'power1.inOut',
-        scrollTrigger: { trigger: cylWrap, start: 'top 75%', end: 'bottom 25%', scrub: true, invalidateOnRefresh: true }
+        x: -100, ease: 'none',
+        scrollTrigger: weg('top 75%', 'bottom 25%')
       });
       G.fromTo(imgs, { y: -100 }, {
         y: 100, ease: 'none',
-        scrollTrigger: { trigger: cylWrap, start: 'top bottom', end: 'bottom top', scrub: true, invalidateOnRefresh: true }
+        scrollTrigger: weg('top bottom', 'bottom top')
       });
 
       return function () {
@@ -486,14 +500,24 @@
 
     function maximum() { return track.scrollWidth - track.clientWidth; }
 
+    /* Passen alle Bilder ohne Lauf in die Bahn (drei Hallenbilder ab 981 px),
+       gibt es nichts zu schieben: dann sind beide Pfeile weg statt blass. */
+    var pfeile = prev.parentElement;
     function stand() {
       var max = maximum();
       prev.setAttribute('aria-disabled', track.scrollLeft <= 2 ? 'true' : 'false');
       next.setAttribute('aria-disabled', track.scrollLeft >= max - 2 ? 'true' : 'false');
+      if (pfeile) pfeile.classList.toggle('is-leer', max <= 2);
     }
 
     function schiebe(weite) {
-      var ziel = Math.max(0, Math.min(maximum(), track.scrollLeft + weite));
+      var max = maximum();
+      var ziel = Math.max(0, Math.min(max, track.scrollLeft + weite));
+      /* Restwege unter einem halben Schritt gleich mitnehmen: sonst schiebt der
+         letzte Klick nur noch ein paar Pixel und das Ende fluchtet nicht. */
+      var halb = Math.abs(weite) / 2;
+      if (weite > 0 && max - ziel < halb) ziel = max;
+      if (weite < 0 && ziel < halb) ziel = 0;
       if (Math.abs(ziel - track.scrollLeft) < 1) return;   /* am Anschlag folgenlos */
       track.scrollTo({ left: ziel, behavior: 'smooth' });
     }
@@ -535,29 +559,131 @@
   }
 
   /* ============================================================ FORMULAR ==
-     Rein im Frontend, ohne Uebertragung. */
+     Versand ueber Netlify Forms. Geprueft wird hier mit einer eigenen Meldung
+     je Feld (novalidate setzt erst dieses Skript; ohne Skript prueft der
+     Browser selbst und schickt das Formular normal per POST).
+     Gesendet wird per fetch als application/x-www-form-urlencoded an "/".
+     Netlify erkennt die Anfrage am versteckten Feld form-name. Die
+     Erfolgsmeldung kommt NUR, wenn Netlify mit 2xx antwortet; sonst bleibt
+     alles Getippte stehen und die Meldung nennt Telefon und E-Mail. */
   function initForm() {
     var form = document.getElementById('form');
     var note = document.getElementById('formNote');
     if (!form || !note) return;
+    form.noValidate = true;
 
+    var knopf  = form.querySelector('button[type="submit"]');
+    var fields = form.querySelectorAll('[required]');
+    var LEER = {
+      fName: 'Bitte geben Sie Ihren Namen an.',
+      fMail: 'Bitte geben Sie Ihre E-Mail-Adresse an.',
+      fMsg:  'Bitte beschreiben Sie kurz Ihr Anliegen.',
+      fDsg:  'Bitte bestätigen Sie, dass Sie die Datenschutzerklärung gelesen haben.'
+    };
+    /* Der Ausweg als eigene, mit "Oder" angebundene Moeglichkeit, nicht als
+       zweiter Pflichtschritt. */
+    var AUSWEG = 'Oder erreichen Sie uns direkt: Telefon <a href="tel:+49870393310">08703&nbsp;9331-0</a>, ' +
+                 'E-Mail <a href="mailto:info@walczok-gmbh.de">info@walczok-gmbh.de</a>.';
+    /* Zahlen bis zwoelf schreibt die Seite aus; es gibt vier Pflichtfelder. */
+    var ZAHLWORT = ['', 'ein', 'zwei', 'drei', 'vier'];
+
+    function fehlerText(f) {
+      if (f.type === 'checkbox') return f.checked ? '' : LEER[f.id];
+      var v = f.value.trim();
+      if (!v) return LEER[f.id] || 'Bitte füllen Sie dieses Feld aus.';
+      if (f.type === 'email' && (!f.checkValidity() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v))) {
+        return 'Bitte geben Sie eine gültige E-Mail-Adresse an, zum Beispiel name@firma.de.';
+      }
+      return '';
+    }
+    function zeige(f, text) {
+      var err = document.getElementById(f.id + 'Err');
+      f.setAttribute('aria-invalid', text ? 'true' : 'false');
+      if (!err) return;
+      err.textContent = text;
+      err.hidden = !text;
+      if (text) f.setAttribute('aria-describedby', err.id);
+      else f.removeAttribute('aria-describedby');
+    }
+    function status(html, art, sammel) {
+      note.className = 'form__note' + (art ? ' is-' + art : '');
+      note.innerHTML = html;
+      if (sammel) note.setAttribute('data-sammel', ''); else note.removeAttribute('data-sammel');
+    }
+    /* Sammelmeldung ueber dem Absenden: nennt die Zahl der markierten Felder */
+    function sammelText(anzahl) {
+      return anzahl === 1 ? 'Bitte prüfen Sie das markierte Feld.'
+                          : 'Bitte prüfen Sie die ' + (ZAHLWORT[anzahl] || anzahl) + ' markierten Felder.';
+    }
+    /* Ins Bild holen, mit Luft unter der Kopfzeile. Das Ziel wird absolut aus
+       der echten Scrollposition gerechnet: Lenis' eigener Stand kann nach
+       einem nativen Sprung (Fokus, Browser) kurz veraltet sein. */
+    function insBild(el) {
+      var y = Math.max(0, el.getBoundingClientRect().top + window.pageYOffset - (hdr ? hdr.offsetHeight : 0) - 72);
+      if (lenis) lenis.scrollTo(y, { duration: .8 });
+      else window.scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
+    }
+
+    /* Nach dem ersten Absendeversuch pruefen die Felder live: eine Meldung
+       verschwindet, sobald die Angabe stimmt. */
+    var geprueft = false;
+    Array.prototype.forEach.call(fields, function (f) {
+      f.addEventListener(f.type === 'checkbox' ? 'change' : 'input', function () {
+        if (!geprueft) return;
+        zeige(f, fehlerText(f));
+        /* Die rote Sammelmeldung zaehlt mit und verschwindet, sobald kein Feld
+           mehr markiert ist. Eine Versandfehler-Meldung (Telefon, E-Mail)
+           bleibt dagegen stehen. */
+        if (note.hasAttribute('data-sammel')) {
+          var rest = form.querySelectorAll('[aria-invalid="true"]').length;
+          if (rest) status(sammelText(rest), 'error', true); else status('', '');
+        }
+      });
+    });
+
+    var sendet = false;
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-      var bad = null;
-      var fields = form.querySelectorAll('[required]');
+      if (sendet) return;
+      geprueft = true;
+
+      var erstes = null, anzahl = 0;
       Array.prototype.forEach.call(fields, function (f) {
-        var ok = f.type === 'checkbox' ? f.checked : f.checkValidity() && f.value.trim() !== '';
-        f.setAttribute('aria-invalid', ok ? 'false' : 'true');
-        if (!ok && !bad) bad = f;
+        var t = fehlerText(f);
+        zeige(f, t);
+        if (t) { anzahl++; if (!erstes) erstes = f; }
       });
-      if (bad) {
-        note.textContent = 'Bitte füllen Sie die Pflichtfelder aus.';
-        bad.focus();
+      if (erstes) {
+        status(sammelText(anzahl), 'error', true);
+        insBild(erstes);
+        erstes.focus({ preventScroll: true });
         return;
       }
-      note.textContent = 'Vielen Dank. Wir melden uns zügig bei Ihnen.';
-      form.reset();
-      Array.prototype.forEach.call(fields, function (f) { f.removeAttribute('aria-invalid'); });
+
+      sendet = true;
+      if (knopf) knopf.setAttribute('aria-disabled', 'true');
+      status('Ihre Anfrage wird gesendet …', 'busy');
+
+      fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(new FormData(form)).toString()
+      }).then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        status('Vielen Dank. Ihre Anfrage ist bei uns angekommen, wir melden uns zügig bei Ihnen.', 'ok');
+        form.reset();
+        geprueft = false;
+        Array.prototype.forEach.call(fields, function (f) { f.removeAttribute('aria-invalid'); });
+      }).catch(function () {
+        status('Ihre Anfrage konnte gerade nicht gesendet werden. Ihre Angaben sind noch da, versuchen Sie es bitte gleich noch einmal. ' + AUSWEG, 'error');
+      }).then(function () {
+        sendet = false;
+        if (knopf) knopf.removeAttribute('aria-disabled');
+        /* Den Knopf ins Bild holen, nicht nur die Meldung: er behaelt den
+           Tastaturfokus und laege sonst unter der festen Kopfzeile
+           (WCAG 2.4.11). Die Meldung steht direkt darunter. */
+        insBild(knopf || note);
+      });
     });
   }
 }());

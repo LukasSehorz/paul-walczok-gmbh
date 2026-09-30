@@ -5,16 +5,26 @@
 
 /* --------------------------------------------------------------- 1 Tokens */
 :root {
-  --bg:        #08090B;
-  --surface:   #101216;
-  --surface-2: #15181D;
+  /* Native Bedienelemente (Checkbox, Scrollleiste unter Windows) dunkel
+     zeichnen; sonst stand die Datenschutz-Checkbox als weisse Flaeche im
+     dunklen Formular. */
+  color-scheme: dark;
+
+  /* 29.09.2026: auf Kundenwunsch etwas heller (vorher #08090B / #101216 /
+     #15181D). Die RGB-Tripel werden fuer halbtransparente Verlaeufe gebraucht,
+     damit Bildverlaeufe genau in den Grund auslaufen. */
+  --bg:        #111317;
+  --bg-rgb:    17, 19, 23;
+  --surface:   #181B20;
+  --surface-rgb: 24, 27, 32;
+  --surface-2: #1E2228;
   --fg:        #F3F5F8;
   --fg-dim:    #B4BAC4;
   --muted:     #7E8692;
   --accent:    #2E5BFF;
   --accent-hi: #7796FF;
-  --line:      #1C2028;
-  --line-2:    #262B34;
+  --line:      #262B33;
+  --line-2:    #313742;
 
   --ff-dis: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
   --ff-txt: 'Manrope', 'Helvetica Neue', Arial, sans-serif;
@@ -26,6 +36,11 @@
   --hh:   112px;
 
   --ease: cubic-bezier(.22, .61, .36, 1);
+
+  /* Eine Eckenrundung fuer alles: Karten, Bilder, Knoepfe, Felder. Klein wie
+     eine gebrochene Kante am Werkstueck (Optik-Check 29.09.2026, vorher 16 px
+     an Karten und eckig an Knoepfen und Formular). */
+  --r: 3px;
 
   /* 3D-Zylinder der Branchen-Sektion — Werte wie in der Vorlage */
   --cyl-total:  14;
@@ -71,6 +86,10 @@ textarea:focus-visible, [tabindex]:focus-visible {
   border-radius: 2px;
 }
 
+/* Sprungziele (Abschnitte, main, body) bekommen per main.js tabindex="-1"
+   und den Fokus. Sie sind kein Bedienelement, deshalb ohne Rahmen. */
+[tabindex="-1"]:focus, [tabindex="-1"]:focus-visible { outline: none; }
+
 ::selection { background: var(--accent); color: #fff; }
 
 .sr {
@@ -95,13 +114,28 @@ textarea:focus-visible, [tabindex]:focus-visible {
 
 .sec { padding-block: var(--sp); }
 
-.kicker {
+/* Etiketten ueber Ueberschriften, Feldern und Spalten: Fliesstextschrift in
+   normaler Schreibung, halbfett, grau. Keine Nummern davor. Die Schreib-
+   maschinenschrift steht nur noch an Massen und Normen (.mass), wie die
+   Normschrift auf einer Zeichnung (Optik-Check 29.09.2026). */
+.kicker,
+.job__meta, .f label, .ftr h2, .con__meta h3, .car__jobsH,
+.own__sub h4, .ceo__label, .stat dt, .own__bandK {
   margin: 0;
+  font-family: var(--ff-txt);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: .01em;
+  text-transform: none;
+  color: var(--muted);
+}
+.mass {
   font-family: var(--ff-mon);
-  font-size: 12px;
-  letter-spacing: .16em;
-  text-transform: uppercase;
-  color: var(--accent-hi);
+  font-weight: 400;
+  font-size: .94em;
+  letter-spacing: 0;
+  word-spacing: -.28em;   /* Monospace-Leerzeichen sind sonst so breit wie eine Ziffer */
 }
 
 /* Sektionsueberschrift bewusst zurueckgenommen: der Nutzen darunter soll die
@@ -111,12 +145,12 @@ textarea:focus-visible, [tabindex]:focus-visible {
   font-family: var(--ff-dis);
   font-weight: 700;
   font-size: clamp(2.1rem, 4vw, 3.6rem);
-  line-height: .98;
-  letter-spacing: -.028em;
+  /* Etwas lockerer als zuvor (.98 / -.028em): die Wortabstaende wurden knapp. */
+  line-height: 1.05;
+  letter-spacing: -.015em;
   color: var(--fg);
   text-wrap: balance;
 }
-.dot { color: var(--accent); }
 
 .lead {
   margin: 22px 0 0;
@@ -130,17 +164,14 @@ textarea:focus-visible, [tabindex]:focus-visible {
 
 /* Massangaben duerfen nie mitten im Mass umbrechen. */
 .nb { white-space: nowrap; }
+/* E-Mail-Adressen brechen sonst am Bindestrich mitten im Namen um,
+   Telefonnummern zwischen den Zifferngruppen. */
+a[href^="mailto:"], a[href^="tel:"] { white-space: nowrap; }
 
-.idx {
-  display: block;
-  font-family: var(--ff-mon);
-  font-size: 12px;
-  letter-spacing: .12em;
-  color: var(--muted);
-}
-
-/* Bildrahmen: fasst das Bild, damit die Reveal-Skalierung nicht ausbricht. */
-.frame { position: relative; overflow: hidden; background: var(--surface); }
+/* Bildrahmen: fasst nur das Bild. Eine Bildunterschrift steht ausserhalb,
+   darunter (figure > .frame + figcaption). isolation haelt die Rundung beim
+   Hover-Zoom auch in Safari sauber. */
+.frame { position: relative; overflow: hidden; background: var(--surface); border-radius: var(--r); isolation: isolate; }
 .frame > img { width: 100%; height: 100%; object-fit: cover; }
 
 /* Buttons ------------------------------------------------------------------ */
@@ -154,6 +185,7 @@ textarea:focus-visible, [tabindex]:focus-visible {
   letter-spacing: .01em;
   line-height: 1.2;
   border: 1px solid transparent;
+  border-radius: var(--r);
   cursor: pointer;
   transition: background-color .28s var(--ease), color .28s var(--ease),
               border-color .28s var(--ease), transform .28s var(--ease);
@@ -171,7 +203,7 @@ textarea:focus-visible, [tabindex]:focus-visible {
   transition: background-color .35s var(--ease), border-color .35s var(--ease);
 }
 .hdr.is-stuck {
-  background: rgba(8, 9, 11, .88);
+  background: rgba(var(--bg-rgb), .88);
   -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
   border-bottom-color: var(--line);
@@ -181,6 +213,10 @@ textarea:focus-visible, [tabindex]:focus-visible {
 .hdr.is-navopen {
   background: var(--bg);
   border-bottom-color: transparent;
+  /* Keine Unschaerfe bei offenem Menue: backdrop-filter macht die Kopfzeile
+     zum Bezugsrahmen fuer das fixe Menue, das dann nur 40 px hoch wurde. */
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
 }
 
 .hdr__in {
@@ -216,7 +252,9 @@ textarea:focus-visible, [tabindex]:focus-visible {
    also nur diese eine Zahl, sonst zerfaellt das Raster (background-size und
    Schrittweite muessen immer zusammenpassen). js/main.js liest die Kachelgroesse
    zur Laufzeit aus dem Element und rechnet nicht mit einem eigenen Wert. */
-.brand__link { display: block; }
+/* Marke und Schriftzug stehen zusammen im Link: ein Tipp auf den Namen fuehrt
+   ebenfalls nach oben. Der Abstand kommt von .brand. */
+.brand__link { display: flex; align-items: center; gap: inherit; }
 .mark {
   --mark-kachel: 84px;            /* einzige Stellschraube fuer die Groesse */
   display: block;
@@ -238,16 +276,10 @@ textarea:focus-visible, [tabindex]:focus-visible {
   .mark { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
 
-.brand__word {
-  font-family: var(--ff-dis);
-  font-weight: 700;
-  font-size: 15px;
-  letter-spacing: .17em;
-  text-transform: uppercase;
-  color: var(--fg);
-  white-space: nowrap;
-}
-.brand__word span { color: var(--muted); }
+/* Original-Schriftzug aus der CI (Kundenwunsch 29.09.2026), als Bild, weil
+   die Schrift der Firma keine Webschrift ist und Band und Rahmen dazugehoeren.
+   Die Hoehe steuert alles, die Breite folgt dem Seitenverhaeltnis 1047:189. */
+.brand__wm { display: block; height: 52px; width: auto; max-width: none; }
 
 /* Sechs Eintraege plus Knopf brauchen mehr Platz als die frueheren vier, die
    Abstaende sind deshalb enger gefasst. */
@@ -275,9 +307,11 @@ textarea:focus-visible, [tabindex]:focus-visible {
 
 .burger {
   display: none;
+  order: 2;                       /* steht im HTML vor dem Menue, optisch rechts */
+  flex: none;                     /* schrumpft sonst bei 320 px auf 22 px */
   width: 48px; height: 48px;
   padding: 0;
-  background: none; border: 1px solid var(--line-2); color: var(--fg);
+  background: none; border: 1px solid var(--line-2); border-radius: var(--r); color: var(--fg);
   cursor: pointer;
 }
 .burger__bars { display: grid; gap: 6px; place-items: center; }
@@ -297,23 +331,39 @@ textarea:focus-visible, [tabindex]:focus-visible {
 }
 .hero__media { position: absolute; inset: 0; z-index: 0; }
 .hero__media video { width: 100%; height: 100%; object-fit: cover; }
+/* Abgedunkelt wird nur, wo Schrift steht: oben fuer die Navigation, links
+   hinter dem Hero-Text, unten der Uebergang in den Grund. Rechts bleibt der
+   Film fast frei, damit Span und Werkstueck glaenzen (Optik-Check 29.09.2026;
+   vorher lag senkrecht .40 bis .78 ueber dem ganzen Bild). */
 .hero__veil {
   position: absolute; inset: 0; z-index: 1;
   background:
-    linear-gradient(180deg, rgba(8,9,11,.86) 0%, rgba(8,9,11,.40) 34%, rgba(8,9,11,.78) 78%, var(--bg) 100%),
-    linear-gradient(90deg, rgba(8,9,11,.80) 0%, rgba(8,9,11,.24) 58%, rgba(8,9,11,.10) 100%);
+    linear-gradient(180deg, rgba(var(--bg-rgb), .70) 0%, rgba(var(--bg-rgb), .15) 24%, rgba(var(--bg-rgb), .15) 62%, rgba(var(--bg-rgb), .55) 86%, var(--bg) 100%),
+    linear-gradient(90deg, rgba(var(--bg-rgb), .84) 0%, rgba(var(--bg-rgb), .68) 30%, rgba(var(--bg-rgb), .28) 56%, rgba(var(--bg-rgb), .04) 80%, rgba(var(--bg-rgb), 0) 100%);
+}
+/* Auf dem Handy steht der Text ueber die ganze Breite, es gibt kein freies
+   Rechts. Dort bleibt die Abdunklung flaechig. */
+@media (max-width: 700px) {
+  .hero__veil {
+    background: linear-gradient(180deg, rgba(var(--bg-rgb), .78) 0%, rgba(var(--bg-rgb), .42) 30%, rgba(var(--bg-rgb), .70) 70%, var(--bg) 100%);
+  }
 }
 .hero__in { position: relative; z-index: 2; }
 
 .hero__h1 {
   margin: 20px 0 0;
   font-family: var(--ff-dis);
-  font-weight: 800;
+  /* 700 statt 800, Laufweite und Zeilenabstand etwas lockerer als zuvor
+     (.94 / -.035em). Wirkt gesetzt statt gepresst. */
+  font-weight: 700;
   font-size: clamp(2.85rem, 7.4vw, 6.4rem);
-  line-height: .94;
-  letter-spacing: -.035em;
+  line-height: 1;
+  letter-spacing: -.022em;
   color: var(--fg);
 }
+/* Der Kicker bleibt in einer Zeile: ein Umbruch liesse ein "·" am Zeilenrand
+   haengen. Auf sehr schmalen Handys wird er dafuer minimal kleiner. */
+.hero__kicker { color: var(--fg-dim); white-space: nowrap; font-size: clamp(12px, 4.1vw, 14px); }
 .hero__sub {
   margin: 28px 0 0;
   max-width: 46ch;
@@ -326,24 +376,31 @@ textarea:focus-visible, [tabindex]:focus-visible {
 /* ------------------------------------------------------------- 6 Vorteile */
 .sec--adv { padding-bottom: clamp(64px, 7vw, 112px); }
 
+/* minmax(0, 1fr): sonst bestimmt ein langes Wort ("Schrottcontainer") die
+   Mindestbreite und die Spalten werden ungleich. */
 .adv {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: clamp(22px, 2.6vw, 44px);
 }
-.adv__i { position: relative; padding-top: 26px; }
+/* Jede Karte belegt zwei Zeilen des Rasters (Titel, Text) und uebernimmt sie
+   per Subgrid: so beginnen alle Texte einer Reihe auf derselben Hoehe, egal
+   ob die Titel ein- oder zweizeilig sind. Die Linie ist absolut gesetzt und
+   belegt keine Zelle. */
+.adv__i {
+  position: relative; padding-top: 26px;
+  display: grid; grid-row: span 2; grid-template-rows: subgrid; row-gap: 0;
+}
 .adv__rule {
   position: absolute; top: 0; left: 0; right: 0;
   height: 1px; background: var(--accent);
   transform-origin: left center;
 }
-.adv__i .idx { margin-bottom: 20px; color: var(--accent-hi); }
 
 /* Das Herzstueck: der Nutzen steht in der zweitgroessten Schrift der Seite,
-   nicht in der kleinsten. min-height haelt die vier Fliesstexte auf einer Linie. */
+   nicht in der kleinsten. */
 .adv__i h3 {
   margin: 0 0 14px;
-  min-height: calc(2 * 1.12em);
   font-family: var(--ff-dis);
   font-weight: 600;
   font-size: clamp(1.6rem, 1.1vw + 1.16rem, 2.125rem);
@@ -354,42 +411,41 @@ textarea:focus-visible, [tabindex]:focus-visible {
 }
 .adv__i p { margin: 0; font-size: 1rem; line-height: 1.62; color: var(--fg-dim); }
 
-/* ---------------------------------------------------------- 7 Bildbuehne */
-.band { padding-inline: var(--gut); }
-.frame--band {
-  max-width: var(--wrap);
-  margin-inline: auto;
-  aspect-ratio: 1400 / 569;
-}
-@media (max-width: 700px) { .frame--band { aspect-ratio: 4 / 3; } }
-
 /* ----------------------------------------------------------- 8 Leistungen
-   Karten nach der teccad-Prozessseite. Drei Spalten, zwei Reihen, alle Karten
-   gleich hoch. Das Foto sitzt im oberen Drittel und laeuft nach unten in den
-   Kartengrund aus, die versale Ueberschrift steht darueber. Die Akzentkarte
-   traegt dieselbe Kopfhoehe ohne Bild, damit alle Ueberschriften auf einer
-   Linie sitzen. */
+   Karten nach der teccad-Prozessseite, alle Karten gleich hoch. Oben das Foto
+   mit harter Unterkante, darunter im Kartengrund die versale Ueberschrift.
+   Kein Verlauf mehr ueber dem Foto, kein Anheben beim Hover: das Foto zoomt
+   langsam im eigenen Ausschnitt (Optik-Check 29.09.2026). */
 .svc {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  /* Acht Karten (seit 29.09.2026: Flach-/Rundschleifen getrennt, Messen neu):
+     vier Spalten ergeben zwei volle Reihen, drei Spalten liessen eine Luecke. */
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: clamp(16px, 1.6vw, 26px);
 }
+/* Jede Karte belegt vier Zeilen des Rasters (Foto, Titel, Einleitung, Text)
+   und uebernimmt sie per Subgrid, der Kartenkoerper die unteren drei
+   ebenso. So beginnen Einleitung und Text einer Reihe auf derselben Hoehe,
+   und eine leere Zeile unter der Einleitung entsteht nur, wenn eine
+   Nachbarkarte der Reihe wirklich zwei Zeilen braucht. */
 .svc__i {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-row: span 4;
+  grid-template-rows: subgrid;
+  row-gap: 0;
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: var(--r);
   background: var(--surface);
   overflow: hidden;
-  transition: border-color .32s var(--ease), transform .32s var(--ease);
+  transition: border-color .32s var(--ease);
 }
-.svc__i:hover { border-color: var(--line-2); transform: translateY(-3px); }
+.svc__i:hover { border-color: var(--line-2); }
 
+/* Eigener Ausschnitt fuer das Foto: overflow haelt den Hover-Zoom im Bild,
+   die Unterkante bleibt hart. */
 .svc__top {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
+  overflow: hidden;
   aspect-ratio: 16 / 9;
   background: var(--surface-2);
 }
@@ -398,34 +454,33 @@ textarea:focus-visible, [tabindex]:focus-visible {
   width: 100%; height: 100%;
   max-width: none;
   object-fit: cover;
+  /* Ausschnitt je Bild im HTML (style="--pos: ..."), Standard mittig */
+  object-position: var(--pos, 50% 50%);
+  transition: transform .7s var(--ease);
 }
-/* Die Abdeckung setzt erst unterhalb der Bildmitte ein. Der Auftraggeber wollte
-   die Verfahren sichtbar haben, und die Ueberschrift steht ohnehin ganz unten,
-   wo der Verlauf bereits voll im Kartengrund liegt. Oben bleibt das Motiv frei. */
-.svc__top::after {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(180deg,
-    rgba(8,9,11,0) 0%,
-    rgba(8,9,11,.08) 34%,
-    rgba(12,14,18,.44) 62%,
-    rgba(16,18,22,.86) 84%,
-    var(--surface) 100%);
-}
+.svc__i:hover .svc__top > img { transform: scale(1.03); }
+/* Weiche Trennstellen (&shy;) statt fester Umbrueche: getrennt wird nur, wenn
+   das Wort nicht in die Zeile passt. Die Groesse waechst mit der Kartenbreite
+   (1.72vw), so passt auch LASERSCHWEISSEN (10,3 em) im Vierer-Raster in eine
+   Zeile und alle Titel stehen auf einer Linie. */
 .svc__h {
-  position: relative; z-index: 2;
-  margin: 0;
-  padding: 0 clamp(20px, 1.7vw, 28px) 16px;
+  margin: 0 0 14px;
   font-family: var(--ff-dis);
   font-weight: 700;
-  font-size: clamp(1.5rem, 1.5vw + .7rem, 2.05rem);
-  line-height: 1.0;
-  letter-spacing: -.01em;
+  font-size: clamp(1.3rem, 1.72vw, 1.5rem);
+  line-height: 1.05;
+  letter-spacing: 0;
   text-transform: uppercase;
+  hyphens: manual;
   color: var(--fg);
 }
 .svc__body {
-  flex: 1;
-  padding: 18px clamp(20px, 1.7vw, 28px) clamp(24px, 2vw, 30px);
+  grid-row: 2 / span 3;
+  display: grid;
+  grid-template-rows: subgrid;
+  row-gap: 0;
+  align-content: start;
+  padding: clamp(20px, 1.8vw, 26px) clamp(20px, 1.7vw, 28px) clamp(24px, 2vw, 30px);
 }
 .svc__body p { margin: 0; font-size: .96rem; line-height: 1.6; color: var(--fg-dim); }
 .svc__intro {
@@ -433,37 +488,21 @@ textarea:focus-visible, [tabindex]:focus-visible {
   font-weight: 600;
   color: var(--fg) !important;
 }
+/* Die fruehere Mindesthoehe von zwei Zeilen fuer die Einleitung ist
+   entfallen: sie liess zwischen 781 und 1200 px (alle Einleitungen
+   einzeilig) unter jeder Einleitung eine leere Zeile. Das Subgrid oben
+   gleicht die Reihen jetzt selbst aus. */
 
-/* Die eine hervorgehobene Karte traegt das Laserschweissen, weil es seit Anfang
-   2026 neu im Portfolio steht. Sie liegt auf dem satten --accent mit weisser
-   Schrift: 5,18:1 und damit AA. Dunkle Schrift auf demselben Blau kaeme nur auf
-   3,85:1, der helle Ton --accent-hi ist im Rest der Seite die Farbe der Kicker
-   und Links und wuerde als Flaeche nichts mehr hervorheben. */
-.svc__i--hi { background: var(--accent); border-color: var(--accent); }
-.svc__i--hi:hover { border-color: var(--accent-hi); }
-.svc__i--hi .svc__top { background: var(--accent); justify-content: space-between; padding-top: clamp(20px, 1.7vw, 28px); }
-.svc__i--hi .svc__top::after { display: none; }
-.svc__i--hi .svc__h { color: #fff; }
-.svc__flag {
-  position: relative; z-index: 2;
-  margin: 0;
-  padding: 0 clamp(20px, 1.7vw, 28px);
-  font-family: var(--ff-mon);
-  font-size: 12px;
-  letter-spacing: .16em;
-  text-transform: uppercase;
-  /* Volles Weiss. Bei 12 px versal auf dem satten Blau kommt schon .88 nur auf
-     4,36:1 und verfehlt AA. Weiss ergibt 5,18:1. */
-  color: #fff;
-}
-.svc__i--hi .svc__body p { color: rgba(255, 255, 255, .92); }
-.svc__i--hi .svc__intro { color: #fff !important; }
+/* Die blaue Akzentkarte (.svc__i--hi, "Neu 2026") ist entfallen: alle Karten
+   stehen im selben Grundton, Blau bleibt Knoepfen und Links vorbehalten. */
 
 /* ------------------------------------------------------- 8b Branchen (3D) */
 /* Grundzustand ist ein schlichtes Raster. Der Zylinder wird erst gebaut, wenn
    GSAP geladen ist, die Bewegung erlaubt ist und die Breite >= 768 px liegt
    (Klasse .gsap-cyl am <html>). Ohne das bleibt die Sektion ein Raster. */
-.sec--ind { padding-top: clamp(64px, 7vw, 112px); padding-bottom: clamp(36px, 3.6vw, 64px); }
+/* Oben und unten gleich tief: unten klebte die Trennlinie zur Karriere sonst
+   52 px unter dem Zylinder. */
+.sec--ind { padding-block: clamp(64px, 7vw, 112px); }
 
 .cyl-wrap { position: relative; width: 100%; perspective-origin: 50% center; transform-origin: 50% center; }
 .cyl-stage { position: relative; z-index: 1; padding-inline: var(--gut); }
@@ -480,12 +519,16 @@ textarea:focus-visible, [tabindex]:focus-visible {
   overflow: hidden;
   aspect-ratio: 1 / 1;
   background: var(--surface);
+  border-radius: var(--r);
 }
 .cyl__c[data-empty] { display: none; }
 .cyl__img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; }
+/* Im Zylinder bleibt die Beschriftung auf dem Bild (darunter wuerde sie die
+   quadratischen Ringkarten brechen). Der Verlauf ist dafuer kurz und leicht,
+   ein weicher Schatten traegt die Schrift (Optik-Check 29.09.2026). */
 .cyl__veil {
   position: absolute; inset: 0; z-index: 2;
-  background-image: linear-gradient(rgba(6, 7, 10, 0) 62%, rgba(6, 7, 10, .72) 100%);
+  background-image: linear-gradient(rgba(6, 7, 10, 0) 74%, rgba(6, 7, 10, .5) 100%);
 }
 .cyl__cap {
   position: absolute; left: 0; bottom: 0; z-index: 3;
@@ -496,15 +539,38 @@ textarea:focus-visible, [tabindex]:focus-visible {
   letter-spacing: .06em;
   text-transform: uppercase;
   color: var(--fg);
+  text-shadow: 0 1px 14px rgba(6, 7, 10, .55);
+}
+/* Als Raster (Handy, ohne GSAP, reduzierte Bewegung) steht die Beschriftung
+   wie ueberall unter dem Bild, ohne Verlauf. */
+:root:not(.gsap-cyl) .cyl__c { overflow: visible; aspect-ratio: auto; background: none; border-radius: 0; }
+:root:not(.gsap-cyl) .cyl__img {
+  position: static; height: auto; aspect-ratio: 1 / 1;
+  border-radius: var(--r); background: var(--surface);
+}
+:root:not(.gsap-cyl) .cyl__veil { display: none; }
+:root:not(.gsap-cyl) .cyl__cap {
+  position: static; display: block;
+  padding: 12px 0 0;
+  font-size: clamp(.98rem, .5vw + .85rem, 1.15rem);
+  text-shadow: none;
 }
 
 /* --- Zylinderzustand ------------------------------------------------------ */
-/* Der Scrollweg ist doppelt so hoch wie der Ring — wie in der Vorlage, aber
-   ueber CSS, damit er beim Breitenwechsel nicht stehenbleibt. */
+/* Der Rahmen ist genau so hoch wie der Ring. Frueher war er doppelt so hoch,
+   damit der Ring nach unten fahren konnte — das liess einen leeren Block
+   stehen. Der Ring dreht jetzt nur noch. Hoehe ueber CSS, damit sie beim
+   Breitenwechsel mitgeht. */
 /* overflow-x:clip statt hidden — clip erlaubt als einziger Wert weiterhin
    overflow-y:visible, der Ring darf also oben und unten aus dem Rahmen ragen,
    erzeugt seitlich aber keine Scrollbreite. */
-.gsap-cyl .cyl-wrap { height: calc(var(--cyl-w) * 2); overflow-x: clip; overflow-y: visible; }
+.gsap-cyl .cyl-wrap { height: var(--cyl-w); overflow-x: clip; overflow-y: visible; }
+/* An den Fensterraendern laufen die Karten weich aus, statt die Beschriftung
+   mitten im Wort hart abzuschneiden. */
+.gsap-cyl .cyl-wrap {
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
+          mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
+}
 .gsap-cyl .cyl-stage {
   padding-inline: 0;
   perspective: 5000px;
@@ -540,17 +606,6 @@ textarea:focus-visible, [tabindex]:focus-visible {
 .sec--own > * + * { margin-top: clamp(48px, 4.8vw, 74px); }
 .sec--own .lead { max-width: 52ch; }
 
-.own__head {
-  display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
-  gap: clamp(32px, 4vw, 72px);
-  align-items: center;
-}
-/* 3:4 statt 4:5. Der Kopf traegt nur noch drei Zeilen Text, ein hoeheres Bild
-   liesse die linke Spalte leer stehen. */
-.own__headImg { aspect-ratio: 3 / 4; border-radius: 16px; }
-.own__act { margin: clamp(28px, 3vw, 40px) 0 0; }
-
 /* Fuehrt seit dem Wegfall des Erklaerblocks die Kartenreihe an. */
 .own__whyH {
   margin: 0 0 clamp(28px, 3vw, 44px);
@@ -558,25 +613,37 @@ textarea:focus-visible, [tabindex]:focus-visible {
   font-family: var(--ff-dis);
   font-weight: 700;
   font-size: clamp(1.6rem, 2.2vw, 2.35rem);
-  line-height: 1.06;
-  letter-spacing: -.026em;
+  line-height: 1.08;
+  letter-spacing: -.015em;
   color: var(--fg);
+  text-wrap: balance;
 }
 
 /* --- Kartenreihe ---------------------------------------------------------- */
+/* Jede Karte belegt drei Zeilen (Titel, Satz, Liste) und uebernimmt sie per
+   Subgrid. So beginnen alle Listen auf einer Hoehe, auch bei zweizeiligem
+   Titel oder wenn der Satz fehlt (Konstruktion): die Liste sitzt immer in
+   der dritten Zeile. */
 .own__steps {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: clamp(16px, 1.6vw, 26px);
 }
 .own__step {
-  display: flex; flex-direction: column;
+  display: grid; grid-row: span 3; grid-template-rows: subgrid; row-gap: 0;
+  align-content: start;
   padding: clamp(24px, 2.2vw, 34px);
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: var(--r);
   background: var(--surface);
+  transition: border-color .3s var(--ease);
 }
-.own__step h3 {
+.own__step > h4 { grid-row: 1; }
+.own__step > p { grid-row: 2; }
+.own__step > .arrow { grid-row: 3; align-self: start; }
+/* Karten ohne Bild: beim Hover wird die Rahmenlinie blau, nichts hebt sich. */
+.own__step:hover { border-color: var(--accent); }
+.own__step h4 {
   margin: 0 0 14px;
   font-family: var(--ff-dis);
   font-weight: 700;
@@ -587,9 +654,8 @@ textarea:focus-visible, [tabindex]:focus-visible {
   color: var(--fg);
 }
 .own__step > p { margin: 0 0 22px; font-size: .96rem; color: var(--fg-dim); }
-.own__step--hi { background: var(--accent); border-color: var(--accent); }
-.own__step--hi h3 { color: #fff; }
-.own__step--hi > p { color: rgba(255, 255, 255, .92); }
+/* Die blaue Mittelkarte (.own__step--hi) ist entfallen: sie las sich wie der
+   "beliebteste Tarif" einer Preistabelle. */
 
 /* Pfeil-Aufzaehlung wie in der Vorlage */
 .arrow { display: grid; gap: 10px; }
@@ -600,16 +666,16 @@ textarea:focus-visible, [tabindex]:focus-visible {
   line-height: 1.45;
   color: var(--fg-dim);
 }
+/* Der Pfeil sitzt auf halber Zeilenhoehe der ersten Zeile (1.45em / 2) und
+   damit mittig zu den Kleinbuchstaben, nicht mehr an deren Oberkante. */
 .arrow li::before {
   content: '';
-  position: absolute; left: 2px; top: .52em;
+  position: absolute; left: 2px; top: .76em;
   width: 7px; height: 7px;
   border-top: 1.5px solid var(--accent-hi);
   border-right: 1.5px solid var(--accent-hi);
   transform: translateY(-50%) rotate(45deg);
 }
-.own__step--hi .arrow li { color: rgba(255, 255, 255, .94); }
-.own__step--hi .arrow li::before { border-color: rgba(255, 255, 255, .78); }
 
 /* --- Bilderlauf ----------------------------------------------------------- */
 .own__galHead {
@@ -632,7 +698,7 @@ textarea:focus-visible, [tabindex]:focus-visible {
   padding: 0;
   background: none;
   border: 1px solid var(--line-2);
-  border-radius: 50%;
+  border-radius: var(--r);
   color: var(--fg);
   cursor: pointer;
   transition: background-color .25s var(--ease), border-color .25s var(--ease), color .25s var(--ease);
@@ -641,6 +707,9 @@ textarea:focus-visible, [tabindex]:focus-visible {
 .galbtn:hover { border-color: var(--accent); color: var(--accent-hi); }
 .galbtn[aria-disabled="true"] { opacity: .34; cursor: default; }
 .galbtn[aria-disabled="true"]:hover { border-color: var(--line-2); color: var(--fg); }
+/* Nichts zu schieben (main.js): Pfeile unsichtbar und aus dem Tab-Lauf,
+   die Kopfzeile behaelt ihre Hoehe. */
+.own__galNav.is-leer { visibility: hidden; }
 
 /* Der Laufweg geht randlos ueber die Breite, das Innenmass richtet sich aber
    weiter am Raster aus. overflow-x liegt im Element, die Seite bleibt schmal. */
@@ -667,15 +736,8 @@ textarea:focus-visible, [tabindex]:focus-visible {
   flex: 0 0 clamp(212px, 18.5vw, 262px);
   scroll-snap-align: start;
 }
-.own__shot .frame { aspect-ratio: 5 / 7; border-radius: 14px; }
-.own__shot figcaption {
-  position: absolute; inset: auto 0 0 0;
-  padding: 40px 16px 14px;
-  background: linear-gradient(180deg, rgba(8,9,11,0) 0%, rgba(8,9,11,.88) 64%, rgba(8,9,11,.95) 100%);
-  font-size: .84rem;
-  font-weight: 600;
-  color: var(--fg);
-}
+.own__shot .frame { aspect-ratio: 5 / 7; }
+.own__shot figure { margin: 0; }
 
 /* --- Die beiden Produkte -------------------------------------------------- */
 .own__prod {
@@ -685,10 +747,12 @@ textarea:focus-visible, [tabindex]:focus-visible {
   padding-top: clamp(32px, 3.4vw, 52px);
   border-top: 1px solid var(--line);
 }
-.own__ico { display: block; color: var(--accent-hi); }
-.own__ico svg { width: 30px; height: 30px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+/* Jedes Produkt belegt vier Zeilen (Foto, Titel, Text, Aufbau) und uebernimmt
+   sie per Subgrid: der Block "Aufbau" steht bei beiden auf einer Linie, auch
+   wenn die Beschreibungen unterschiedlich lang sind. */
+.own__p { display: grid; grid-row: span 4; grid-template-rows: subgrid; row-gap: 0; align-content: start; }
 .own__p h3 {
-  margin: 18px 0 12px;
+  margin: 0 0 12px;
   font-family: var(--ff-dis);
   font-weight: 600;
   font-size: clamp(1.3rem, 1.1vw + .9rem, 1.7rem);
@@ -696,34 +760,24 @@ textarea:focus-visible, [tabindex]:focus-visible {
   color: var(--fg);
 }
 .own__p > p { margin: 0; font-size: 1rem; color: var(--fg-dim); }
-.own__sub { margin-top: clamp(24px, 2.4vw, 34px); }
+.own__sub { padding-top: clamp(24px, 2.4vw, 34px); }
 /* Die Liste laeuft zweispaltig, damit die Spalte in der Breite nicht leer
    ausseinanderfaellt, seit die zweite Unterspalte entfallen ist. */
 .own__sub .arrow { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(16px, 1.6vw, 26px); }
-.own__sub h4 {
-  margin: 0 0 12px;
-  font-family: var(--ff-mon);
-  font-weight: 400; font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
-  color: var(--muted);
-}
+.own__sub h4 { margin: 0 0 12px; }
 
-/* --- Abschlussband -------------------------------------------------------- */
+/* --- Abschlusszeile ------------------------------------------------------- */
 /* Schmal gehalten und ohne zweites Formular. Die Kontaktsektion nimmt die
-   Anfrage entgegen, hier steht nur der Weg dorthin. */
+   Anfrage entgegen, hier steht nur der Weg dorthin. Seit dem Optik-Check
+   29.09.2026 eine ruhige Textzeile unter einer Haarlinie statt eines blauen
+   Kastens; Blau traegt nur noch der Link. */
 .own__band { padding-inline: var(--gut); }
 .own__bandIn {
   display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px clamp(20px, 2vw, 32px);
   max-width: var(--wrap);
   margin-inline: auto;
-  padding: clamp(22px, 2.2vw, 32px) clamp(24px, 2.6vw, 40px);
-  background: var(--accent);
-  border-radius: 16px;
-}
-.own__bandK {
-  margin: 0;
-  font-family: var(--ff-mon);
-  font-size: 12px; letter-spacing: .16em; text-transform: uppercase;
-  color: #fff;                       /* wie der Kicker der Akzentkarte, 5,18:1 */
+  padding-top: clamp(24px, 2.4vw, 34px);
+  border-top: 1px solid var(--line);
 }
 .own__bandT {
   margin: 0;
@@ -731,19 +785,20 @@ textarea:focus-visible, [tabindex]:focus-visible {
   font-family: var(--ff-dis);
   font-weight: 600;
   font-size: clamp(1.05rem, .9vw + .8rem, 1.4rem);
-  line-height: 1.2;
-  letter-spacing: -.014em;
-  color: #fff;
+  line-height: 1.25;
+  letter-spacing: -.012em;
+  color: var(--fg);
 }
 .own__bandA {
   font-weight: 700;
   font-size: .98rem;
-  color: #fff;
-  border-bottom: 2px solid rgba(255, 255, 255, .48);
+  color: var(--accent-hi);
+  border-bottom: 1px solid rgba(119, 150, 255, .45);
   padding-block: 3px;
-  transition: border-color .25s var(--ease);
+  white-space: nowrap;
+  transition: border-color .25s var(--ease), color .25s var(--ease);
 }
-.own__bandA:hover { border-bottom-color: #fff; }
+.own__bandA:hover { color: var(--fg); border-bottom-color: var(--fg); }
 
 /* ----------------------------------------------------------- 9 Referenzen */
 /* Die belegte Geschichte des Lichtmaschinenhalters steht vor dem Raster:
@@ -759,14 +814,6 @@ textarea:focus-visible, [tabindex]:focus-visible {
 }
 .refx__imgs { display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(12px, 1.4vw, 20px); }
 .refx__imgs .frame { aspect-ratio: 4 / 3; }
-.refx__imgs figcaption {
-  position: absolute; inset: auto 0 0 0;
-  padding: 36px 14px 12px;
-  background: linear-gradient(180deg, rgba(8,9,11,0) 0%, rgba(8,9,11,.86) 62%, rgba(8,9,11,.94) 100%);
-  font-family: var(--ff-mon);
-  font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
-  color: var(--fg);
-}
 .refx__txt h3 {
   margin: 16px 0 14px;
   font-family: var(--ff-dis);
@@ -785,17 +832,9 @@ textarea:focus-visible, [tabindex]:focus-visible {
   gap: clamp(18px, 2.2vw, 34px) clamp(18px, 2.2vw, 32px);
 }
 .ref__i .frame { aspect-ratio: 1 / 1; }
-.ref__i figcaption {
-  position: absolute; inset: auto 0 0 0;
-  display: flex; align-items: baseline; gap: 12px;
-  padding: 44px 18px 16px;
-  background: linear-gradient(180deg, rgba(8,9,11,0) 0%, rgba(8,9,11,.86) 62%, rgba(8,9,11,.94) 100%);
-  font-family: var(--ff-txt);
-  font-size: .92rem;
-  font-weight: 600;
-  color: var(--fg);
-}
-.ref__i figcaption .idx { color: var(--accent-hi); }
+/* Titan und Baugruppe liegen als quadratische Kopien vor (Rand aus dem
+   eigenen Fotogrund), damit gilt wieder cover wie bei allen Kacheln. Die
+   fruehere Regel .ref__i--quer mit contain (dunkle Balken) ist entfallen. */
 
 /* -------------------------------------------------------------- 10 Zahlen */
 .stats {
@@ -808,18 +847,14 @@ textarea:focus-visible, [tabindex]:focus-visible {
 .stats__bg img { width: 100%; height: 100%; object-fit: cover; }
 .stats__bg::after {
   content: ''; position: absolute; inset: 0;
-  background: linear-gradient(180deg, var(--bg) 0%, rgba(8,9,11,.62) 30%, rgba(8,9,11,.86) 82%, var(--bg) 100%);
+  background: linear-gradient(180deg, var(--bg) 0%, rgba(var(--bg-rgb), .62) 30%, rgba(var(--bg-rgb), .86) 82%, var(--bg) 100%);
 }
 .stats__in { position: relative; z-index: 1; }
 /* Zwei mal zwei statt vier nebeneinander: nur so tragen alle vier Kennzahlen
    dieselbe Groesse — das dreiteilige Frasmass braucht die Breite. */
 .stats__grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(28px, 3.4vw, 52px) clamp(32px, 4vw, 72px); }
 .stat { border-top: 1px solid var(--line-2); padding-top: 18px; }
-.stat dt {
-  font-family: var(--ff-mon);
-  font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
-  color: var(--accent-hi);
-}
+.stat dt { color: var(--fg-dim); }   /* heller als die uebrigen Etiketten, steht auf dem Foto */
 .stat dd {
   margin: 12px 0 0;
   display: flex; align-items: flex-end;
@@ -831,7 +866,7 @@ textarea:focus-visible, [tabindex]:focus-visible {
   font-weight: 700;
   font-size: clamp(2.1rem, 3.4vw, 3.4rem);
   line-height: 1;
-  letter-spacing: -.03em;
+  letter-spacing: -.02em;
   color: var(--fg);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
@@ -846,18 +881,21 @@ textarea:focus-visible, [tabindex]:focus-visible {
   align-items: start;
 }
 .con__head { grid-column: 1 / -1; }
+/* Feste Plaetze: im HTML steht das Formular vor den Kontaktdaten (Tab-
+   Reihenfolge), optisch bleiben Kontaktdaten links, Formular rechts. */
+.con__l { grid-column: 1; grid-row: 2; }
+.con > .form { grid-column: 2; grid-row: 2; }
 .con__img { aspect-ratio: 16 / 10; }
+/* Das Foto ist quadratisch; mittig beschnitten fehlte dem Mitarbeiter der Kopf. */
+.con__img > img { object-position: 50% 4%; }
 .con__meta {
-  display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px;
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px;
   margin-top: clamp(32px, 3.4vw, 48px);
 }
-.con__meta h3 {
-  margin: 0 0 12px;
-  font-family: var(--ff-mon);
-  font-weight: 400; font-size: 13px; letter-spacing: .13em; text-transform: uppercase;
-  color: var(--muted);
-}
-.con__meta h3 + h3 { margin-top: 26px; }
+.con__meta h3 { margin: 0 0 10px; }
+/* Abstand vor jedem weiteren Etikett einer Spalte (zwischen den h3 steht die
+   Adresse, deshalb griff h3 + h3 nie). */
+.con__meta * + h3 { margin-top: 22px; }
 .con__meta li, .con__meta address, .con__meta p { margin: 0 0 6px; font-size: .96rem; color: var(--fg-dim); }
 .con__meta a { color: var(--fg); border-bottom: 1px solid var(--line-2); transition: color .25s var(--ease), border-color .25s var(--ease); }
 .con__meta a:hover { color: var(--accent-hi); border-bottom-color: var(--accent-hi); }
@@ -870,14 +908,10 @@ textarea:focus-visible, [tabindex]:focus-visible {
   padding: clamp(24px, 2.6vw, 40px);
   background: var(--surface);
   border: 1px solid var(--line);
+  border-radius: var(--r);
 }
 .f { display: flex; flex-direction: column; gap: 8px; }
 .f--full { grid-column: 1 / -1; }
-.f label {
-  font-family: var(--ff-mon);
-  font-size: 13px; letter-spacing: .12em; text-transform: uppercase;
-  color: var(--muted);
-}
 .f label span { color: var(--accent-hi); }
 .f input, .f textarea {
   width: 100%;
@@ -885,9 +919,10 @@ textarea:focus-visible, [tabindex]:focus-visible {
   padding: 11px 14px;
   background: var(--bg);
   border: 1px solid var(--line-2);
+  border-radius: var(--r);
   color: var(--fg);
   font-family: var(--ff-txt);
-  font-size: 15px;
+  font-size: 16px;                /* unter 16 px zoomt iOS beim Antippen hinein */
   line-height: 1.5;
   transition: border-color .25s var(--ease), background-color .25s var(--ease);
 }
@@ -895,8 +930,20 @@ textarea:focus-visible, [tabindex]:focus-visible {
 .f input:hover, .f textarea:hover { border-color: #333A46; }
 .f input:focus, .f textarea:focus { border-color: var(--accent); outline-offset: 1px; }
 .f input[aria-invalid="true"], .f textarea[aria-invalid="true"] { border-color: #FF6B6B; }
+/* Die native Checkbox kennt keinen roten Rahmen: der Fehler zeigt sich als Ring. */
+.f--check input[aria-invalid="true"] { outline: 2px solid #FF6B6B; outline-offset: 2px; }
 
-.f--check { flex-direction: row; align-items: flex-start; gap: 12px; }
+/* Meldung direkt am Feld, rot statt Linkblau (Fehlerfarbe wie der Feldrahmen) */
+.f__err { margin: 0; font-size: .86rem; font-weight: 600; line-height: 1.4; color: #FF8A8A; }
+.f__err[hidden] { display: none; }
+.form__req { grid-column: 1 / -1; margin: -4px 0 0; font-size: .86rem; color: var(--muted); }
+.form__req span { color: var(--accent-hi); }
+/* Honigtopf gegen Spam: fuer Menschen unsichtbar, fuer Bots ein normales Feld */
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+.f--check { flex-direction: row; flex-wrap: wrap; align-items: flex-start; gap: 8px 12px; }
+.f--check label { flex: 1 1 0; min-width: 0; }
+.f--check .f__err { flex-basis: 100%; padding-left: 36px; }
 .f--check input {
   flex: 0 0 auto;
   width: 24px; height: 24px; min-height: 24px;
@@ -905,7 +952,7 @@ textarea:focus-visible, [tabindex]:focus-visible {
 }
 .f--check label {
   font-family: var(--ff-txt);
-  font-size: .9rem; letter-spacing: 0; text-transform: none; line-height: 1.5;
+  font-size: .9rem; font-weight: 400; letter-spacing: 0; text-transform: none; line-height: 1.5;
   color: var(--fg-dim);
 }
 .f--check label a { color: var(--accent-hi); border-bottom: 1px solid currentColor; }
@@ -913,8 +960,15 @@ textarea:focus-visible, [tabindex]:focus-visible {
 .form__foot { flex-direction: row; align-items: center; flex-wrap: wrap; gap: 16px 24px; margin-top: 8px; }
 .form__hint { margin: 0; font-size: .86rem; color: var(--muted); }
 .form__hint a { color: var(--fg-dim); border-bottom: 1px solid var(--line-2); }
-.form__note { grid-column: 1 / -1; margin: 0; font-size: .9rem; color: var(--accent-hi); }
+.form__note { grid-column: 1 / -1; margin: 0; font-size: .95rem; line-height: 1.5; color: var(--fg); }
 .form__note:empty { display: none; }
+.form__note:focus { outline: none; }
+/* Zustaende setzt main.js: Fehler rot, Erfolg hell, Senden grau */
+.form__note.is-error { color: #FF8A8A; font-weight: 600; }
+.form__note.is-ok { color: var(--fg); font-weight: 600; }
+.form__note.is-busy { color: var(--muted); }
+.form__note a { color: var(--fg); border-bottom: 1px solid currentColor; }
+.form button[aria-disabled="true"] { opacity: .6; cursor: progress; }
 
 /* -------------------------------------------------------------- 12 Footer */
 .ftr { border-top: 1px solid var(--line); padding-block: clamp(56px, 6vw, 88px) 28px; }
@@ -923,14 +977,10 @@ textarea:focus-visible, [tabindex]:focus-visible {
   grid-template-columns: 1.7fr repeat(4, minmax(0, 1fr));
   gap: clamp(28px, 3vw, 56px);
 }
-.ftr__brand img { width: 64px; height: 64px; }
+/* Ruhebild der 3D-Marke, gleiche Kante wie im Kopf */
+.ftr__brand img { width: 84px; height: 84px; }
 .ftr__claim { margin: 20px 0 0; max-width: 34ch; font-size: .95rem; color: var(--muted); }
-.ftr h2 {
-  margin: 0 0 14px;
-  font-family: var(--ff-mon);
-  font-weight: 400; font-size: 13px; letter-spacing: .13em; text-transform: uppercase;
-  color: var(--accent-hi);
-}
+.ftr h2 { margin: 0 0 12px; }
 .ftr li, .ftr address { font-size: .94rem; line-height: 1.85; color: var(--fg-dim); }
 .ftr a { transition: color .25s var(--ease); }
 .ftr a:hover { color: var(--accent-hi); }
@@ -950,63 +1000,103 @@ textarea:focus-visible, [tabindex]:focus-visible {
 /* Tippziel: Fliesstext-Links bekommen vertikale Luft, damit die Trefferflaeche
    auch bei 14–15 px Schrift ueber 24 px liegt. */
 .con__meta a, .ftr a, .form__hint a, .f--check label a { padding-block: 3px; }
+/* Links mit Unterstrich bekommen zusaetzlich eine unsichtbare Trefferflaeche
+   von rund 44 px Hoehe. Die Linie bleibt, wo sie ist. Ausgenommen ist der
+   Link im Einwilligungstext: dort laege die Flaeche ueber der naechsten Zeile,
+   und ein Tipp auf den Text oeffnete die Erklaerung statt den Haken zu setzen. */
+.con__meta a, .car__call a, .form__hint a, .own__bandA, .form__note a { position: relative; }
+.con__meta a::before, .car__call a::before, .form__hint a::before,
+.own__bandA::before, .form__note a::before {
+  content: ''; position: absolute; inset: -9px -4px;
+}
 
 /* --------------------------------------------------- 13 Startzustaende GSAP */
-/* Greifen nur, wenn der GSAP-Stack nachweislich geladen ist. */
+/* Greifen nur, wenn der GSAP-Stack nachweislich geladen ist. Versteckt wird
+   nur, was main.js wieder aufdeckt: Hero-Intro, Masslinien, Bildschieber.
+   Text, Karten und Ueberschriften (.rv, .h2) stehen von Anfang an da. */
 .gsap .hero__kicker,
 .gsap .hero__sub,
 .gsap .hero__act { opacity: 0; }
 .gsap .hero__h1 { opacity: 0; }
-.gsap .rv { opacity: 0; }
 .gsap .adv__rule { transform: scaleX(0); }
-.gsap .frame > img { transform: scale(1.04); }
+/* Bildschieber: .wipe setzt main.js nur auf die Boxen, die es auch oeffnet,
+   und nimmt die Klasse danach wieder ab. Das Bild darin bleibt unberuehrt. */
+.gsap .wipe { clip-path: inset(0 0 100% 0); }
 
 .no-anim .hero__kicker, .no-anim .hero__sub, .no-anim .hero__act,
-.no-anim .hero__h1, .no-anim .rv { opacity: 1 !important; }
+.no-anim .hero__h1 { opacity: 1 !important; }
 .no-anim .adv__rule { transform: none !important; }
-.no-anim .frame > img { transform: none !important; }
+.no-anim .wipe { clip-path: none !important; }
 
 @media (prefers-reduced-motion: reduce) {
   .gsap .hero__kicker, .gsap .hero__sub, .gsap .hero__act,
-  .gsap .hero__h1, .gsap .rv { opacity: 1 !important; }
+  .gsap .hero__h1 { opacity: 1 !important; }
   .gsap .adv__rule { transform: none !important; }
-  .gsap .frame > img { transform: none !important; }
+  .gsap .wipe { clip-path: none !important; }
   * { animation-duration: .001ms !important; transition-duration: .001ms !important; }
 }
 
 /* ------------------------------------------------------------ 14 Responsiv */
-/* Die Navigation traegt jetzt sechs Eintraege plus Knopf und braucht in einer
-   Zeile rund 1200 px. Darunter wird daraus das Klappmenue. Der Kopf selbst
-   bleibt bis 980 px in voller Hoehe, Menue und Kopfmasse stehen deshalb in
-   getrennten Bloecken. */
-@media (max-width: 1280px) {
+/* Die Navigation traegt sechs Eintraege plus Knopf und braucht in einer Zeile
+   rund 1350 px, in der kompakten Stufe (Marke 72, Schriftzug 44, Luecke 18)
+   rund 1230 px. Darunter wird daraus das Klappmenue. Der Kopf selbst bleibt
+   bis 980 px in voller Hoehe, Menue und Kopfmasse stehen deshalb in
+   getrennten Bloecken. js/main.js schliesst das Menue, sobald die Breite
+   ueber diese Grenze wechselt (gleicher Wert dort). */
+@media (min-width: 1260px) and (max-width: 1379px) {
+  .mark { --mark-kachel: 72px; }      /* main.js liest die Kachel zur Laufzeit */
+  .brand__wm { height: 44px; }
+  .nav { gap: 18px; }
+}
+@media (max-width: 1259px) {
   .burger { display: grid; place-items: center; }
 
+  /* Das Menue reicht bis zum unteren Rand: keine halb sichtbare, tote Seite
+     darunter, und im Querformat (z. B. 844 x 390) laesst es sich scrollen. */
+  /* Hoehe fest aus dem Fenster, nicht aus bottom: 0. So stimmt sie auch,
+     falls die Kopfzeile doch einmal Bezugsrahmen wird (backdrop-filter). */
   .nav {
     position: fixed; inset: var(--hh) 0 auto;
+    height: calc(100vh - var(--hh));
+    height: calc(100dvh - var(--hh));
     flex-direction: column; align-items: stretch;
     gap: 0;
     padding: 12px var(--gut) 28px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
     /* Deckend, nicht .97: bei drei Prozent Durchlass las man ueber dem hellen
        Hero-Video die Ueberschrift durch die Menueeintraege hindurch mit. */
     background: var(--bg);
-    border-bottom: 1px solid var(--line);
     opacity: 0; visibility: hidden;
     transform: translateY(-8px);
     transition: opacity .3s var(--ease), transform .3s var(--ease), visibility .3s;
   }
   .nav.is-open { opacity: 1; visibility: visible; transform: none; }
   .nav > a:not(.nav__cta) {
+    flex: none;
     padding: 16px 0;
     font-size: 1.1rem;
     border-bottom: 1px solid var(--line);
   }
   .nav > a:not(.nav__cta)::after { display: none; }
-  .nav__cta { margin: 20px 0 0; align-self: flex-start; }
+  .nav__cta { flex: none; margin: 20px 0 0; align-self: flex-start; }
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1200px) {
   .svc { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+/* Vier Vorteil-Spalten werden unter 1100 px zu schmal (Titel dreizeilig). */
+@media (max-width: 1100px) {
+  .adv { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(28px, 4vw, 44px); }
+}
+/* Die Fusszeile mit fuenf Spalten bricht schon unter 1180 px um: darunter
+   ragte die E-Mail (162 px) aus der Kontaktspalte (1101: 155 px, 1151:
+   161,5 px). 1180 laesst gut 3 px Luft. Muss vor dem 980er-Block stehen. */
+@media (max-width: 1180px) {
+  .ftr__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .ftr__brand { grid-column: 1 / -1; }
+}
+@media (max-width: 1000px) {
   /* Drei Karten auf zwei Spalten: die dritte nimmt die volle Breite, sonst
      stuenden zwei halb leere Reihen untereinander. */
   .own__steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -1015,15 +1105,15 @@ textarea:focus-visible, [tabindex]:focus-visible {
      Liste laeuft deshalb zweispaltig und fuellt die Breite, statt sie leer
      stehen zu lassen. */
   .own__step:last-child .arrow { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(16px, 2vw, 32px); }
-  .own__head { gap: clamp(24px, 3vw, 44px); }
 }
 
 /* Auf schmalen Desktops waeren 475-px-Karten zu gross fuer den Ausschnitt —
-   der Ring wird kleiner, der Radius rechnet sich mit. */
+   der Ring wird kleiner, der Radius rechnet sich mit. Die 25-rem-Stufe reicht
+   bis 1366 px: bei 1280 passten sonst nur zweieinhalb Karten ins Bild. */
 @media (min-width: 768px) and (max-width: 1023px) {
   :root { --cyl-w: 21rem; }
 }
-@media (min-width: 1024px) and (max-width: 1200px) {
+@media (min-width: 1024px) and (max-width: 1366px) {
   :root { --cyl-w: 25rem; }
 }
 
@@ -1033,21 +1123,27 @@ textarea:focus-visible, [tabindex]:focus-visible {
      per calc() daran. Wuerde hier width/height direkt gesetzt, bliebe das
      Kachelraster bei 84 px stehen und das Sprite zerfiele. */
   .mark { --mark-kachel: 62px; }              /* Marke 62 px in 84-px-Kopfzeile */
+  .brand__wm { height: 38px; }
   .brand { gap: 12px; }
 
-  .adv { grid-template-columns: repeat(2, 1fr); gap: clamp(28px, 4vw, 44px); }
+  /* Kontakt einspaltig: das Formular kommt direkt nach dem Kopf, Foto und
+     Kontaktdaten danach. Sonst lag das Formular nach "Anfrage" ganz unter dem
+     Bildschirmrand. */
   .con { grid-template-columns: minmax(0, 1fr); row-gap: clamp(32px, 4vw, 48px); }
-  .ftr__grid { grid-template-columns: 1fr 1fr; }
+  .con__l, .con > .form { grid-column: auto; grid-row: auto; }
+  .con__img { aspect-ratio: 16 / 9; }
+  /* Fusszeile: Marke ueber volle Breite, darunter zwei volle Reihen */
+  .ftr__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
-  /* Kopf und Erklaerblock stapeln, das Produktbild wandert nach oben und wird
-     flacher, damit es nicht den halben Bildschirm einnimmt. */
-  .own__head { grid-template-columns: minmax(0, 1fr); }
-  /* 4:3 statt 16:10: die Vorlagen sind Hochformat, ein flacherer Ausschnitt
-     zeigt vom Schweisstisch nur noch die Platte. */
-  .own__headImg { order: -1; aspect-ratio: 4 / 3; }
-  .own__whyH br { display: none; }
-  .own__prod { grid-template-columns: minmax(0, 1fr); row-gap: clamp(36px, 5vw, 52px); }
   .refx { grid-template-columns: minmax(0, 1fr); }
+
+  /* Einspaltiger Fliesstext wird sonst ueber 100 Zeichen lang */
+  .job > p, .job .arrow, .refx__txt, .own__p > p, .ceo__facts p, .ceo__quote p { max-width: 68ch; }
+}
+/* Zwischen 761 und 980 bleiben die Produkte zweispaltig: einspaltig standen
+   beide Fotos bildschirmbreit und die Seite wurde sprunghaft laenger. */
+@media (min-width: 761px) and (max-width: 980px) {
+  .own__sub .arrow { grid-template-columns: minmax(0, 1fr); }
 }
 
 @media (max-width: 760px) {
@@ -1055,12 +1151,13 @@ textarea:focus-visible, [tabindex]:focus-visible {
   .cyl { grid-template-columns: repeat(2, 1fr); }
   .con__meta { grid-template-columns: 1fr; }
   .form { grid-template-columns: minmax(0, 1fr); }
-  .own__head .h2 br { display: none; }
+  .own__prod { grid-template-columns: minmax(0, 1fr); row-gap: clamp(36px, 5vw, 52px); }
 }
 
 @media (max-width: 620px) {
   .svc { grid-template-columns: minmax(0, 1fr); }
-  .svc__top { aspect-ratio: 21 / 9; }
+  /* Das Foto bleibt auch am Handy 16:9 (vorher 21:9): flacher schnitt es die
+     Werkstuecke oben und unten an. */
   .own__steps { grid-template-columns: minmax(0, 1fr); }
   .own__step:last-child { grid-column: auto; }
   /* Auf dem Handy ist fuer zwei Listenspalten kein Platz. Beide Faelle muessen
@@ -1074,8 +1171,10 @@ textarea:focus-visible, [tabindex]:focus-visible {
 }
 
 @media (max-width: 560px) {
+  /* Abschnittsabstand am Handy 128 statt 168 px: vorher stand ein Fuenftel
+     des Bildschirms leer zwischen zwei Abschnitten. */
+  :root { --sp: 64px; }
   .adv { grid-template-columns: minmax(0, 1fr); }
-  .adv__i h3 { min-height: 0; }
   .stats__grid { grid-template-columns: minmax(0, 1fr); gap: 26px; }
   /* Der Fussbereich bleibt zweispaltig, die Marke nimmt die volle Breite.
      Einspaltig war allein der Fuss ueber 1000 px lang. */
@@ -1083,26 +1182,28 @@ textarea:focus-visible, [tabindex]:focus-visible {
   .ftr__brand { grid-column: 1 / -1; }
   .ftr__ai { margin-left: 0 !important; text-align: left; }
   .ftr__bar { gap: 14px; }
-  .refx__imgs { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 460px) {
-  /* Marke bleibt, nur Vorname und Rechtsform blenden aus: "WALCZOK". */
-  .brand__word--opt { display: none; }
-  .brand__word { font-size: 14px; letter-spacing: .15em; }
+  /* Die Hoehe des Schriftzugs waechst mit der Breite: 25 px bei 320, 37 px
+     bei 390. Eine feste Hoehe liess bei 320 den Burger auf 22 px schrumpfen
+     und bei 390 rechts 62 px ungenutzt. */
+  .hdr__in { gap: 12px; }
+  .brand { gap: 10px; }
+  .brand__wm { height: clamp(24px, calc((100vw - 172px) * .17), 38px); }
   /* Die Referenzen bleiben auch auf dem Handy zweispaltig. Einspaltig waren
      sechs quadratische Kacheln allein gut 2000 px lang. */
-  .ref__i figcaption { padding: 34px 12px 12px; font-size: .82rem; gap: 8px; }
+  .ref__i figcaption { padding-top: 8px; font-size: 13px; }
   /* Einspaltig, aber im Querformat — sonst wird die Sektion auf dem Handy
      unverhaeltnismaessig lang (wie im Original). */
   .cyl { grid-template-columns: minmax(0, 1fr); }
-  .cyl__c { aspect-ratio: 4 / 3; }
+  :root:not(.gsap-cyl) .cyl__img { aspect-ratio: 4 / 3; }
   .btn--lg { width: 100%; }
 }
 
 /* ================================================= 15 Ergaenzungen 09/2026
-   Zweiter Hero-Knopf und Belegzeile, Laufband, Unternehmen (Geschaeftsfuehrung),
-   Karriere mit schaltbaren Stellen, Zeilenmasken fuer die Ueberschriften. */
+   Zweiter Hero-Knopf und Belegzeile, Unternehmen (Geschaeftsfuehrung),
+   Karriere mit schaltbaren Stellen. */
 
 /* --- Hero ----------------------------------------------------------------- */
 .hero__act { display: flex; flex-wrap: wrap; gap: 12px 14px; }
@@ -1113,31 +1214,23 @@ textarea:focus-visible, [tabindex]:focus-visible {
   margin: clamp(36px, 5vh, 56px) 0 0;
   padding-top: 22px;
   border-top: 1px solid rgba(255, 255, 255, .14);
+  /* Bricht die Zeile um, liegt die Trennlinie des ersten Belegs links
+     ausserhalb der Liste und wird hier abgeschnitten: nichts haengt. */
+  overflow: hidden;
 }
+/* Belegzeile in der Fliesstextschrift, ohne blaue Quadrate davor. Die drei
+   Belege trennt eine feine senkrechte Linie. */
 .hero__proof li {
-  position: relative; padding-left: 18px;
-  font-family: var(--ff-mon); font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
+  position: relative;
+  font-family: var(--ff-txt); font-size: 14px; font-weight: 600; letter-spacing: .01em;
   color: var(--fg-dim);
 }
-.hero__proof li::before { content: ''; position: absolute; left: 0; top: .42em; width: 7px; height: 7px; background: var(--accent); }
-/* Langsame Ruhefahrt des Videos beim Laden: 1,08 -> 1 in neun Sekunden. */
-.hero__media video { animation: heroZoom 9s var(--ease) both; }
-@keyframes heroZoom { from { transform: scale(1.08); } to { transform: scale(1); } }
-
-/* --- Laufband ------------------------------------------------------------- */
-/* Zwei identische Saetze; der Streifen faehrt exakt um einen Satz und springt
-   deshalb nahtlos. Unter der Maus haelt er an. */
-.ticker { overflow: hidden; border-block: 1px solid var(--line); background: var(--bg); padding-block: 18px; }
-.ticker__track { display: flex; width: max-content; animation: ticker 64s linear infinite; }
-.ticker__set { display: flex; align-items: center; gap: 34px; padding-right: 34px; }
-.ticker span {
-  font-family: var(--ff-dis); font-weight: 600; font-size: 13px;
-  letter-spacing: .14em; text-transform: uppercase; white-space: nowrap;
-  color: var(--muted);
+.hero__proof li + li::before {
+  content: ''; position: absolute; left: -14px; top: .3em; bottom: .3em;
+  width: 1px; background: rgba(255, 255, 255, .22);
 }
-.ticker i { width: 6px; height: 6px; background: var(--accent); flex: none; }
-@keyframes ticker { to { transform: translateX(-50%); } }
-.ticker:hover .ticker__track { animation-play-state: paused; }
+/* Die langsame Ruhefahrt des Videos beim Laden (heroZoom) und das Laufband
+   unter dem Hero sind entfallen: weniger Bewegung (Optik-Check 29.09.2026). */
 
 /* --- Unternehmen ---------------------------------------------------------- */
 .ceo {
@@ -1146,24 +1239,38 @@ textarea:focus-visible, [tabindex]:focus-visible {
   gap: clamp(32px, 5vw, 88px);
   align-items: start;
 }
-.ceo__img { aspect-ratio: 4 / 5; border-radius: 16px; position: sticky; top: calc(var(--hh) + 24px); }
-.ceo__img figcaption, .car__img figcaption {
-  position: absolute; inset: auto 0 0 0;
-  padding: 48px 20px 18px;
-  background: linear-gradient(180deg, rgba(8,9,11,0) 0%, rgba(8,9,11,.88) 70%, rgba(8,9,11,.95) 100%);
-  font-family: var(--ff-mon); font-size: 12px; letter-spacing: .1em; text-transform: uppercase;
-  line-height: 1.5;
-  color: var(--fg);
-}
+/* Die figure klebt, der Rahmen darin traegt das Hochformat; die Unterschrift
+   steht darunter. */
+.ceo__img { position: sticky; top: calc(var(--hh) + 24px); }
+.ceo__img .frame { aspect-ratio: 4 / 5; }
 .ceo__txt .head { margin-bottom: clamp(28px, 3vw, 44px); }
-.ceo__quote { margin: 0; padding-left: clamp(20px, 2.4vw, 32px); border-left: 2px solid var(--accent); }
+/* Zitat ohne blauen Balken: das oeffnende Zeichen haengt gross und grau links
+   vor dem Block, der erste Satz steht hell, der Rest grau. Eine Stufe kleiner
+   als zuvor (1,7 rem), damit es sich liest statt ruft (Optik-Check 29.09.2026). */
+.ceo__quote { margin: 0; }
 .ceo__quote p {
   margin: 0;
   font-family: var(--ff-dis); font-weight: 500;
-  font-size: clamp(1.2rem, 1.1vw + .9rem, 1.7rem);
-  line-height: 1.32; letter-spacing: -.012em;
-  color: var(--fg);
+  font-size: clamp(1.12rem, .45vw + 1rem, 1.35rem);
+  line-height: 1.45; letter-spacing: -.008em;
+  color: var(--fg-dim);
   text-wrap: pretty;
+}
+.ceo__qLead { color: var(--fg); }
+.ceo__qm {
+  /* Zeilenhoehe 0: das grosse Zeichen sitzt auf der Grundlinie und macht die
+     erste Zeile nicht hoeher. Breite = Zeichen (.435 em) plus Luft; der
+     gleich grosse negative Rand schiebt es ganz vor die Satzkante. */
+  display: inline-block;
+  margin-left: -.56em;
+  width: .56em;
+  font-size: 2.2em; line-height: 0;
+  color: var(--muted);
+}
+/* Einspaltig (ab 980 px abwaerts) steht das Zitat an der Seitenkante, der
+   Rand ist zu schmal zum Haengen: dort steht das Zeichen vor dem ersten Wort. */
+@media (max-width: 980px) {
+  .ceo__qm { margin-left: 0; width: auto; margin-right: .12em; font-size: 1.6em; }
 }
 .ceo__quote footer { display: flex; flex-direction: column; gap: 4px; margin-top: 22px; }
 .ceo__quote footer b { font-weight: 700; font-size: 1rem; color: var(--fg); }
@@ -1185,26 +1292,31 @@ textarea:focus-visible, [tabindex]:focus-visible {
   gap: clamp(32px, 5vw, 80px);
   align-items: start;
 }
-.car__img { aspect-ratio: 4 / 3; border-radius: 16px; }
+.car__img .frame { aspect-ratio: 4 / 3; }
 .car__ben {
   display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: clamp(22px, 2.4vw, 36px) clamp(20px, 2vw, 32px);
   margin-top: clamp(28px, 3vw, 44px);
 }
-.car__ben li { padding-top: 16px; border-top: 1px solid var(--line-2); }
-.car__ben .idx { margin-bottom: 10px; color: var(--accent-hi); }
+/* Titel und Text je Vorteil als Subgrid: ein zweizeiliger Titel verschiebt den
+   Text der Nachbarspalte nicht mehr. */
+.car__ben li {
+  padding-top: 16px; border-top: 1px solid var(--line-2);
+  display: grid; grid-row: span 2; grid-template-rows: subgrid; row-gap: 0;
+}
 .car__ben h3 { margin: 0 0 8px; font-family: var(--ff-dis); font-weight: 600; font-size: 1.1rem; letter-spacing: -.01em; color: var(--fg); }
 .car__ben p { margin: 0; font-size: .92rem; color: var(--fg-dim); }
-.car__jobsH { margin: 0 0 18px; font-family: var(--ff-mon); font-weight: 400; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.car__jobsH { margin: 0 0 16px; }
 .jobs { display: grid; gap: 16px; }
 .job {
   padding: clamp(24px, 2.4vw, 34px);
-  border: 1px solid var(--line); border-radius: 16px;
+  border: 1px solid var(--line); border-radius: var(--r);
   background: var(--surface);
-  transition: border-color .3s var(--ease), transform .3s var(--ease);
+  transition: border-color .3s var(--ease);
 }
-.job:hover { border-color: var(--line-2); transform: translateY(-3px); }
-.job__meta { margin: 0 0 12px; font-family: var(--ff-mon); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-hi); }
+/* Karten ohne Bild: die Rahmenlinie wird blau, nichts hebt sich an. */
+.job:hover { border-color: var(--accent); }
+.job__meta { margin: 0 0 10px; }
 .job h4 {
   margin: 0 0 12px;
   font-family: var(--ff-dis); font-weight: 700;
@@ -1216,33 +1328,230 @@ textarea:focus-visible, [tabindex]:focus-visible {
 .job .arrow { margin-bottom: 24px; }
 .job--init { margin-top: 16px; background: transparent; border-style: dashed; }
 .jobs[hidden] { display: none; }
-.jobs__none { margin: 0 0 16px; padding: 20px 24px; border: 1px solid var(--line); border-radius: 12px; font-size: .95rem; color: var(--fg-dim); }
+.jobs__none { margin: 0 0 16px; padding: 20px 24px; border: 1px solid var(--line); border-radius: var(--r); font-size: .95rem; color: var(--fg-dim); }
 .jobs__none[hidden] { display: none; }
 .car__call { margin: 24px 0 0; font-size: .92rem; color: var(--muted); }
 .car__call a { color: var(--fg); border-bottom: 1px solid var(--line-2); padding-block: 3px; transition: color .25s var(--ease), border-color .25s var(--ease); }
 .car__call a:hover { color: var(--accent-hi); border-bottom-color: var(--accent-hi); }
 
 /* --- Startzustaende der Ergaenzungen -------------------------------------- */
-/* Die Sektionsueberschriften fahren zeilenweise aus einer Maske (SplitText).
-   Ohne SplitText setzt main.js die Deckkraft sofort auf 1. */
-.gsap .h2 { opacity: 0; }
+/* Die Sektionsueberschriften (.h2) stehen einfach da, ohne Startzustand.
+   Nur die Belegzeile im Hero blendet mit dem Intro ein. */
 .gsap .hero__proof { opacity: 0; }
-.no-anim .h2, .no-anim .hero__proof { opacity: 1 !important; }
+.no-anim .hero__proof { opacity: 1 !important; }
 @media (prefers-reduced-motion: reduce) {
-  .gsap .h2, .gsap .hero__proof { opacity: 1 !important; }
-  .ticker__track { animation: none; }
-  .hero__media video { animation: none; }
+  .gsap .hero__proof { opacity: 1 !important; }
 }
 
 /* --- Responsiv ------------------------------------------------------------ */
 @media (max-width: 980px) {
-  .ceo { grid-template-columns: minmax(0, 1fr); }
-  .ceo__img { position: static; aspect-ratio: 16 / 10; }
+  /* Einspaltig: erst Etikett und Ueberschrift, dann das Teamfoto, dann
+     Leitsatz, Zitat und Chronik. Stand das Foto vorn, hing es optisch noch
+     am Abschnitt Vorteile. display: contents hebt die Textspalte auf, damit
+     ihre Teile einzeln sortiert werden koennen. */
+  .ceo { display: flex; flex-direction: column; align-items: stretch; gap: 0; }
+  .ceo__txt { display: contents; }
+  .ceo__txt > .head { order: -2; }
+  .ceo__img { order: -1; margin-bottom: clamp(32px, 4vw, 48px); }
+  /* Hochformatiges Teamfoto: im Querformat den oberen Teil zeigen, sonst
+     faellt der Kopf aus dem Bild. */
+  .ceo__img { position: static; }
+  .ceo__img .frame { aspect-ratio: 4 / 3; }
+  .ceo__img .frame > img { object-position: 50% 16%; }
   .car { grid-template-columns: minmax(0, 1fr); }
+}
+/* Zwischen 761 und 980 stehen Team- und Karrierefoto bildschirmbreit: dort
+   flacher (16:9), sonst wird die Seite sprunghaft laenger. */
+@media (min-width: 761px) and (max-width: 980px) {
+  .ceo__img .frame, .car__img .frame { aspect-ratio: 16 / 9; }
 }
 @media (max-width: 560px) {
   .car__ben { grid-template-columns: minmax(0, 1fr); }
   .ceo__facts li { grid-template-columns: 72px minmax(0, 1fr); }
-  .hero__proof { gap: 8px 18px; }
-  .ticker { padding-block: 14px; }
+  .hero__proof { gap: 8px 22px; }
+  .hero__proof li + li::before { left: -11px; }
+}
+
+/* ================================================= 16 Kundenfeedback 29.09.2026
+   Bausteine aus "Hinweise Homepage": Erfahrung als Zahlenliste, Leitsatz und
+   Chronik im Unternehmen, quere Hallenbilder, Produktfotos, Referenzfotos
+   ohne Zuschnitt. */
+
+/* Vorteil 07 "Erfahrung": zwei belegte Zahlen statt Fliesstext */
+/* align-content: start — die Liste wird als Subgrid-Zelle auf die Hoehe des
+   laengsten Nachbartexts gestreckt; ohne start zogen die zwei Zeilen mit und
+   die Zahlen standen 31 bis 57 px statt 10 px auseinander. */
+.adv__facts { display: grid; gap: 10px; align-content: start; }
+.adv__facts li { font-size: 1rem; line-height: 1.5; color: var(--fg-dim); }
+.adv__facts b { display: block; font-family: var(--ff-dis); font-weight: 600; font-size: 1.15rem; color: var(--fg); }
+
+/* Unternehmen: Leitsatz ueber dem Zitat, Chronik mit eigener Zeile */
+.ceo__label { margin: 0 0 10px; }
+.ceo__motto { margin: 0 0 clamp(32px, 3.4vw, 48px); }
+.ceo__mottoT {
+  margin: 0;
+  font-family: var(--ff-dis); font-weight: 600;
+  font-size: clamp(1.35rem, 1.2vw + 1rem, 1.95rem);
+  line-height: 1.25; letter-spacing: -.015em;
+  color: var(--fg); text-wrap: balance;
+}
+.ceo__label--facts { margin-top: clamp(40px, 4.4vw, 60px); }
+.ceo__label--facts + .ceo__facts { margin-top: 0; }
+
+/* Hallenbilder sind quer: Karten im Format 4:3. Drei Karten fuellen die
+   Bahn genau (Bahnbreite minus zwei Luecken, gedrittelt). So endet der Lauf
+   nach ganzen Schritten und die letzte Stellung fluchtet wieder mit der
+   Rasterkante; vorher schob der dritte Klick nur noch 17 px. */
+.own__gal--quer .own__shot { flex-basis: calc((100% - 2 * clamp(14px, 1.4vw, 22px)) / 3); }
+.own__gal--quer .own__shot .frame { aspect-ratio: 4 / 3; }
+/* Tablet: zwei Karten je Ansicht */
+@media (max-width: 980px) {
+  .own__gal--quer .own__shot { flex-basis: calc((100% - clamp(14px, 1.4vw, 22px)) / 2); }
+}
+/* Handy: die naechste Karte ragt sichtbar herein (Hinweis aufs Wischen), und
+   der Lauf rastet immer auf eine Karte ein. */
+@media (max-width: 620px) {
+  .own__gal--quer .own__shot { flex-basis: min(280px, 78vw); }
+  .own__track { scroll-snap-type: x mandatory; }
+}
+/* Der Bilderlauf sitzt im Unternehmen, Abstand zur Chronik darueber */
+.sec--ceo .own__gal { margin-top: clamp(64px, 7vw, 112px); }
+
+/* Eigenentwicklungen: je ein Produktfoto ueber der Beschreibung */
+.own__pImg { aspect-ratio: 4 / 3; margin-bottom: clamp(20px, 2vw, 28px); }
+
+/* Referenz Lichtmaschinenhalter: Teile vollstaendig zeigen. Eigenes
+   Seitenverhaeltnis statt 4:3-Zuschnitt, Unterschrift unter dem Bild. */
+/* Beide Fotos immer nebeneinander und gleich hoch, Breite folgt dem eigenen
+   Format: die Spalte wird im Verhaeltnis 3 : 4 geteilt (Dummy 3:4, Halter
+   1:1), die Hoehe ergibt sich aus der Breite. Vorher hatten beide eine feste
+   Hoehe und brachen zwischen 981 und 1335 px untereinander um. max-width
+   haelt die Bilder in der einspaltigen Ansicht bei rund 360 px Hoehe. */
+.refx--ganz .refx__imgs { display: flex; flex-wrap: nowrap; align-items: flex-start; max-width: 660px; }
+.refx--ganz .refx__imgs figure { min-width: 0; }
+.refx--ganz .refx__imgs figure:nth-child(1) { flex: 3 1 0; }
+.refx--ganz .refx__imgs figure:nth-child(2) { flex: 4 1 0; }
+/* Der Rahmen schmiegt sich um das Bild (kein festes Format) und haelt nur die
+   Rundung und den Hover-Zoom. */
+.refx--ganz .refx__imgs .frame { aspect-ratio: auto; background: transparent; }
+.refx--ganz .refx__imgs .frame > img { width: 100%; height: auto; }
+
+/* ================================================= 17 Optik-Check 29.09.2026
+   Bildunterschriften unter dem Bild, ruhige Hover-Zustaende, zweispaltige
+   Abschnittskoepfe. Die uebrigen Punkte (Etiketten, Rundung, Hero-Schleier,
+   Zitat, Blauflaechen) stehen direkt an ihren Regeln weiter oben. */
+
+/* --- Bildunterschriften --------------------------------------------------- */
+/* Wie im Katalog: Bild, darunter der Name. Fliesstextschrift, grau, kein
+   Verlauf mehr auf dem Foto. Beim Hover ueber die Abbildung wird sie hell. */
+/* Keine Einzelwoerter in der letzten Zeile ("Mass." allein), wo der Browser
+   es kann. Ueberschriften nutzen bereits text-wrap: balance. */
+p, li, figcaption { text-wrap: pretty; }
+
+figcaption {
+  padding-top: 12px;
+  font-family: var(--ff-txt);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.45;
+  letter-spacing: .01em;
+  color: var(--muted);
+  transition: color .3s var(--ease);
+}
+
+/* --- Hover ---------------------------------------------------------------- */
+/* Kein Anheben mehr. Das Foto zoomt langsam im eigenen Rahmen auf 103 %,
+   auf der ganzen Seite gleich; Karten ohne Bild bekommen stattdessen eine
+   blaue Rahmenlinie (.job, .own__step). Nur auf Geraeten mit Maus, sonst
+   bliebe der Zoom nach dem Antippen stehen. */
+.frame > img { transition: transform .7s var(--ease); }
+@media (hover: hover) {
+  .frame:hover > img,
+  figure:hover > .frame > img { transform: scale(1.03); }
+  figure:hover > figcaption { color: var(--fg); }
+}
+@media (hover: none) {
+  .svc__i:hover .svc__top > img { transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .frame:hover > img,
+  figure:hover > .frame > img,
+  .svc__i:hover .svc__top > img { transform: none; }
+}
+
+/* --- Zweispaltiger Kopf --------------------------------------------------- */
+/* In vier Abschnitten (Leistungen, Referenzen, Karriere, Kontakt) steht die
+   Ueberschrift links, die Einleitung rechts, beide auf einer Grundlinie. Die
+   Spalten folgen jeweils dem Raster darunter, so beginnt die Einleitung genau
+   ueber einer Kante des Inhalts. Die uebrigen Koepfe bleiben einspaltig: das
+   ergibt Rhythmus statt Schablone.
+   Zwei Zeilen: Etikett oben, Ueberschrift unten. Ist die Einleitung hoeher,
+   waechst nur die obere (1fr) — das Etikett rutscht mit und bleibt dicht
+   ueber der Ueberschrift. */
+.head--split {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  grid-template-rows: 1fr auto;
+  column-gap: 48px;
+}
+.head--split > .kicker { grid-area: 1 / 1 / 2 / 2; align-self: end; }
+.head--split > .h2 { grid-area: 2 / 1 / 3 / 2; align-self: end; align-self: last baseline; }
+.head--split > .lead { grid-area: 1 / 2 / 3 / 3; margin: 0; align-self: end; align-self: last baseline; }
+/* Leistungen: zwei gleiche Haelften mit dem Kartenabstand, die Einleitung
+   beginnt damit genau ueber der dritten Karte. */
+.sec--svc .head--split { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(16px, 1.6vw, 26px); }
+/* Referenzen: ueber dem Text zum Lichtmaschinenhalter */
+.sec--ref .head--split { grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); column-gap: clamp(28px, 3.4vw, 56px); }
+/* Karriere: ueber der Spalte mit den Stellen */
+.sec--car .head--split { grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); column-gap: clamp(32px, 5vw, 80px); }
+/* Kontakt: ueber dem Formular */
+.con .head--split { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: clamp(40px, 5vw, 88px); }
+@media (max-width: 980px) {
+  .head--split { display: block; }
+  .head--split > .lead { margin-top: 22px; }
+}
+
+/* Sehr schmale Handys (320 px): die E-Mail-Adresse bricht nicht mehr um und
+   waere fuer die halbe Fussspalte zu breit. Die Kontaktspalte nimmt dort die
+   volle Breite. */
+@media (max-width: 374px) {
+  .ftr__grid > div:nth-child(2),
+  .ftr__grid > div:nth-child(3) { grid-column: 1 / -1; }   /* Adresse, Kontakt */
+}
+
+/* ================================================= 18 Pruefrunde 1, 29.09.2026
+   Tippflaechen am Handy: Links der Fusszeile mindestens 44 px hoch. Jede Zeile
+   bekommt dieselbe Hoehe, damit Text- und Linkzeilen im Takt bleiben.
+   Pruefrunde 2: auch auf jedem Touch-Geraet (Tablet hoch, Handy quer), nicht
+   nur unter 760 px Breite. */
+@media (max-width: 760px), (pointer: coarse) {
+  /* Jede Zeile 22 px Text + 2 x 11 px Luft = 44 px. Ein Link fuellt seine
+     Zeile ganz aus (negativer Rand hebt das eigene Polster wieder auf). */
+  .ftr li { padding-block: 11px; line-height: 1.5; }
+  .ftr li > a { display: block; margin-block: -11px; padding-block: 11px; }
+  .ftr__legal a { display: inline-block; padding-block: 12px; }
+}
+
+/* ================================================= 19 Pruefrunde 2, 30.09.2026
+   Handy quer (z. B. 844 x 390): bisher galten Tablet-Masse, die Kopfzeile nahm
+   22 % der Hoehe, Abschnittsabstaende 38 bis 49 %, Fotos waren hoeher als der
+   sichtbare Bereich. Eigene Stufe nach Hoehe. main.js liest die Kachel der
+   Marke zur Laufzeit. Rahmen mit object-fit: cover schneiden nur zu. */
+@media (orientation: landscape) and (max-height: 500px) {
+  :root { --hh: 64px; --sp: 48px; }
+  .mark { --mark-kachel: 48px; }
+  .brand__wm { height: 30px; }
+  /* Rahmen mit festem Seitenverhaeltnis werden dadurch schmaler statt hoeher
+     (die Hoehengrenze uebertraegt sich ueber aspect-ratio auf die Breite):
+     das Foto bleibt ganz und passt unter die Kopfzeile. */
+  .frame { max-height: calc(100svh - var(--hh) - 32px); }
+  /* Lichtmaschinenhalter: Rahmen ohne festes Format, deshalb nicht ueber die
+     Hoehe begrenzen (das schnitte die Teile ab), sondern das Paar schmaler
+     stellen. Hoehe = 4/7 der Breite ohne Luecke (Dummy 3:4 und Halter 1:1 im
+     Verhaeltnis 3 : 4 nebeneinander), Luecke hier 12 px. */
+  .refx--ganz .refx__imgs .frame { max-height: none; }
+  .refx--ganz .refx__imgs { max-width: min(660px, calc((100svh - var(--hh) - 32px) * 1.75 + 12px)); }
+  /* Zahlenband: nicht hoeher als der sichtbare Bereich (vorher 56vw = 472 px
+     bei 390 px Hoehe, darueber 268 px leerer Grund). */
+  .stats { min-height: calc(100svh - var(--hh)); padding-top: var(--sp); }
 }
