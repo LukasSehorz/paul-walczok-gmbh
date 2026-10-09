@@ -10,21 +10,22 @@
      dunklen Formular. */
   color-scheme: dark;
 
-  /* 29.09.2026: auf Kundenwunsch etwas heller (vorher #08090B / #101216 /
+  /* 09.10.2026: auf Wunsch noch einen Ticken heller (29.09.: #111317 / #181B20 /
+     #1E2228; davor #08090B / #101216 /
      #15181D). Die RGB-Tripel werden fuer halbtransparente Verlaeufe gebraucht,
      damit Bildverlaeufe genau in den Grund auslaufen. */
-  --bg:        #111317;
-  --bg-rgb:    17, 19, 23;
-  --surface:   #181B20;
-  --surface-rgb: 24, 27, 32;
-  --surface-2: #1E2228;
+  --bg:        #16191E;
+  --bg-rgb:    22, 25, 30;
+  --surface:   #1D2026;
+  --surface-rgb: 29, 32, 38;
+  --surface-2: #23272E;
   --fg:        #F3F5F8;
   --fg-dim:    #B4BAC4;
   --muted:     #7E8692;
   --accent:    #2E5BFF;
   --accent-hi: #7796FF;
-  --line:      #262B33;
-  --line-2:    #313742;
+  --line:      #2C3139;
+  --line-2:    #373D48;
 
   --ff-dis: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
   --ff-txt: 'Manrope', 'Helvetica Neue', Arial, sans-serif;
@@ -260,7 +261,7 @@ a[href^="mailto:"], a[href^="tel:"] { white-space: nowrap; }
   display: block;
   width: var(--mark-kachel);
   height: var(--mark-kachel);
-  background-image: url(../assets/img/logo-spin3d.webp?v=20260930b);
+  background-image: url(../assets/img/logo-spin3d.webp?v=20261009);
   background-repeat: no-repeat;
   background-size: calc(var(--mark-kachel) * 11) calc(var(--mark-kachel) * 11);
   background-position: 0 0;       /* Lage 0 = Frontansicht */
