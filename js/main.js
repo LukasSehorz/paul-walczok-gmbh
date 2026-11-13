@@ -4,7 +4,7 @@
      1. Hero-Intro (Zeilen der H1 aus der Maske, Rest in einer Timeline)
      2. Bildschieber: jede Bildbox oeffnet sich einmal von oben nach unten
      3. Masslinien der Vorteile ziehen sich auf
-   Dazu die Bildmarke im Kopf und der Branchen-Ring (nur Drehung). Text,
+   Dazu der Branchen-Ring (nur Drehung). Text,
    Listen, Ueberschriften und Karten stehen einfach da. Kein Pinning, kein
    Preloader. Nur transform, opacity und clip-path. Ohne GSAP bleibt die Seite
    vollstaendig sichtbar.
@@ -151,134 +151,9 @@
   initJobs();
 
   /* ============================================================== LOGO ==
-     Die Bildmarke ist ein Sprite aus 120 gerenderten Lagen der Kundendatei
-     3d-logo.STEP: eine volle Umdrehung um die senkrechte Achse in Schritten
-     von 3 Grad, wie in der SOLIDWORKS-Aufnahme des Kunden (dort dreht sich
-     das Bauteil wie auf einem Drehteller, ohne jedes Kippen; die Seite mit
-     der Messtrommel kommt zuerst auf den Betrachter zu). Gesetzt wird nur
-     die background-position.
-
-     Beim Scrollen folgt die Lage dem Scrollweg (eine halbe Umdrehung je
-     Bildschirmhoehe; abwaerts vorwaerts, aufwaerts rueckwaerts), gedaempft,
-     damit nichts springt. Wird 1,2 s lang nicht gescrollt, laeuft die Marke in
-     1,5 s mit weichem Auslauf (kubisches Ease-out, ohne Ueberschwingen) zum
-     naechsten Vielfachen einer vollen Umdrehung zurueck. Lage 0 ist die
-     Frontansicht: in Ruhe zeigt die Marke exakt das Original, beim Laden
-     ebenso. Bei reduzierter Bewegung passiert nichts, dann bleibt Lage 0 aus
-     dem CSS stehen.
-
-     window.__markHold (Zahl) friert eine Lage ein, nur fuer Bildschirmfotos —
-     erwartet wird ein Lagenindex 0..119 (Lage k = k * 3 Grad). */
-  var mark = document.getElementById('mark');
-  if (mark && !reduce) {
-    /* Rasterdaten des Sprites: 120 Lagen in 11 Spalten und 11 Zeilen (der
-       letzte Platz bleibt leer). Die beiden Zahlen stehen fest, weil sie im
-       Bild selbst stecken.
-
-       Die Kachelgroesse steht bewusst NICHT hier: css/styles.css setzt sie in
-       --mark-kachel und verkleinert sie unter 980 px auf 62 px. Ein fester
-       Wert an dieser Stelle wuerde bei jedem Breakpoint auseinanderlaufen und
-       Nachbarkacheln ins Bild ziehen. Deshalb wird die Kante aus dem Element
-       gelesen und bei resize neu bestimmt. */
-    var LAGEN = 120, SPALTEN = 11;
-
-    var RUHE_MS = 1200, RUECKKEHR_MS = 1500;
-    var jetzt = function () { return (window.performance && performance.now) ? performance.now() : Date.now(); };
-    /* Gerechnet wird in Lagen (Kommazahl), nicht in Grad: eine volle
-       Umdrehung sind LAGEN Schritte. */
-    var scrollLage = 0, lage = 0, gesetzt = null, tVor = null, letzterScroll = -1e9;
-    var ruheStart = null, ruheVon = 0;
-    var letzterY = window.pageYOffset || 0;
-
-    var kachel = 0;
-    function kachelMessen() {
-      /* getBoundingClientRect statt offsetWidth: liefert auch bei fraktionaler
-         Skalierung den Wert, mit dem der Browser den Hintergrund wirklich
-         rechnet. */
-      var b = mark.getBoundingClientRect().width;
-      kachel = b > 0 ? b : parseFloat(getComputedStyle(mark).width) || 84;
-    }
-    kachelMessen();
-    function kachelNeu() {
-      kachelMessen();
-      gesetzt = null;   /* Lage neu schreiben, sonst bleibt der alte Versatz stehen */
-      wecken();
-    }
-    /* ResizeObserver misst das Element selbst und faengt damit auch Aenderungen,
-       die kein resize-Ereignis ausloesen — etwa wenn --mark-kachel spaeter einmal
-       aus einer Container Query oder einem vw-Ausdruck kaeme. Wo es ihn nicht
-       gibt, tut es das Fensterereignis. */
-    if (typeof ResizeObserver === 'function') {
-      new ResizeObserver(kachelNeu).observe(mark);
-    } else {
-      window.addEventListener('resize', kachelNeu, { passive: true });
-    }
-
-    /* Der Takt laeuft nur, solange sich etwas bewegt. Steht die Marke auf ihrer
-       Ruhelage, haelt er an und wird vom naechsten Scrollen wieder geweckt.
-       Sonst liefe ein rAF-Callback dauerhaft mit 60 Bildern je Sekunde mit,
-       ohne je etwas zu zeichnen — auf dem Notebook im Akkubetrieb umsonst. */
-    var laeuft = false;
-    function wecken() {
-      if (laeuft) return;
-      laeuft = true;
-      tVor = null;            /* sonst ist dt der ganze Schlafzeitraum */
-      requestAnimationFrame(takt);
-    }
-
-    window.addEventListener('scroll', function () {
-      var y = window.pageYOffset || 0;
-      /* Eine Bildschirmhoehe Scrollweg entspricht einer halben Umdrehung
-         (180 Grad = LAGEN/2 Lagen). */
-      scrollLage += (y - letzterY) * ((LAGEN / 2) / Math.max(320, window.innerHeight));
-      letzterY = y;
-      letzterScroll = jetzt();
-      wecken();
-    }, { passive: true });
-
-    function takt(t) {
-      t = t || jetzt();
-      if (tVor === null) tVor = t;
-      var dt = Math.min(0.1, (t - tVor) / 1000); tVor = t;   /* s, gedeckelt (Tab-Wechsel) */
-      var ruht = false;
-      if (t - letzterScroll > RUHE_MS) {
-        /* Ruhe: auf das naechste Vielfache eines vollen Durchlaufs einrasten
-           und in RUECKKEHR_MS mit kubischem Ease-out dorthin laufen. Lage 0
-           ist die Frontansicht der Kundendatei, in Ruhe steht also das
-           Original. */
-        if (ruheStart === null) {
-          ruheStart = t; ruheVon = lage;
-          scrollLage = Math.round(scrollLage / LAGEN) * LAGEN;
-        }
-        var p = Math.min(1, (t - ruheStart) / RUECKKEHR_MS);
-        p = 1 - Math.pow(1 - p, 3);
-        lage = ruheVon + (scrollLage - ruheVon) * p;
-        /* Erst anhalten, wenn der Auslauf durch ist UND die Lage wirklich
-           steht. Ohne die zweite Bedingung koennte ein halbes Bild fehlen. */
-        ruht = p >= 1 && Math.abs(scrollLage - lage) < 0.01;
-      } else {
-        ruheStart = null;
-        lage += (scrollLage - lage) * Math.min(1, dt * 7);   /* Daempfung ~140 ms */
-      }
-      var n = Math.round(lage);
-      if (typeof window.__markHold === 'number') n = window.__markHold;  /* nur fuer Bildschirmfotos */
-      /* Negative Werte sauber in den Bereich holen: % ist in JS vorzeichenbehaftet. */
-      n = ((n % LAGEN) + LAGEN) % LAGEN;
-      if (n !== gesetzt) {
-        gesetzt = n;
-        var sx = (n % SPALTEN) * kachel;
-        var sy = Math.floor(n / SPALTEN) * kachel;
-        mark.style.backgroundPosition = (-sx) + 'px ' + (-sy) + 'px';
-      }
-      if (ruht) {
-        lage = scrollLage;    /* exakt auf die Ruhelage setzen, kein Rest */
-        laeuft = false;
-        return;               /* Takt anhalten, bis wieder gescrollt wird */
-      }
-      requestAnimationFrame(takt);
-    }
-    wecken();
-  }
+     Bis 13.11.2026 drehte sich hier die Bildmarke als 3D-Sprite beim Scrollen.
+     Seit den Hinweisen des Kunden (Logo "unrund") steht die Marke aus seiner
+     Vektordatei still im Kopf; das Skript dazu steht im Git-Verlauf (0742ca6). */
 
   if (!hasGsap || reduce) { initForm(); return; }
 

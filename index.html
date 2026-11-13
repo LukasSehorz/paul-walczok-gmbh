@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Paul Walczok GmbH · CNC-Präzisionsteile aus Essenbach bei Landshut</title>
 <meta name="description" content="CNC-Drehen, Fräsen, Schleifen, Laserschweißen und Konstruktion aus Essenbach bei Landshut. Einzelteile, Prototypen und Kleinserien, im eigenen Haus gemessen.">
-<meta name="theme-color" content="#16191E">
+<meta name="theme-color" content="#1C2026">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="https://www.walczok-gmbh.de/">
 
@@ -31,7 +31,7 @@
 <link rel="preload" as="font" type="font/woff2" href="fonts/xn7gYHE41ni1AdIRggexSg.woff2" crossorigin>
 <link rel="stylesheet" href="fonts/fonts.css?v=20261009">
 <link rel="preload" as="image" href="assets/img/hero-poster.jpg" fetchpriority="high">
-<link rel="stylesheet" href="css/styles.css?v=20261009">
+<link rel="stylesheet" href="css/styles.css?v=20261113">
 
 <!-- Die versteckten Startzustaende haengen an `.gsap`; die Klasse wird erst gesetzt,
      wenn der GSAP-Stack nachweislich geladen ist. Faellt eine Vendor-Datei aus,
@@ -90,22 +90,14 @@
 
     <div class="brand">
       <a class="brand__link" href="#top" aria-label="Paul Walczok GmbH, zum Seitenanfang">
-        <!-- Die Bildmarke als echtes 3D-Bauteil, gerendert aus der Kundendatei
-             Unterlagen Kunden/3d-logo.STEP (SolidWorks 2026). 120 Lagen einer
-             vollen Umdrehung um die senkrechte Achse (Drehteller wie in der
-             SOLIDWORKS-Aufnahme des Kunden, kein Kippen) liegen als 11 x 11
-             Raster in einer einzigen WebP-Datei; beim Scrollen wechselt nur
-             die background-position. Ein Video waere hier falsch: es liesse sich
-             nicht sauber endlos schliessen und muesste auf jeder Seite
-             mitgeladen werden.
-
-             Lage 0 ist exakt die Frontansicht des Originals. Bleibt das Rad
-             stehen, rastet js/main.js dorthin zurueck — in Ruhe zeigt die
-             Marke also unveraendert die Kundendatei.
-
-             Ohne JavaScript oder bei reduzierter Bewegung bleibt Lage 0
-             stehen; die Marke ist dann ein normales Standbild. -->
-        <span class="mark" id="mark" aria-hidden="true"></span>
+        <!-- Bildmarke aus der Vektordatei des Kunden (Patch der Arbeitskleidung,
+             Hinweise Homepage-2 vom 13.11.2026: das 3D-Logo wirkte "unrund").
+             Linien 1:1 aus der Kundendatei, Koerper im Akzentblau, Linien hell —
+             dieselben Farben wie der Schriftzug daneben. Als SVG bleibt sie in
+             jeder Groesse scharf. Bis 13.11.2026 stand hier ein drehendes
+             3D-Bauteil aus 3d-logo.STEP (siehe Git-Verlauf, tools/logo-sprite/). -->
+        <img class="mark" src="assets/img/logo-mark-vektor.svg?v=20261113" width="139" height="90"
+             alt="" aria-hidden="true" decoding="async">
         <!-- Rechts neben der Marke der Original-Schriftzug aus der CI des Kunden
              (Hinweise Homepage, 29.09.2026: "genau so, das gehoert zu unserer CI").
              Ausgeschnitten aus assets/img/logo-full.png, Farben unveraendert. Er
@@ -1097,9 +1089,8 @@
 
     <div class="ftr__grid">
       <div class="ftr__brand">
-        <!-- Ruhebild der 3D-Marke aus dem Kopf (Lage 0 aus logo-spin3d.webp),
-             damit das Zeichen ueberall in derselben Qualitaet steht. -->
-        <img src="assets/img/logo-mark-3d.webp" width="168" height="168" loading="lazy" decoding="async"
+        <!-- Dieselbe Bildmarke wie in der Kopfzeile (Vektordatei des Kunden). -->
+        <img src="assets/img/logo-mark-vektor.svg?v=20261113" width="139" height="90" loading="lazy" decoding="async"
              alt="Bildmarke der Paul Walczok GmbH">
         <p class="ftr__claim">Präzision ist unsere Leidenschaft. Unser Ansporn ist es, jeden Tag aufs Neue das beste Teil zu fertigen. Seit 1984 in Essenbach.</p>
       </div>
@@ -1157,6 +1148,6 @@
 <script src="js/vendor/ScrollTrigger.min.js"></script>
 <script src="js/vendor/SplitText.min.js"></script>
 <script src="js/vendor/lenis.min.js"></script>
-<script src="js/main.js?v=20261009"></script>
+<script src="js/main.js?v=20261113"></script>
 </body>
 </html>

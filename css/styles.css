@@ -10,22 +10,23 @@
      dunklen Formular. */
   color-scheme: dark;
 
-  /* 09.10.2026: auf Wunsch noch einen Ticken heller (29.09.: #111317 / #181B20 /
-     #1E2228; davor #08090B / #101216 /
-     #15181D). Die RGB-Tripel werden fuer halbtransparente Verlaeufe gebraucht,
+  /* 13.11.2026: Kunde (Hinweise Homepage-2) will den Grund nochmal heller.
+     Verlauf: 13.11. #1C2026 / #23272E / #2A2F37 · 09.10. #16191E · 29.09.
+     #111317 · davor #08090B. Die graue Schrift ist dafuer heller geworden
+     (#7E8692 -> #8F97A4), damit sie auf allen drei Flaechen ueber 4,5:1 bleibt. Die RGB-Tripel werden fuer halbtransparente Verlaeufe gebraucht,
      damit Bildverlaeufe genau in den Grund auslaufen. */
-  --bg:        #16191E;
-  --bg-rgb:    22, 25, 30;
-  --surface:   #1D2026;
-  --surface-rgb: 29, 32, 38;
-  --surface-2: #23272E;
+  --bg:        #1C2026;
+  --bg-rgb:    28, 32, 38;
+  --surface:   #23272E;
+  --surface-rgb: 35, 39, 46;
+  --surface-2: #2A2F37;
   --fg:        #F3F5F8;
   --fg-dim:    #B4BAC4;
-  --muted:     #7E8692;
+  --muted:     #8F97A4;
   --accent:    #2E5BFF;
   --accent-hi: #7796FF;
-  --line:      #2C3139;
-  --line-2:    #373D48;
+  --line:      #343A44;
+  --line-2:    #404753;
 
   --ff-dis: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
   --ff-txt: 'Manrope', 'Helvetica Neue', Arial, sans-serif;
@@ -230,65 +231,38 @@ a[href^="mailto:"], a[href^="tel:"] { white-space: nowrap; }
 
 .brand { display: flex; align-items: center; gap: 16px; margin-right: auto; }
 
-/* Bildmarke als echtes 3D-Bauteil (Kantenlaenge 84 px in der 112-px-Zeile).
+/* Marke und Schriftzug (13.11.2026, Hinweise Homepage-2 des Kunden).
 
-   Gerendert aus der Kundendatei 3d-logo.STEP: 120 Lagen einer vollen
-   Umdrehung um die senkrechte Achse (3 Grad je Lage), wie in der
-   SOLIDWORKS-Aufnahme des Kunden — ein Drehteller, kein Kippen. Abgelegt
-   als 11 x 11 Raster in einem einzigen WebP, Kachel 168 px = exakt die
-   doppelte Anzeigekante fuer Retina-Bildschirme. Beim Scrollen wird nur die
-   background-position umgeschaltet — kein Video, kein WebGL.
+   Bildmarke: aus der Vektordatei des Kunden (Patch der Arbeitskleidung),
+   Koerper im Akzentblau, Linien hell. Vorher drehte hier ein 3D-Bauteil aus
+   3d-logo.STEP; der Kunde fand es "unrund" — die strenge Frontansicht machte
+   den Bolzen kantig, im Patch sieht man ihn leicht von oben und rund.
 
-   Warum ein Sprite und keine CSS-3D-Transformation: das Bauteil ist ein
-   Koerper mit Gewinde, Sechskant und Bohrungen. Eine transformierte Flaeche
-   kaeme nur an eine gekippte Scheibe heran, nie an die Verdeckungen, die
-   sich beim Drehen ergeben.
+   Schriftzug: der Original-Schriftzug der CI als Dunkel-Version (30.09.2026:
+   Band im Akzentblau, weisses Band als blau umrandetes Band mit heller Schrift),
+   als Bild, weil die Schrift der Firma keine Webschrift ist.
 
-   Lage 0 (links oben) ist exakt die Frontansicht der Kundendatei. In Ruhe
-   rastet js/main.js genau dorthin zurueck: das Logo steht dann still und
-   zeigt das Original.
-
-   Raster: 11 Spalten x 11 Zeilen. Die Anzeigekante steht EINMAL in --mark-kachel;
-   Breite, Hoehe und background-size leiten sich daraus ab. Ein Breakpoint aendert
-   also nur diese eine Zahl, sonst zerfaellt das Raster (background-size und
-   Schrittweite muessen immer zusammenpassen). js/main.js liest die Kachelgroesse
-   zur Laufzeit aus dem Element und rechnet nicht mit einem eigenen Wert. */
+   Groesse: der Kunde will beides groesser. Es gibt EINE Stellschraube, die
+   Hoehe des Schriftzugs (--wm-h); die Marke steht immer 1,25-mal so hoch, die
+   Breiten folgen den Seitenverhaeltnissen (Marke 139:90, Schriftzug 1047:189).
+   Breakpoints aendern nur --wm-h. */
+/* Mit voller Navigation (ab 1260 px) teilen sich Marke, Schriftzug und sechs
+   Menuepunkte eine Zeile. Der Schriftzug waechst deshalb mit der Breite:
+   41 px bei 1260, 54 px bei 1380, 58 px ab rund 1410 (gemessen, mit 2 px Luft).
+   Darunter (Klappmenue) setzt der Breakpoint eigene Werte. */
+.brand { --wm-h: clamp(40px, calc(11.1vw - 99px), 58px); }
 /* Marke und Schriftzug stehen zusammen im Link: ein Tipp auf den Namen fuehrt
    ebenfalls nach oben. Der Abstand kommt von .brand. */
 .brand__link { display: flex; align-items: center; gap: inherit; }
 .mark {
-  --mark-kachel: 84px;            /* einzige Stellschraube fuer die Groesse */
-  display: block;
-  width: var(--mark-kachel);
-  height: var(--mark-kachel);
-  background-image: url(../assets/img/logo-spin3d.webp?v=20261009);
-  background-repeat: no-repeat;
-  background-size: calc(var(--mark-kachel) * 11) calc(var(--mark-kachel) * 11);
-  background-position: 0 0;       /* Lage 0 = Frontansicht */
-  /* Kein will-change: background-position ist keine Compositor-Eigenschaft, der
-     Hinweis spart hier keinen Paint, haelt aber dauerhaft eine Ebene mit der
-     1800 x 1600 grossen Textur im Grafikspeicher — auch bei reduzierter
-     Bewegung, wo gar nichts animiert wird. */
+  display: block; flex: none;
+  height: calc(var(--wm-h) * 1.25); width: auto; max-width: none;
 }
-
-/* Hintergrundbilder druckt der Browser von sich aus nicht. Ohne diese Regel
-   bliebe im Ausdruck der Startseite eine Luecke neben dem Schriftzug. */
-@media print {
-  .mark { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-}
-
-/* 30.09.2026: Dunkel-Version des CI-Schriftzugs (logo-wordmark-dunkel.webp):
-   gleiche Form und Buchstaben, Band im Akzentblau der Seite, das weisse Band
-   als blau umrandetes Band mit heller Schrift. Das Original mit grellweisser
-   Flaeche wirkte auf dem dunklen Grund wie ein Fremdkoerper. */
-/* Original-Schriftzug aus der CI (Kundenwunsch 29.09.2026), als Bild, weil
-   die Schrift der Firma keine Webschrift ist und Band und Rahmen dazugehoeren.
-   Die Hoehe steuert alles, die Breite folgt dem Seitenverhaeltnis 1047:189. */
-.brand__wm { display: block; height: 44px; width: auto; max-width: none; }
+.brand__wm { display: block; flex: none; height: var(--wm-h); width: auto; max-width: none; }
 
 /* Sechs Eintraege plus Knopf brauchen mehr Platz als die frueheren vier, die
    Abstaende sind deshalb enger gefasst. */
-.nav { display: flex; align-items: center; gap: clamp(15px, 1.7vw, 34px); }
+.nav { display: flex; align-items: center; gap: clamp(15px, 1.4vw, 22px); }
 .nav > a:not(.nav__cta) {
   position: relative;
   padding: 10px 0;
@@ -932,7 +906,7 @@ a[href^="mailto:"], a[href^="tel:"] { white-space: nowrap; }
   transition: border-color .25s var(--ease), background-color .25s var(--ease);
 }
 .f textarea { resize: vertical; min-height: 128px; }
-.f input:hover, .f textarea:hover { border-color: #333A46; }
+.f input:hover, .f textarea:hover { border-color: #4A5260; }
 .f input:focus, .f textarea:focus { border-color: var(--accent); outline-offset: 1px; }
 .f input[aria-invalid="true"], .f textarea[aria-invalid="true"] { border-color: #FF6B6B; }
 /* Die native Checkbox kennt keinen roten Rahmen: der Fehler zeigt sich als Ring. */
@@ -983,7 +957,7 @@ a[href^="mailto:"], a[href^="tel:"] { white-space: nowrap; }
   gap: clamp(28px, 3vw, 56px);
 }
 /* Ruhebild der 3D-Marke, gleiche Kante wie im Kopf */
-.ftr__brand img { width: 84px; height: 84px; }
+.ftr__brand img { width: 124px; height: auto; }   /* Bildmarke 139:90 */
 .ftr__claim { margin: 20px 0 0; max-width: 34ch; font-size: .95rem; color: var(--muted); }
 .ftr h2 { margin: 0 0 12px; }
 .ftr li, .ftr address { font-size: .94rem; line-height: 1.85; color: var(--fg-dim); }
@@ -1043,18 +1017,14 @@ a[href^="mailto:"], a[href^="tel:"] { white-space: nowrap; }
 
 /* ------------------------------------------------------------ 14 Responsiv */
 /* Die Navigation traegt sechs Eintraege plus Knopf und braucht in einer Zeile
-   rund 1350 px, in der kompakten Stufe (Marke 72, Schriftzug 44, Luecke 18)
-   rund 1230 px. Darunter wird daraus das Klappmenue. Der Kopf selbst bleibt
-   bis 980 px in voller Hoehe, Menue und Kopfmasse stehen deshalb in
-   getrennten Bloecken. js/main.js schliesst das Menue, sobald die Breite
-   ueber diese Grenze wechselt (gleicher Wert dort). */
-@media (min-width: 1260px) and (max-width: 1379px) {
-  .mark { --mark-kachel: 72px; }      /* main.js liest die Kachel zur Laufzeit */
-  .brand__wm { height: 40px; }
-  .nav { gap: 18px; }
-}
+   ab 1260 px Platz (Marke und Schriftzug wachsen dort mit der Breite, siehe
+   .brand). Darunter wird daraus das Klappmenue; dann ist wieder Platz fuer den
+   grossen Schriftzug. Der Kopf selbst bleibt bis 980 px in voller Hoehe, Menue
+   und Kopfmasse stehen deshalb in getrennten Bloecken. js/main.js schliesst das
+   Menue, sobald die Breite ueber diese Grenze wechselt (gleicher Wert dort). */
 @media (max-width: 1259px) {
   .burger { display: grid; place-items: center; }
+  .brand { --wm-h: 58px; }
 
   /* Das Menue reicht bis zum unteren Rand: keine halb sichtbare, tote Seite
      darunter, und im Querformat (z. B. 844 x 390) laesst es sich scrollen. */
@@ -1124,11 +1094,7 @@ a[href^="mailto:"], a[href^="tel:"] { white-space: nowrap; }
 
 @media (max-width: 980px) {
   :root { --hh: 84px; }
-  /* Nur die Kachelgroesse setzen: Breite, Hoehe und background-size haengen
-     per calc() daran. Wuerde hier width/height direkt gesetzt, bliebe das
-     Kachelraster bei 84 px stehen und das Sprite zerfiele. */
-  .mark { --mark-kachel: 62px; }              /* Marke 62 px in 84-px-Kopfzeile */
-  .brand__wm { height: 34px; }
+  .brand { --wm-h: 44px; }                    /* Marke 55 px in 84-px-Kopfzeile */
   .brand { gap: 12px; }
 
   /* Kontakt einspaltig: das Formular kommt direkt nach dem Kopf, Foto und
@@ -1190,12 +1156,13 @@ a[href^="mailto:"], a[href^="tel:"] { white-space: nowrap; }
 }
 
 @media (max-width: 460px) {
-  /* Die Hoehe des Schriftzugs waechst mit der Breite: 25 px bei 320, 37 px
-     bei 390. Eine feste Hoehe liess bei 320 den Burger auf 22 px schrumpfen
-     und bei 390 rechts 62 px ungenutzt. */
+  /* Die Hoehe des Schriftzugs waechst mit der Breite: 27 px bei 320, 37 px
+     bei 390, 40 px ab 412. Marke + Schriftzug sind zusammen 7,5 x --wm-h + 10
+     breit; daneben brauchen Burger und Raender 100 px. Eine feste Hoehe liess
+     bei 320 den Burger schrumpfen und bei 390 rechts Platz ungenutzt. */
   .hdr__in { gap: 12px; }
   .brand { gap: 10px; }
-  .brand__wm { height: clamp(22px, calc((100vw - 172px) * .15), 34px); }
+  .brand { --wm-h: clamp(24px, calc(13.3vw - 15px), 40px); }
   /* Die Referenzen bleiben auch auf dem Handy zweispaltig. Einspaltig waren
      sechs quadratische Kacheln allein gut 2000 px lang. */
   .ref__i figcaption { padding-top: 8px; font-size: 13px; }
@@ -1544,8 +1511,7 @@ figcaption {
    Marke zur Laufzeit. Rahmen mit object-fit: cover schneiden nur zu. */
 @media (orientation: landscape) and (max-height: 500px) {
   :root { --hh: 64px; --sp: 48px; }
-  .mark { --mark-kachel: 48px; }
-  .brand__wm { height: 26px; }
+  .brand { --wm-h: 30px; }
   /* Rahmen mit festem Seitenverhaeltnis werden dadurch schmaler statt hoeher
      (die Hoehengrenze uebertraegt sich ueber aspect-ratio auf die Breite):
      das Foto bleibt ganz und passt unter die Kopfzeile. */
