@@ -31,7 +31,7 @@
 <link rel="preload" as="font" type="font/woff2" href="fonts/xn7gYHE41ni1AdIRggexSg.woff2" crossorigin>
 <link rel="stylesheet" href="fonts/fonts.css?v=20261009">
 <link rel="preload" as="image" href="assets/img/hero-poster.jpg" fetchpriority="high">
-<link rel="stylesheet" href="css/styles.css?v=20261113b">
+<link rel="stylesheet" href="css/styles.css?v=20261113c">
 
 <!-- Die versteckten Startzustaende haengen an `.gsap`; die Klasse wird erst gesetzt,
      wenn der GSAP-Stack nachweislich geladen ist. Faellt eine Vendor-Datei aus,
@@ -85,10 +85,7 @@
 <a class="skip" href="#main">Zum Inhalt springen</a>
 
 <!-- ═══════════════════════ KOPFZEILE ═══════════════════════ -->
-<!-- hdr--buehne: oben auf der Seite stehen Marke und Schriftzug gross und mittig
-     ueber dem Hero und wandern beim Scrollen an ihren Platz links oben
-     (js/main.js, Platz dafuer: .hero__buehne). -->
-<header class="hdr hdr--buehne" id="hdr">
+<header class="hdr" id="hdr">
   <div class="hdr__in">
 
     <div class="brand">
@@ -102,9 +99,9 @@
              steht vor dem Bolzen, die andere dahinter (js/main.js). Ohne
              JavaScript steht die Marke einfach still. -->
         <span class="mark" id="mark" aria-hidden="true">
-          <img class="mark__b mark__b--l" src="assets/img/marke-buegel.svg?v=20261113b" width="139" height="90" alt="" decoding="async">
-          <img class="mark__z" src="assets/img/marke-bolzen.svg?v=20261113b" width="139" height="90" alt="" decoding="async">
-          <img class="mark__b mark__b--r" src="assets/img/marke-buegel.svg?v=20261113b" width="139" height="90" alt="" decoding="async">
+          <img class="mark__b mark__b--l" src="assets/img/marke-buegel.svg?v=20261113c" width="139" height="90" alt="" decoding="async">
+          <img class="mark__z" src="assets/img/marke-bolzen.svg?v=20261113c" width="139" height="90" alt="" decoding="async">
+          <img class="mark__b mark__b--r" src="assets/img/marke-buegel.svg?v=20261113c" width="139" height="90" alt="" decoding="async">
         </span>
         <!-- Rechts neben der Marke der Original-Schriftzug aus der CI des Kunden
              (Hinweise Homepage, 29.09.2026: "genau so, das gehoert zu unserer CI").
@@ -151,9 +148,6 @@
   <div class="hero__veil" aria-hidden="true"></div>
 
   <div class="wrap hero__in">
-    <!-- Platzhalter fuer die grosse Marke (steht selbst in der Kopfzeile und
-         wird von js/main.js hierueber gelegt). Nur auf grossen Bildschirmen. -->
-    <div class="hero__buehne" aria-hidden="true"></div>
     <!-- Geschuetztes Leerzeichen: sonst bricht der Kicker auf dem Handy zwischen
          "seit" und der Jahreszahl um. -->
     <p class="kicker hero__kicker">Zerspanungstechnik · Essenbach · seit&nbsp;1984</p>
@@ -1101,7 +1095,7 @@
     <div class="ftr__grid">
       <div class="ftr__brand">
         <!-- Dieselbe Bildmarke wie in der Kopfzeile (Vektordatei des Kunden). -->
-        <img src="assets/img/logo-mark-vektor.svg?v=20261113b" width="139" height="90" loading="lazy" decoding="async"
+        <img src="assets/img/logo-mark-vektor.svg?v=20261113c" width="139" height="90" loading="lazy" decoding="async"
              alt="Bildmarke der Paul Walczok GmbH">
         <p class="ftr__claim">Präzision ist unsere Leidenschaft. Unser Ansporn ist es, jeden Tag aufs Neue das beste Teil zu fertigen. Seit 1984 in Essenbach.</p>
       </div>
@@ -1159,6 +1153,6 @@
 <script src="js/vendor/ScrollTrigger.min.js"></script>
 <script src="js/vendor/SplitText.min.js"></script>
 <script src="js/vendor/lenis.min.js"></script>
-<script src="js/main.js?v=20261113b"></script>
+<script src="js/main.js?v=20261113c"></script>
 </body>
 </html>

@@ -47,12 +47,8 @@
   /* --------------------------------------------------------- Kopfzeile fix */
   var hdr = document.getElementById('hdr');
   var stuck = false;
-  /* Ab welchem Scrollweg die Leiste ihren Grund bekommt. Mit der Buehne (siehe
-     LOGO weiter unten) erst, wenn Marke und Schriftzug an ihrem Platz stehen;
-     sonst hinge das grosse Paar unten aus der Leiste heraus. */
-  var stuckAb = 24;
   function onScrollHdr() {
-    var s = (window.scrollY || window.pageYOffset) > stuckAb;
+    var s = (window.scrollY || window.pageYOffset) > 24;
     if (s !== stuck) { stuck = s; hdr.classList.toggle('is-stuck', s); }
   }
   onScrollHdr();
@@ -155,71 +151,7 @@
   initJobs();
 
   /* ============================================================== LOGO ==
-     1. BUEHNE. Oben auf der Seite stehen Marke und Schriftzug gross und mittig
-        ueber dem Hero, im Platz, den .hero__buehne freihaelt. Beim Scrollen
-        wandern sie an ihren Platz links oben in der Leiste und werden dabei
-        kleiner. Das Paar steht die ganze Zeit in der fixen Kopfzeile; gesetzt
-        wird nur transform (verschieben + skalieren, Ursprung links oben).
-
-        Der Weg ist so lang, dass die Unterkante des Paars genau mit dem Inhalt
-        nach oben laeuft (Weg = Hoehenversatz + Schrumpfen der Hoehe). So faehrt
-        die Hero-Ueberschrift nie unter das grosse Paar.
-
-        Die Groesse folgt dem Platz: hoechstens so hoch wie die Buehne, hoechstens
-        so breit, dass der Schriftzug (Bild, 1047 px breit) auch auf Retina
-        scharf bleibt. Unter Faktor 1,2 lohnt es nicht, dann bleibt alles wie
-        ohne Buehne. Auch bei reduzierter Bewegung: das Paar haengt direkt am
-        Scrollweg wie der Seiteninhalt selbst, es laeuft nichts von allein. */
-  var brandLink = document.querySelector('.hdr--buehne .brand__link');
-  var buehne = document.querySelector('.hero__buehne');
-  var B = null;                 /* { tx, ty, s, d } oder null = keine Buehne */
-  function buehneSetzen() {
-    if (!brandLink) return;
-    var p = B ? Math.min(1, Math.max(0, (window.pageYOffset || 0) / B.d)) : 1;
-    if (p >= 1) { if (brandLink.style.transform) brandLink.style.transform = ''; return; }
-    var q = 1 - p;
-    /* Seitwaerts laeuft das Paar am Anfang schneller (q * q): so steht es
-       schon links, bevor es auf die Hoehe der Menuepunkte kommt. */
-    brandLink.style.transform = 'translate(' + (B.tx * q * q).toFixed(2) + 'px,' + (B.ty * q).toFixed(2) +
-      'px) scale(' + (1 + (B.s - 1) * q).toFixed(4) + ')';
-  }
-  function buehneMessen() {
-    if (!brandLink || !buehne) return;
-    brandLink.style.transform = 'none';             /* Platz in der Leiste messen */
-    var z = buehne.getBoundingClientRect();
-    var r = brandLink.getBoundingClientRect();
-    var wmEl = brandLink.querySelector('.brand__wm');
-    var wm = wmEl ? wmEl.getBoundingClientRect().width : 0;
-    brandLink.style.transform = '';
-    B = null;
-    if (z.height > 40 && r.width > 0 && wm > 0) {
-      var oben = hdr.getBoundingClientRect().height + 6;
-      var unten = z.bottom + (window.pageYOffset || 0);   /* Lage bei Scrollweg 0 */
-      var platz = unten - oben;
-      var s = Math.min(platz / r.height, 540 / wm, (window.innerWidth - 64) / r.width, 2.2);
-      if (s >= 1.2) {
-        var ty = oben + (platz - r.height * s) / 2 - r.top;
-        B = { s: s, ty: ty, tx: (window.innerWidth - r.width * s) / 2 - r.left,
-              d: Math.max(60, ty + r.height * (s - 1)) };
-      }
-    }
-    stuckAb = B ? B.d - 1 : 24;
-    buehneSetzen();
-    onScrollHdr();
-    hdr.classList.add('is-bereit');
-  }
-  if (brandLink) {
-    buehneMessen();
-    window.addEventListener('scroll', buehneSetzen, { passive: true });
-    var messTakt = 0;
-    window.addEventListener('resize', function () {
-      cancelAnimationFrame(messTakt);
-      messTakt = requestAnimationFrame(buehneMessen);
-    }, { passive: true });
-    window.addEventListener('load', buehneMessen);
-  }
-
-  /* 2. DREHUNG. Die Bildmarke besteht aus Buegel und Bolzen (Vektordatei des
+     DREHUNG. Die Bildmarke besteht aus Buegel und Bolzen (Vektordatei des
         Kunden). Beim Scrollen schwenkt der Buegel um die senkrechte Achse, wie
         das Bauteil in der SOLIDWORKS-Aufnahme des Kunden auf dem Drehteller;
         der Bolzen ist ein Drehteil und bleibt stehen. Gesetzt wird nur die
