@@ -10,23 +10,25 @@
      dunklen Formular. */
   color-scheme: dark;
 
-  /* 13.11.2026: Kunde (Hinweise Homepage-2) will den Grund nochmal heller.
-     Verlauf: 13.11. #1C2026 / #23272E / #2A2F37 · 09.10. #16191E · 29.09.
-     #111317 · davor #08090B. Die graue Schrift ist dafuer heller geworden
-     (#7E8692 -> #8F97A4), damit sie auf allen drei Flaechen ueber 4,5:1 bleibt. Die RGB-Tripel werden fuer halbtransparente Verlaeufe gebraucht,
+  /* 13.11.2026 (zweite Runde): die Stimmung der Seite soll insgesamt heller
+     sein. Verlauf des Grunds: #272C34 · 13.11. frueh #1C2026 · 09.10. #16191E ·
+     29.09. #111317 · davor #08090B. Graue und blaue Schrift sind mitgewachsen
+     (--muted #AAB1BC, --fg-dim #C6CCD5, --accent-hi #9AB0FF), damit sie auf
+     allen drei Flaechen ueber 4,5:1 bleiben. Auch die Schleier ueber dem
+     Hero-Film und dem Kennzahlen-Foto sind duenner. Die RGB-Tripel werden fuer halbtransparente Verlaeufe gebraucht,
      damit Bildverlaeufe genau in den Grund auslaufen. */
-  --bg:        #1C2026;
-  --bg-rgb:    28, 32, 38;
-  --surface:   #23272E;
-  --surface-rgb: 35, 39, 46;
-  --surface-2: #2A2F37;
+  --bg:        #272C34;
+  --bg-rgb:    39, 44, 52;
+  --surface:   #2F353E;
+  --surface-rgb: 47, 53, 62;
+  --surface-2: #373E48;
   --fg:        #F3F5F8;
-  --fg-dim:    #B4BAC4;
-  --muted:     #8F97A4;
+  --fg-dim:    #C6CCD5;
+  --muted:     #AAB1BC;
   --accent:    #2E5BFF;
-  --accent-hi: #7796FF;
-  --line:      #343A44;
-  --line-2:    #404753;
+  --accent-hi: #9AB0FF;
+  --line:      #434B57;
+  --line-2:    #515A68;
 
   --ff-dis: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
   --ff-txt: 'Manrope', 'Helvetica Neue', Arial, sans-serif;
@@ -233,19 +235,19 @@ a[href^="mailto:"], a[href^="tel:"] { white-space: nowrap; }
 
 /* Marke und Schriftzug (13.11.2026, Hinweise Homepage-2 des Kunden).
 
-   Bildmarke: aus der Vektordatei des Kunden (Patch der Arbeitskleidung),
-   Koerper im Akzentblau, Linien hell. Vorher drehte hier ein 3D-Bauteil aus
-   3d-logo.STEP; der Kunde fand es "unrund" — die strenge Frontansicht machte
-   den Bolzen kantig, im Patch sieht man ihn leicht von oben und rund.
+   Bildmarke: aus der Vektordatei des Kunden (Patch der Arbeitskleidung), Optik
+   wie auf dem Patch — heller Koerper, blaue Linien. Vorher drehte hier ein
+   3D-Bauteil aus 3d-logo.STEP; der Kunde fand es "unrund" (strenge
+   Frontansicht, der Bolzen wirkte kantig).
 
    Schriftzug: der Original-Schriftzug der CI als Dunkel-Version (30.09.2026:
    Band im Akzentblau, weisses Band als blau umrandetes Band mit heller Schrift),
    als Bild, weil die Schrift der Firma keine Webschrift ist.
 
-   Groesse: der Kunde will beides groesser. Es gibt EINE Stellschraube, die
-   Hoehe des Schriftzugs (--wm-h); die Marke steht immer 1,25-mal so hoch, die
-   Breiten folgen den Seitenverhaeltnissen (Marke 139:90, Schriftzug 1047:189).
-   Breakpoints aendern nur --wm-h. */
+   Groesse: es gibt EINE Stellschraube, die Hoehe des Schriftzugs (--wm-h); die
+   Marke steht immer 1,25-mal so hoch, die Breiten folgen den
+   Seitenverhaeltnissen (Marke 139:90, Schriftzug 1047:189). Breakpoints
+   aendern nur --wm-h. */
 /* Mit voller Navigation (ab 1260 px) teilen sich Marke, Schriftzug und sechs
    Menuepunkte eine Zeile. Der Schriftzug waechst deshalb mit der Breite:
    41 px bei 1260, 54 px bei 1380, 58 px ab rund 1410 (gemessen, mit 2 px Luft).
@@ -255,9 +257,62 @@ a[href^="mailto:"], a[href^="tel:"] { white-space: nowrap; }
    ebenfalls nach oben. Der Abstand kommt von .brand. */
 .brand__link { display: flex; align-items: center; gap: inherit; }
 .mark {
-  display: block; flex: none;
-  height: calc(var(--wm-h) * 1.25); width: auto; max-width: none;
+  display: block; flex: none; position: relative;
+  height: calc(var(--wm-h) * 1.25); aspect-ratio: 139.02 / 89.82;
 }
+img.mark { width: auto; max-width: none; }        /* Unterseiten: ein Bild */
+/* Startseite: drei deckungsgleiche Ebenen. Der Buegel dreht um die senkrechte
+   Achse durch die Bolzenmitte (41,19 % der Breite), mit etwas Perspektive. Die
+   beiden Buegelbilder zeigen je eine Haelfte und ueberlappen an der Achse um
+   einen Hauch, damit dort keine Naht steht. Welche Haelfte vorn liegt, setzt
+   js/main.js ueber data-vorn; in Ruhe (0 Grad) ist es gleichgueltig. */
+.mark > img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; max-width: none; }
+/* Die Buegelbilder sind doppelt so gross angelegt und per scale(.5) auf die
+   Marke gebracht: der Browser zeichnet gedrehte Ebenen in ihrer Layoutgroesse
+   vor, und auf der Buehne (Marke bis 2,2-fach vergroessert) waeren sie sonst
+   unscharf. Die Verschiebungen holen die Drehachse (41,19 % der Markenbreite,
+   halbe Hoehe) in den Ursprung; Prozentwerte beziehen sich auf das doppelt so
+   grosse Bild, deshalb die halben Zahlen. */
+.mark > .mark__b {
+  z-index: 1;
+  inset: 0 auto auto 0; width: 200%; height: 200%;
+  transform-origin: 0 0;
+  transform: translate(20.595%, 25%) perspective(calc(var(--wm-h) * 11)) rotateY(var(--dreh, 0deg))
+             translate(-20.595%, -25%) scale(.5);
+}
+.mark__b--l { clip-path: inset(0 58.5% 0 0); }
+.mark__b--r { clip-path: inset(0 0 0 40.9%); }
+.mark__z { z-index: 2; }
+.mark[data-vorn="l"] .mark__b--l,
+.mark[data-vorn="r"] .mark__b--r { z-index: 3; }
+
+/* Buehne (nur Startseite, .hdr--buehne): oben auf der Seite stehen Marke und
+   Schriftzug gross und mittig ueber dem Hero, beim Scrollen wandern sie an
+   ihren Platz links oben. js/main.js rechnet Lage und Groesse aus dem Platz,
+   den .hero__buehne freihaelt, und setzt nur transform. Bis das Skript
+   gemessen hat, bleibt das Paar unsichtbar, sonst spraenge es beim Laden von
+   links oben in die Mitte. Faellt das Skript aus, zeigt .no-anim es wieder. */
+.brand__link { transform-origin: 0 0; }
+.hero__buehne { display: none; }
+@media (min-width: 1100px) and (min-height: 680px) {
+  .js .hdr--buehne .brand__link { opacity: 0; }
+  .js .hdr--buehne.is-bereit .brand__link,
+  .no-anim .hdr--buehne .brand__link { opacity: 1; transition: opacity .35s var(--ease); }
+  .hero__buehne { display: block; height: clamp(96px, 15vh, 170px); margin-bottom: 14px; }
+  /* Die Buehne braucht Hoehe. Damit Ueberschrift, Text und Knoepfe trotzdem im
+     ersten Bild bleiben, richtet sich die Ueberschrift hier auch nach der
+     Fensterhoehe (auf einem 1080er Bildschirm bleibt sie wie zuvor), und die
+     Abstaende sind etwas knapper.
+     (body davor: die Grundregeln des Hero stehen weiter unten in der Datei und
+     wuerden sonst gewinnen.) */
+  body .hero { padding-top: calc(var(--hh) + 4px); padding-bottom: clamp(22px, 3.4vh, 80px); }
+  body .hero__h1 { margin-top: 14px; font-size: clamp(2.85rem, min(7.4vw, 9.4vh), 6.4rem); }
+  body .hero__sub { margin-top: clamp(14px, 2.4vh, 28px); }
+  body .hero__act { margin-top: clamp(18px, 3vh, 38px); }
+  body .hero__proof { margin-top: clamp(20px, 3.4vh, 56px); padding-top: clamp(14px, 2vh, 22px); }
+}
+/* Bei offenem Klappmenue steht das Paar immer an seinem Platz in der Leiste. */
+.hdr.is-navopen .brand__link { transform: none !important; }
 .brand__wm { display: block; flex: none; height: var(--wm-h); width: auto; max-width: none; }
 
 /* Sechs Eintraege plus Knopf brauchen mehr Platz als die frueheren vier, die
@@ -317,14 +372,14 @@ a[href^="mailto:"], a[href^="tel:"] { white-space: nowrap; }
 .hero__veil {
   position: absolute; inset: 0; z-index: 1;
   background:
-    linear-gradient(180deg, rgba(var(--bg-rgb), .70) 0%, rgba(var(--bg-rgb), .15) 24%, rgba(var(--bg-rgb), .15) 62%, rgba(var(--bg-rgb), .55) 86%, var(--bg) 100%),
-    linear-gradient(90deg, rgba(var(--bg-rgb), .84) 0%, rgba(var(--bg-rgb), .68) 30%, rgba(var(--bg-rgb), .28) 56%, rgba(var(--bg-rgb), .04) 80%, rgba(var(--bg-rgb), 0) 100%);
+    linear-gradient(180deg, rgba(var(--bg-rgb), .58) 0%, rgba(var(--bg-rgb), .10) 24%, rgba(var(--bg-rgb), .10) 62%, rgba(var(--bg-rgb), .50) 86%, var(--bg) 100%),
+    linear-gradient(90deg, rgba(var(--bg-rgb), .78) 0%, rgba(var(--bg-rgb), .60) 30%, rgba(var(--bg-rgb), .22) 56%, rgba(var(--bg-rgb), .02) 80%, rgba(var(--bg-rgb), 0) 100%);
 }
 /* Auf dem Handy steht der Text ueber die ganze Breite, es gibt kein freies
    Rechts. Dort bleibt die Abdunklung flaechig. */
 @media (max-width: 700px) {
   .hero__veil {
-    background: linear-gradient(180deg, rgba(var(--bg-rgb), .78) 0%, rgba(var(--bg-rgb), .42) 30%, rgba(var(--bg-rgb), .70) 70%, var(--bg) 100%);
+    background: linear-gradient(180deg, rgba(var(--bg-rgb), .70) 0%, rgba(var(--bg-rgb), .38) 30%, rgba(var(--bg-rgb), .64) 70%, var(--bg) 100%);
   }
 }
 .hero__in { position: relative; z-index: 2; }
@@ -826,7 +881,7 @@ a[href^="mailto:"], a[href^="tel:"] { white-space: nowrap; }
 .stats__bg img { width: 100%; height: 100%; object-fit: cover; }
 .stats__bg::after {
   content: ''; position: absolute; inset: 0;
-  background: linear-gradient(180deg, var(--bg) 0%, rgba(var(--bg-rgb), .62) 30%, rgba(var(--bg-rgb), .86) 82%, var(--bg) 100%);
+  background: linear-gradient(180deg, var(--bg) 0%, rgba(var(--bg-rgb), .50) 30%, rgba(var(--bg-rgb), .78) 82%, var(--bg) 100%);
 }
 .stats__in { position: relative; z-index: 1; }
 /* Zwei mal zwei statt vier nebeneinander: nur so tragen alle vier Kennzahlen
@@ -906,7 +961,7 @@ a[href^="mailto:"], a[href^="tel:"] { white-space: nowrap; }
   transition: border-color .25s var(--ease), background-color .25s var(--ease);
 }
 .f textarea { resize: vertical; min-height: 128px; }
-.f input:hover, .f textarea:hover { border-color: #4A5260; }
+.f input:hover, .f textarea:hover { border-color: #5C6675; }
 .f input:focus, .f textarea:focus { border-color: var(--accent); outline-offset: 1px; }
 .f input[aria-invalid="true"], .f textarea[aria-invalid="true"] { border-color: #FF6B6B; }
 /* Die native Checkbox kennt keinen roten Rahmen: der Fehler zeigt sich als Ring. */

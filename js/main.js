@@ -4,7 +4,7 @@
      1. Hero-Intro (Zeilen der H1 aus der Maske, Rest in einer Timeline)
      2. Bildschieber: jede Bildbox oeffnet sich einmal von oben nach unten
      3. Masslinien der Vorteile ziehen sich auf
-   Dazu der Branchen-Ring (nur Drehung). Text,
+   Dazu die Bildmarke im Kopf und der Branchen-Ring (nur Drehung). Text,
    Listen, Ueberschriften und Karten stehen einfach da. Kein Pinning, kein
    Preloader. Nur transform, opacity und clip-path. Ohne GSAP bleibt die Seite
    vollstaendig sichtbar.
@@ -47,8 +47,12 @@
   /* --------------------------------------------------------- Kopfzeile fix */
   var hdr = document.getElementById('hdr');
   var stuck = false;
+  /* Ab welchem Scrollweg die Leiste ihren Grund bekommt. Mit der Buehne (siehe
+     LOGO weiter unten) erst, wenn Marke und Schriftzug an ihrem Platz stehen;
+     sonst hinge das grosse Paar unten aus der Leiste heraus. */
+  var stuckAb = 24;
   function onScrollHdr() {
-    var s = (window.scrollY || window.pageYOffset) > 24;
+    var s = (window.scrollY || window.pageYOffset) > stuckAb;
     if (s !== stuck) { stuck = s; hdr.classList.toggle('is-stuck', s); }
   }
   onScrollHdr();
@@ -151,9 +155,152 @@
   initJobs();
 
   /* ============================================================== LOGO ==
-     Bis 13.11.2026 drehte sich hier die Bildmarke als 3D-Sprite beim Scrollen.
-     Seit den Hinweisen des Kunden (Logo "unrund") steht die Marke aus seiner
-     Vektordatei still im Kopf; das Skript dazu steht im Git-Verlauf (0742ca6). */
+     1. BUEHNE. Oben auf der Seite stehen Marke und Schriftzug gross und mittig
+        ueber dem Hero, im Platz, den .hero__buehne freihaelt. Beim Scrollen
+        wandern sie an ihren Platz links oben in der Leiste und werden dabei
+        kleiner. Das Paar steht die ganze Zeit in der fixen Kopfzeile; gesetzt
+        wird nur transform (verschieben + skalieren, Ursprung links oben).
+
+        Der Weg ist so lang, dass die Unterkante des Paars genau mit dem Inhalt
+        nach oben laeuft (Weg = Hoehenversatz + Schrumpfen der Hoehe). So faehrt
+        die Hero-Ueberschrift nie unter das grosse Paar.
+
+        Die Groesse folgt dem Platz: hoechstens so hoch wie die Buehne, hoechstens
+        so breit, dass der Schriftzug (Bild, 1047 px breit) auch auf Retina
+        scharf bleibt. Unter Faktor 1,2 lohnt es nicht, dann bleibt alles wie
+        ohne Buehne. Auch bei reduzierter Bewegung: das Paar haengt direkt am
+        Scrollweg wie der Seiteninhalt selbst, es laeuft nichts von allein. */
+  var brandLink = document.querySelector('.hdr--buehne .brand__link');
+  var buehne = document.querySelector('.hero__buehne');
+  var B = null;                 /* { tx, ty, s, d } oder null = keine Buehne */
+  function buehneSetzen() {
+    if (!brandLink) return;
+    var p = B ? Math.min(1, Math.max(0, (window.pageYOffset || 0) / B.d)) : 1;
+    if (p >= 1) { if (brandLink.style.transform) brandLink.style.transform = ''; return; }
+    var q = 1 - p;
+    /* Seitwaerts laeuft das Paar am Anfang schneller (q * q): so steht es
+       schon links, bevor es auf die Hoehe der Menuepunkte kommt. */
+    brandLink.style.transform = 'translate(' + (B.tx * q * q).toFixed(2) + 'px,' + (B.ty * q).toFixed(2) +
+      'px) scale(' + (1 + (B.s - 1) * q).toFixed(4) + ')';
+  }
+  function buehneMessen() {
+    if (!brandLink || !buehne) return;
+    brandLink.style.transform = 'none';             /* Platz in der Leiste messen */
+    var z = buehne.getBoundingClientRect();
+    var r = brandLink.getBoundingClientRect();
+    var wmEl = brandLink.querySelector('.brand__wm');
+    var wm = wmEl ? wmEl.getBoundingClientRect().width : 0;
+    brandLink.style.transform = '';
+    B = null;
+    if (z.height > 40 && r.width > 0 && wm > 0) {
+      var oben = hdr.getBoundingClientRect().height + 6;
+      var unten = z.bottom + (window.pageYOffset || 0);   /* Lage bei Scrollweg 0 */
+      var platz = unten - oben;
+      var s = Math.min(platz / r.height, 540 / wm, (window.innerWidth - 64) / r.width, 2.2);
+      if (s >= 1.2) {
+        var ty = oben + (platz - r.height * s) / 2 - r.top;
+        B = { s: s, ty: ty, tx: (window.innerWidth - r.width * s) / 2 - r.left,
+              d: Math.max(60, ty + r.height * (s - 1)) };
+      }
+    }
+    stuckAb = B ? B.d - 1 : 24;
+    buehneSetzen();
+    onScrollHdr();
+    hdr.classList.add('is-bereit');
+  }
+  if (brandLink) {
+    buehneMessen();
+    window.addEventListener('scroll', buehneSetzen, { passive: true });
+    var messTakt = 0;
+    window.addEventListener('resize', function () {
+      cancelAnimationFrame(messTakt);
+      messTakt = requestAnimationFrame(buehneMessen);
+    }, { passive: true });
+    window.addEventListener('load', buehneMessen);
+  }
+
+  /* 2. DREHUNG. Die Bildmarke besteht aus Buegel und Bolzen (Vektordatei des
+        Kunden). Beim Scrollen schwenkt der Buegel um die senkrechte Achse, wie
+        das Bauteil in der SOLIDWORKS-Aufnahme des Kunden auf dem Drehteller;
+        der Bolzen ist ein Drehteil und bleibt stehen. Gesetzt wird nur die
+        CSS-Variable --dreh und data-vorn (welche Buegelhaelfte vor dem Bolzen
+        liegt), den Rest macht css/styles.css.
+
+        Die Drehung folgt dem Scrollweg (eine halbe Umdrehung je
+        Bildschirmhoehe; abwaerts vorwaerts, aufwaerts rueckwaerts), gedaempft,
+        damit nichts springt. Wird 1,2 s lang nicht gescrollt, laeuft die Marke
+        in 1,5 s mit weichem Auslauf zur naechsten vollen Umdrehung zurueck: in
+        Ruhe und beim Laden zeigt sie genau die Ansicht des Kunden. Bei
+        reduzierter Bewegung dreht sich nichts.
+
+        window.__markHold (Grad) friert einen Winkel ein, nur fuer
+        Bildschirmfotos. */
+  var mark = document.getElementById('mark');
+  if (mark && !reduce) {
+    var RUHE_MS = 1200, RUECKKEHR_MS = 1500;
+    var jetzt = function () { return (window.performance && performance.now) ? performance.now() : Date.now(); };
+    var zielGrad = 0, grad = 0, gesetzt = null, tVor = null, letzterScroll = -1e9;
+    var ruheStart = null, ruheVon = 0, laeuft = false;
+    var letzterY = window.pageYOffset || 0;
+
+    /* Der Takt laeuft nur, solange sich etwas bewegt, und wird vom naechsten
+       Scrollen wieder geweckt. */
+    var wecken = function () {
+      if (laeuft) return;
+      laeuft = true;
+      tVor = null;            /* sonst ist dt der ganze Schlafzeitraum */
+      requestAnimationFrame(takt);
+    };
+
+    window.addEventListener('scroll', function () {
+      var y = window.pageYOffset || 0;
+      zielGrad += (y - letzterY) * (180 / Math.max(320, window.innerHeight));
+      letzterY = y;
+      letzterScroll = jetzt();
+      wecken();
+    }, { passive: true });
+
+    var takt = function (t) {
+      t = t || jetzt();
+      if (tVor === null) tVor = t;
+      var dt = Math.min(0.1, (t - tVor) / 1000); tVor = t;   /* s, gedeckelt (Tab-Wechsel) */
+      var ruht = false;
+      if (t - letzterScroll > RUHE_MS) {
+        if (ruheStart === null) {
+          ruheStart = t; ruheVon = grad;
+          zielGrad = Math.round(zielGrad / 360) * 360;
+        }
+        var p = Math.min(1, (t - ruheStart) / RUECKKEHR_MS);
+        p = 1 - Math.pow(1 - p, 3);
+        grad = ruheVon + (zielGrad - ruheVon) * p;
+        ruht = p >= 1;
+      } else {
+        ruheStart = null;
+        grad += (zielGrad - grad) * Math.min(1, dt * 7);   /* Daempfung ~140 ms */
+      }
+      var g = ruht ? zielGrad : grad;
+      if (typeof window.__markHold === 'number') g = window.__markHold;
+      g = ((g % 360) + 360) % 360;
+      g = Math.round(g * 2) / 2;                           /* halbe Grad reichen */
+      if (g !== gesetzt) {
+        gesetzt = g;
+        mark.style.setProperty('--dreh', g + 'deg');
+        /* rotateY(+): die rechte Haelfte geht nach hinten. Zwischen 0 und 180
+           Grad liegt also die linke vorn, danach die rechte. Nahe 0 und 180
+           liegt der Buegel in der Bildebene, dort verdeckt nichts. */
+        var sn = Math.sin(g * Math.PI / 180);
+        var vorn = sn > 0.03 ? 'l' : (sn < -0.03 ? 'r' : '');
+        if (mark.getAttribute('data-vorn') !== vorn) mark.setAttribute('data-vorn', vorn);
+      }
+      if (ruht) {
+        grad = zielGrad;
+        laeuft = false;
+        return;               /* Takt anhalten, bis wieder gescrollt wird */
+      }
+      requestAnimationFrame(takt);
+    };
+    if (typeof window.__markHold === 'number') wecken();
+  }
 
   if (!hasGsap || reduce) { initForm(); return; }
 

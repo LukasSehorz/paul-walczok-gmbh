@@ -8,7 +8,9 @@ bearbeitet, nicht per CSS-Filter: so sieht jedes Geraet dasselbe Bild.
 
 Methode "Lebendigkeit" statt pauschaler Saettigung: blasse Farben gewinnen viel,
 schon kraeftige kaum (sonst kippen die roten Lichtmaschinenhalter und die
-Titan-Teile ins Grelle). Dazu etwas Kontrast. Grauwerte bleiben grau, es wird
+Titan-Teile ins Grelle). Dazu etwas Kontrast und Helligkeit. Zweite Runde am
+13.11.2026 (Lukas: "noch mal farbkraeftiger"): Staerke 1,0 -> 1,6. Die
+endgueltigen Fotos kommen noch, dann neu einstellen. Grauwerte bleiben grau, es wird
 keine Farbe erfunden.
 
 Gelesen wird IMMER das Original aus dem Git-Stand vor der Bearbeitung
@@ -23,8 +25,9 @@ import numpy as np
 from PIL import Image
 
 ORIGINAL_REF = "0742ca6"          # letzter Stand mit unbearbeiteten Fotos
-STAERKE = 1.0                      # Lebendigkeit: s' = s * (1 + STAERKE * (1 - s))
-KONTRAST = 1.08                    # um die Bildmitte, sanft
+STAERKE = 1.6                      # Lebendigkeit: s' = s * (1 + STAERKE * (1 - s)); 13.11. frueh 1.0
+KONTRAST = 1.10                    # um die Bildmitte, sanft
+HELL = 0.94                        # Gamma auf die Helligkeit, unter 1 = heller (Stimmung der Seite)
 QUALITAET = 86
 
 # Alle Fotos, die eine Seite wirklich zeigt. Nicht dabei: hero-poster.jpg
@@ -51,6 +54,7 @@ def kraeftiger(im):
     hsv = np.asarray(im.convert("HSV")).astype(np.float32) / 255
     s = hsv[..., 1]
     hsv[..., 1] = np.clip(s * (1 + STAERKE * (1 - s)), 0, 1)
+    hsv[..., 2] = np.clip(hsv[..., 2] ** HELL, 0, 1)
     out = Image.fromarray((hsv * 255 + 0.5).astype(np.uint8), "HSV").convert("RGB")
     rgb = np.asarray(out).astype(np.float32)
     rgb = (rgb - 128) * KONTRAST + 128
