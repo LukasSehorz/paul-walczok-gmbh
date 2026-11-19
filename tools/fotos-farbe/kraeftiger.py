@@ -1,21 +1,29 @@
-"""Fotos kraeftiger in der Farbe (Hinweise Homepage-2 des Kunden, 13.11.2026:
-"Die Fotos duerfen dann schon kraeftig in der Farbe sein. Die sind jetzt eher
-blass und farblos.").
+"""Farbe der aelteren Fotos, die auf der Seite bleiben (Stand 19.11.2026).
 
-Die Werkstattfotos sind von Haus aus grau (Metall, Maschinen, Hallenlicht),
-auf der Seite liegt kein Filter darauf. Deshalb werden die Dateien selbst
-bearbeitet, nicht per CSS-Filter: so sieht jedes Geraet dasselbe Bild.
+Geschichte: Am 13.11.2026 wollte der Kunde kraeftigere Fotos ("eher blass und
+farblos"), damals wurden alle Fotos mit "Lebendigkeit" Staerke 1,6, Kontrast
+1,10 und Gamma 0,94 aufgedreht. Am 19.11.2026 kam die Gegenrueckmeldung: "Die
+Bilder sehen aus, als waere ein Filter drauf, alles wirkt leblos." Seitdem
+stehen fast ueberall echte Fotos vom Termin vor Ort (tools/fotos-vor-ort/,
+ohne Farbtrick). Die Fotos hier bleiben, weil es dafuer noch keinen Ersatz
+gibt: Lichtmaschinenhalter vorher/nachher, die sechs Referenzteile und die
+sechs Branchenbilder (Stand vor Korrekturrunde 1; seitdem bleiben nur noch
+Lichtmaschinenhalter, Titan und Motorsport). Sie werden
+jetzt zurueckhaltend und natuerlich
+eingestellt, damit sie neben den neuen Fotos nicht kuenstlich wirken:
+Lebendigkeit hoechstens 0,6, Kontrast 1,03, keine Aufhellung per Gamma.
 
-Methode "Lebendigkeit" statt pauschaler Saettigung: blasse Farben gewinnen viel,
-schon kraeftige kaum (sonst kippen die roten Lichtmaschinenhalter und die
-Titan-Teile ins Grelle). Dazu etwas Kontrast und Helligkeit. Zweite Runde am
-13.11.2026 (Lukas: "noch mal farbkraeftiger"): Staerke 1,0 -> 1,6. Die
-endgueltigen Fotos kommen noch, dann neu einstellen. Grauwerte bleiben grau, es wird
-keine Farbe erfunden.
+Die Einstellung BRANCHE (Gamma und halber Farbstich-Ausgleich) war fuer die
+dunklen, blaustichigen Branchenbilder; sie sind am 19.11.2026 von der Seite
+entfallen. Die Einstellung bleibt fuer den Fall, dass wieder ein dunkles,
+farbstichiges Altfoto bearbeitet werden muss.
+
+Methode "Lebendigkeit" statt pauschaler Saettigung: blasse Farben gewinnen,
+schon kraeftige kaum. Grauwerte bleiben grau.
 
 Gelesen wird IMMER das Original aus dem Git-Stand vor der Bearbeitung
-(ORIGINAL_REF), nie die schon bearbeitete Datei: ein zweiter Lauf mit anderen
-Werten setzt also neu auf und verstaerkt nicht doppelt.
+(ORIGINAL_REF), nie die schon bearbeitete Datei: ein zweiter Lauf setzt neu
+auf und verstaerkt nicht doppelt.
 
 Aufruf im Projektordner:  python3 tools/fotos-farbe/kraeftiger.py
 Braucht: numpy, pillow.
@@ -25,20 +33,21 @@ import numpy as np
 from PIL import Image
 
 ORIGINAL_REF = "0742ca6"          # letzter Stand mit unbearbeiteten Fotos
-STAERKE = 1.6                      # Lebendigkeit: s' = s * (1 + STAERKE * (1 - s)); 13.11. frueh 1.0
-KONTRAST = 1.10                    # um die Bildmitte, sanft
-HELL = 0.94                        # Gamma auf die Helligkeit, unter 1 = heller (Stimmung der Seite)
 QUALITAET = 86
 
-# Alle Fotos, die eine Seite wirklich zeigt. Nicht dabei: hero-poster.jpg
-# (Standbild des Hero-Videos, muss zum Video passen).
-FOTOS = """branche-automobil branche-luftfahrt branche-maschinenbau branche-medizintechnik
-branche-motorsport branche-pruefinstitute cta-bg eigen-schraubstock eigen-schweisstisch
-halle-dreherei halle-fraeserei halle-messraum leistung-cad leistung-drehen leistung-fraesen
-leistung-laser leistung-schleifen leistung-zugproben-quer leistung-zugproben mp-fraeszentrum
-mp-halle mp-materiallager mp-messtechnik mp-voreinstellung ref-baugruppe-q ref-bremstopf
-ref-lima-nachher ref-lima-vorher ref-motorsport-2 ref-motorsport ref-riemenscheibe ref-titan-q
-ref-zahnrad team-mitarbeiter""".split()
+# Foto -> (Lebendigkeit, Kontrast, Gamma, Anteil Farbstich-Ausgleich)
+# Gamma unter 1 hebt die Mitten an; 1.0 = keine Aufhellung.
+NATUERLICH = (0.6, 1.03, 1.00, 0.0)
+BRANCHE    = (0.4, 1.03, 0.78, 0.5)
+
+# Alle aelteren Fotos, die eine Seite noch zeigt (Korrekturrunde 1, 19.11.2026:
+# Branchenbilder, Riemenrad, Komplettbaugruppe, Zahnrad und Bremsscheibentopf
+# sind entfallen).
+FOTOS = {
+    "ref-lima-vorher": NATUERLICH, "ref-lima-nachher": NATUERLICH,
+    "ref-titan-q": NATUERLICH,
+    "ref-motorsport-2": NATUERLICH,
+}
 
 WURZEL = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
 
@@ -50,20 +59,25 @@ def original(name):
     return Image.open(io.BytesIO(roh)).convert("RGB")
 
 
-def kraeftiger(im):
+def einstellen(im, staerke, kontrast, gamma, ausgleich):
+    rgb = np.asarray(im).astype(np.float32) / 255
+    if ausgleich:
+        m = rgb.reshape(-1, 3).mean(0)
+        faktor = 1 + ausgleich * (m[1] / m - 1)          # Rot und Blau Richtung Gruen
+        rgb = np.clip(rgb * faktor, 0, 1)
+    if gamma != 1.0:
+        rgb = rgb ** gamma                                 # gleich auf allen Kanaelen
+    im = Image.fromarray((rgb * 255 + 0.5).astype(np.uint8), "RGB")
     hsv = np.asarray(im.convert("HSV")).astype(np.float32) / 255
     s = hsv[..., 1]
-    hsv[..., 1] = np.clip(s * (1 + STAERKE * (1 - s)), 0, 1)
-    hsv[..., 2] = np.clip(hsv[..., 2] ** HELL, 0, 1)
-    out = Image.fromarray((hsv * 255 + 0.5).astype(np.uint8), "HSV").convert("RGB")
-    rgb = np.asarray(out).astype(np.float32)
-    rgb = (rgb - 128) * KONTRAST + 128
-    return Image.fromarray(np.clip(rgb + 0.5, 0, 255).astype(np.uint8), "RGB")
+    hsv[..., 1] = np.clip(s * (1 + staerke * (1 - s)), 0, 1)
+    out = np.asarray(Image.fromarray((hsv * 255 + 0.5).astype(np.uint8), "HSV").convert("RGB")).astype(np.float32)
+    out = (out - 128) * kontrast + 128
+    return Image.fromarray(np.clip(out + 0.5, 0, 255).astype(np.uint8), "RGB")
 
 
 if __name__ == "__main__":
-    for name in FOTOS:
-        im = original(name)
+    for name, werte in FOTOS.items():
         ziel = os.path.join(WURZEL, "assets", "img", f"{name}.jpg")
-        kraeftiger(im).save(ziel, "JPEG", quality=QUALITAET, optimize=True, progressive=True)
+        einstellen(original(name), *werte).save(ziel, "JPEG", quality=QUALITAET, optimize=True, progressive=True)
         print(f"{name:26s} {os.path.getsize(ziel)//1024:5d} kB")

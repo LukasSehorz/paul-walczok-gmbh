@@ -4,7 +4,8 @@
      1. Hero-Intro (Zeilen der H1 aus der Maske, Rest in einer Timeline)
      2. Bildschieber: jede Bildbox oeffnet sich einmal von oben nach unten
      3. Masslinien der Vorteile ziehen sich auf
-   Dazu die Bildmarke im Kopf und der Branchen-Ring (nur Drehung). Text,
+   Dazu die Bildmarke im Kopf (der Branchen-Ring ist am 19.11.2026
+   entfallen) und der Film im Block Laserschweissen. Text,
    Listen, Ueberschriften und Karten stehen einfach da. Kein Pinning, kein
    Preloader. Nur transform, opacity und clip-path. Ohne GSAP bleibt die Seite
    vollstaendig sichtbar.
@@ -149,6 +150,7 @@
      GSAP-Zweig los. Faellt der Vendor-Stack aus, bleibt er trotzdem bedienbar. */
   initGal();
   initJobs();
+  initFilme();
 
   /* ============================================================== LOGO ==
      DREHUNG. Die Bildmarke besteht aus Buegel und Bolzen (Vektordatei des
@@ -317,8 +319,9 @@
     });
   }
 
-  /* Masslinien der Vorteile: ziehen sich von links auf wie eine Bemassung */
-  ST.batch('.adv__rule', {
+  /* Masslinien der Vorteile und (seit 19.11.2026) der Branchen: ziehen sich
+     von links auf wie eine Bemassung */
+  ST.batch('.adv__rule, .ind__rule', {
     start: 'top 92%',
     once: true,
     onEnter: function (els) {
@@ -346,77 +349,6 @@
           }
         });
       }
-    });
-  }
-
-  /* ================================================== BRANCHEN-ZYLINDER ==
-     14 Ringplaetze, sechs davon belegt — die uebrigen bleiben leer, damit die
-     Karten einen offenen Bogen bilden statt eines geschlossenen Rads. Der Ring
-     dreht beim Scrollen, waehrend die Bilder in den Karten gegenlaeufig
-     wandern. Er faehrt NICHT mehr nach unten: die Abwaertsfahrt liess oben
-     einen leeren Block stehen. Erst ab 768 px; darunter (und ohne GSAP) bleibt
-     die Sektion ein schlichtes Raster. */
-  var cyl      = document.getElementById('cyl');
-  var cylWrap  = document.getElementById('cylWrap');
-  var cylStage = document.getElementById('cylStage');
-
-  if (cyl && cylWrap && cylStage) {
-    var TOTAL = 14;
-    for (var ci = cyl.children.length; ci < TOTAL; ci++) {
-      var slot = document.createElement('li');
-      slot.className = 'cyl__c';
-      slot.setAttribute('data-empty', '');
-      slot.setAttribute('aria-hidden', 'true');
-      cyl.appendChild(slot);
-    }
-    Array.prototype.forEach.call(cyl.children, function (card, i) {
-      card.style.setProperty('--index', i + 1);
-    });
-
-    G.matchMedia().add('(min-width: 768px)', function () {
-      root.classList.add('gsap-cyl');   /* Ringhoehe kommt aus dem CSS */
-
-      /* Der Ring laeuft jetzt mit der Seite mit. Die Drehung beginnt wie
-         frueher, wenn seine Oberkante bei 75 % der Fensterhoehe steht, und
-         endet, wenn seine Unterkante bei 25 % steht. Damit zeigt jede
-         Ringlage im Fenster dasselbe Bild wie vorher, nur ohne Abwaertsfahrt.
-         Linear statt power1.inOut: gleichmaessige Drehung ohne Spitze in der
-         Bildmitte. */
-      function weg(start, end) {
-        return { trigger: cylWrap, start: start, end: end, scrub: true, invalidateOnRefresh: true };
-      }
-      var imgs = cyl.querySelectorAll('.cyl__img');
-      var ringWeg = weg('top 75%', 'bottom 25%');
-      ringWeg.onToggle = function (self) { cyl.style.willChange = self.isActive ? 'transform' : ''; };
-
-      /* Startwinkel: Die Referenz startet mit vier belegten Ringplaetzen bei
-         -102 Grad. Wir haben sechs, also 51,4 Grad mehr Bogen (25,7 je Platz) —
-         der gleiche Bildeindruck beim Eintritt ergibt sich deshalb bei -153:
-         links stehen zweieinhalb Karten, die rechte Haelfte ist frei, dann
-         schwenken sie ein. Bis -25 wandert jede Karte genau einmal durch die
-         Bildmitte. */
-      G.fromTo(cyl, { rotateY: -153 }, {
-        rotateY: -25, ease: 'none',
-        scrollTrigger: ringWeg
-      });
-      /* Bilder wandern in den Karten gegenlaeufig: waagrecht mit der Drehung,
-         senkrecht ueber die ganze Sichtzeit. */
-      G.fromTo(imgs, { x: 100 }, {
-        x: -100, ease: 'none',
-        scrollTrigger: weg('top 75%', 'bottom 25%')
-      });
-      G.fromTo(imgs, { y: -100 }, {
-        y: 100, ease: 'none',
-        scrollTrigger: weg('top bottom', 'bottom top')
-      });
-
-      return function () {
-        root.classList.remove('gsap-cyl');
-        cylWrap.style.height = '';
-        cyl.style.willChange = '';
-        G.set(cyl, { clearProps: 'transform' });
-        G.set(imgs, { clearProps: 'transform' });
-      };
     });
   }
 
@@ -496,6 +428,54 @@
     }, { passive: true });
     window.addEventListener('resize', stand, { passive: true });
     stand();
+  }
+
+  /* =============================================================== FILME ==
+     19.11.2026: Film im Block Laserschweissen (video[data-film]). Er laeuft
+     stumm in Schleife, aber nur, solange er im Bild ist: IntersectionObserver
+     startet ihn ab einem Drittel Sichtbarkeit und haelt ihn an, wenn er
+     hinauslaeuft (spart Akku und Datenvolumen; preload="none" laedt erst
+     beim ersten Start). Unter dem Film steht ein Knopf "Film anhalten", er
+     ist per Tastatur erreichbar; wer anhaelt, bekommt den Film nicht
+     ungefragt zurueck (WCAG 2.2.2). Bei reduzierter Bewegung oder ohne
+     IntersectionObserver startet nichts von selbst; dann traegt der Film die
+     Bedienleiste des Browsers und der Knopf bleibt versteckt.
+     Haengt an keiner Bibliothek und laeuft deshalb vor dem GSAP-Zweig. */
+  function initFilme() {
+    Array.prototype.forEach.call(document.querySelectorAll('video[data-film]'), function (v) {
+      var fig = v.closest('figure');
+      var knopf = fig ? fig.querySelector('[data-film-btn]') : null;
+      if (reduce || !('IntersectionObserver' in window)) {
+        v.controls = true;
+        return;
+      }
+      var angehalten = false, imBild = false;
+      function abspielen() {
+        var p = v.play();
+        if (p && typeof p.catch === 'function') p.catch(function () { v.controls = true; if (knopf) knopf.hidden = true; });
+      }
+      function beschriften() {
+        /* Der Knopf zeigt, was ein Klick tut: ausserhalb des Bildes ruht der
+           Film von selbst, das zaehlt nicht als "angehalten". */
+        if (knopf) knopf.textContent = angehalten ? 'Film abspielen' : 'Film anhalten';
+      }
+      new IntersectionObserver(function (eintraege) {
+        eintraege.forEach(function (e) {
+          imBild = e.isIntersecting;
+          if (imBild && !angehalten) abspielen();
+          else if (!imBild && !v.paused) v.pause();
+          beschriften();
+        });
+      }, { threshold: 0.35 }).observe(v);
+      if (knopf) {
+        knopf.hidden = false;
+        knopf.addEventListener('click', function () {
+          angehalten = !angehalten;
+          if (angehalten) v.pause(); else abspielen();
+          beschriften();
+        });
+      }
+    });
   }
 
   /* ============================================================= STELLEN ==

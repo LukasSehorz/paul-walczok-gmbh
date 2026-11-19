@@ -31,7 +31,7 @@
 <link rel="preload" as="font" type="font/woff2" href="fonts/xn7gYHE41ni1AdIRggexSg.woff2" crossorigin>
 <link rel="stylesheet" href="fonts/fonts.css?v=20261009">
 <link rel="preload" as="image" href="assets/img/hero-poster.jpg" fetchpriority="high">
-<link rel="stylesheet" href="css/styles.css?v=20261113c">
+<link rel="stylesheet" href="css/styles.css?v=20261119">
 
 <!-- Die versteckten Startzustaende haengen an `.gsap`; die Klasse wird erst gesetzt,
      wenn der GSAP-Stack nachweislich geladen ist. Faellt eine Vendor-Datei aus,
@@ -140,10 +140,15 @@
 <!-- ═══════════════════════ 1 · HERO ═══════════════════════ -->
 <section class="hero" aria-labelledby="heroH1">
   <div class="hero__media" aria-hidden="true">
-    <video id="heroVideo" poster="assets/img/hero-poster.jpg" autoplay muted loop playsinline preload="metadata">
-      <source src="assets/video/hero-mobile.mp4" type="video/mp4" media="(max-width: 700px)">
-      <source src="assets/video/hero.mp4" type="video/mp4">
-    </video>
+    <!-- 19.11.2026: Der Kunde fand den bisherigen Film (Zerspanung in
+         Nahaufnahme, fast grau) leblos. Jetzt ein echter Schwenk von der
+         Galerie ueber die eigene Halle (Termin vor Ort 18.11., Clip 0184,
+         vorwaerts und rueckwaerts als nahtlose Schleife, siehe
+         tools/fotos-vor-ort/videos.sh). hero-poster.jpg ist das erste Bild
+         davon; das alte Standbild liegt als hero-poster-alt.jpg.
+         RUECKWEG mit einer Zeile: die Zeile <video ...> unten durch diese ersetzen
+         <video id="heroVideo" poster="assets/img/hero-poster-alt.jpg" autoplay muted loop playsinline preload="metadata"><source src="assets/video/hero-mobile.mp4" type="video/mp4" media="(max-width: 700px)"><source src="assets/video/hero.mp4" type="video/mp4"></video> -->
+    <video id="heroVideo" poster="assets/img/hero-poster.jpg" autoplay muted loop playsinline preload="metadata"><source src="assets/video/vo-hero-mobile.mp4" type="video/mp4" media="(max-width: 700px)"><source src="assets/video/vo-hero.mp4" type="video/mp4"></video>
   </div>
   <div class="hero__veil" aria-hidden="true"></div>
 
@@ -200,12 +205,12 @@
 
     <ul class="svc">
 
-      <li class="svc__i rv">
+      <li class="svc__i rv" id="l-drehen">
         <div class="svc__top">
-          <!-- style="pos": Ausschnitt im 16:9-Rahmen, so dass das Werkstueck
-               moeglichst ganz zu sehen ist (Ring oben vollstaendig) -->
-          <img src="assets/img/leistung-drehen.jpg" width="1440" height="1080" loading="lazy" decoding="async" style="--pos: 50% 25%"
-               alt="CNC-Drehmaschine bei der Bearbeitung eines Rundteils">
+          <!-- 19.11.2026: echte Fotos vom Termin vor Ort (18.11.), Nummern und
+               Ausschnitte in tools/fotos-vor-ort/bauen.py. Hier 0131. -->
+          <img src="assets/img/vo-drehen.jpg" width="1000" height="750" loading="lazy" decoding="async"
+               alt="Arbeitsraum einer CNC-Drehmaschine mit Spannfutter und Werkzeugrevolver">
         </div>
         <div class="svc__body">
           <h3 class="svc__h">Drehen</h3>
@@ -221,10 +226,11 @@
         </div>
       </li>
 
-      <li class="svc__i rv">
+      <li class="svc__i rv" id="l-fraesen">
         <div class="svc__top">
-          <img src="assets/img/leistung-fraesen.jpg" width="1440" height="1080" loading="lazy" decoding="async"
-               alt="Fräsbearbeitung im fünfachsigen Bearbeitungszentrum">
+          <!-- Foto 0123 -->
+          <img src="assets/img/vo-fraesen.jpg" width="1000" height="750" loading="lazy" decoding="async"
+               alt="Verzahntes Bauteil in der Aufspannung im Arbeitsraum des Bearbeitungszentrums">
         </div>
         <div class="svc__body">
           <h3 class="svc__h">Fräsen</h3>
@@ -239,10 +245,11 @@
            Kunde moechte das ausdruecklich NICHT als neu hervorheben (Eindruck
            von Unerfahrenheit). Deshalb eine normale Karte mit Foto der Anlage
            und ohne Jahreszahl. -->
-      <li class="svc__i rv">
+      <li class="svc__i rv" id="l-laser">
         <div class="svc__top">
-          <img src="assets/img/leistung-laser.jpg" width="457" height="343" loading="lazy" decoding="async"
-               alt="Laserschweißanlage mit Mikroskop in der Fertigung">
+          <!-- Foto 0207 -->
+          <img src="assets/img/vo-laser.jpg" width="1000" height="750" loading="lazy" decoding="async"
+               alt="Laserkopf mit Mikroskop über dem Schweißtisch">
         </div>
         <div class="svc__body">
           <h3 class="svc__h">Laser&shy;schweißen</h3>
@@ -255,15 +262,13 @@
         </div>
       </li>
 
-      <!-- Schleifen ist auf Kundenwunsch in zwei Karten geteilt. Die Fotos sind
-           Platzhalter und werden mit dem Kunden abgestimmt: Rundschleifen zeigt
-           rundgeschliffene Stifte, Flachschleifen vorerst das Materiallager.
-           Angaben vom Kunden nachfordern: passende Fotos, Schleiflaenge,
-           Durchmesser, Tischmass. -->
-      <li class="svc__i rv">
+      <!-- Schleifen ist auf Kundenwunsch in zwei Karten geteilt. Seit 19.11.2026
+           zeigen beide Karten die eigenen Maschinen (Fotos 0157 und 0163).
+           Angaben vom Kunden nachfordern: Schleiflaenge, Durchmesser, Tischmass. -->
+      <li class="svc__i rv" id="l-flachschleifen">
         <div class="svc__top">
-          <img src="assets/img/mp-materiallager.jpg" width="1400" height="1400" loading="lazy" decoding="async"
-               alt="Rund- und Flachmaterial im eigenen Lager">
+          <img src="assets/img/vo-flachschleifen.jpg" width="1000" height="750" loading="lazy" decoding="async"
+               alt="Flachschleifmaschine mit Magnetplatte und Steuerung">
         </div>
         <div class="svc__body">
           <h3 class="svc__h">Flach&shy;schleifen</h3>
@@ -272,11 +277,10 @@
         </div>
       </li>
 
-      <li class="svc__i rv">
+      <li class="svc__i rv" id="l-rundschleifen">
         <div class="svc__top">
-          <!-- Stifte oben und unten nur minimal angeschnitten statt drei Spitzen ab -->
-          <img src="assets/img/leistung-schleifen.jpg" width="1040" height="780" loading="lazy" decoding="async" style="--pos: 50% 24%"
-               alt="Rundgeschliffene Stifte aus eigener Fertigung">
+          <img src="assets/img/vo-rundschleifen.jpg" width="1000" height="750" loading="lazy" decoding="async"
+               alt="Rundschleifmaschine in der eigenen Fertigung">
         </div>
         <div class="svc__body">
           <h3 class="svc__h">Rund&shy;schleifen</h3>
@@ -290,9 +294,10 @@
       <!-- Neu auf Kundenwunsch: eigene Karte "Messen" mit einem Foto des
            Messraums. Inhalt belegt: 3D-Koordinatenmessmaschine, Messprotokoll
            auf Wunsch, Chefkontrolle vor jeder Auslieferung. -->
-      <li class="svc__i rv">
+      <li class="svc__i rv" id="l-messen">
         <div class="svc__top">
-          <img src="assets/img/halle-messraum.jpg" width="1400" height="569" loading="lazy" decoding="async"
+          <!-- Foto 0169 -->
+          <img src="assets/img/vo-messen.jpg" width="1000" height="750" loading="lazy" decoding="async"
                alt="Messraum der Paul Walczok GmbH mit Koordinatenmessmaschine">
         </div>
         <div class="svc__body">
@@ -304,14 +309,11 @@
         </div>
       </li>
 
-      <li class="svc__i rv">
+      <li class="svc__i rv" id="l-zugproben">
         <div class="svc__top">
-          <!-- Das Original (leistung-zugproben.jpg) ist hochkant, im 16:9-Rahmen
-               blieben nur 42 % und drei von sieben Proben fehlten. Die Aufsicht
-               ist deshalb um 90 Grad gedreht abgelegt: alle sieben Proben
-               stehen vollstaendig nebeneinander. -->
-          <img src="assets/img/leistung-zugproben-quer.jpg" width="1152" height="864" loading="lazy" decoding="async" style="--pos: 50% 40%"
-               alt="Gefertigte Zugproben nach DIN 50125">
+          <!-- Foto 0198: sechs Proben auf Holz, alle ganz im Bild -->
+          <img src="assets/img/vo-zugproben.jpg" width="1000" height="750" loading="lazy" decoding="async"
+               alt="Flach- und Rundzugproben aus eigener Fertigung">
         </div>
         <div class="svc__body">
           <h3 class="svc__h">Zug&shy;proben</h3>
@@ -324,10 +326,11 @@
         </div>
       </li>
 
-      <li class="svc__i rv">
+      <li class="svc__i rv" id="l-konstruktion">
         <div class="svc__top">
-          <img src="assets/img/leistung-cad.jpg" width="1200" height="887" loading="lazy" decoding="async"
-               alt="CAD-Modell eines Bauteils am Bildschirm">
+          <!-- Foto 0177 -->
+          <img src="assets/img/vo-cad.jpg" width="1000" height="750" loading="lazy" decoding="async"
+               alt="Konstruktionsarbeitsplatz mit CAD-Modell eines Bauteils am Bildschirm">
         </div>
         <div class="svc__body">
           <h3 class="svc__h">Konstruk&shy;tion</h3>
@@ -340,6 +343,54 @@
       </li>
 
     </ul>
+
+    <!-- Laserschweissen als eigener Block (Kundenwunsch 18.11.2026: "unbedingt
+         Bilder UND Video"). Links ein kurzer Film vom Termin vor Ort (Clip 0219,
+         14 bis 27 s: Mitarbeiter am Mikroskop, Schweisslicht am Werkstueck),
+         rechts der Text. Der Text setzt sich NUR aus Aussagen zusammen, die
+         schon auf der Seite stehen (Karte "Laserschweissen", Vorteil
+         "Reparatur statt Schrottcontainer", Chronik 2026); neu ist nur, was man
+         im Film sieht (Mikroskop). Darunter zwei Fotos der Anlage (0204, 0206).
+         Der Film laeuft stumm in Schleife, erst wenn der Block im Bild ist, und
+         haelt an, wenn er hinauslaeuft (js/main.js, initFilme). Bei reduzierter
+         Bewegung startet er nicht von selbst, dann mit Bedienleiste. -->
+    <!-- Korrekturrunde 1: Die Ueberschrift steht im HTML vor dem Film. Am
+         Handy liest man so erst die Ueberschrift, dann den Film, dann den
+         Text; am Desktop setzt das CSS sie rechts ueber den Text. -->
+    <div class="lsr" id="laserschweissen">
+      <h3 class="lsr__h rv">Laserschweißen im eigenen Haus</h3>
+      <figure class="lsr__film rv">
+        <div class="frame lsr__frame">
+          <video class="lsr__v" data-film muted loop playsinline preload="none" poster="assets/img/vo-laser-poster.jpg"
+                 width="1280" height="720" aria-label="Mitarbeiter am Mikroskop der Laserschweißanlage, am Werkstück leuchtet das Schweißlicht">
+            <source src="assets/video/vo-laser.mp4" type="video/mp4">
+          </video>
+        </div>
+        <figcaption class="lsr__cap">
+          <span>Laserschweißen unter dem Mikroskop</span>
+          <button class="lsr__btn" type="button" data-film-btn hidden>Film anhalten</button>
+        </figcaption>
+      </figure>
+      <div class="lsr__txt rv">
+        <p>Mit unserer Laserschweißanlage fügen wir Teile und tragen Material gezielt auf, etwa an einem ausgeschlagenen Lagersitz. Verschlissene Bereiche schweißen wir verzugsfrei auf und arbeiten sie anschließend nach. Ergebnis: Die Passung ist wieder maßhaltig.</p>
+        <p>Gearbeitet wird unter dem Mikroskop, direkt an der Anlage.</p>
+        <p class="lsr__hint">Der Schweißtisch unter dem Laser und der Gasflaschenwagen daneben sind Eigenentwicklungen aus unserer Werkstatt. <a href="#eigenentwicklungen">Zu den Eigenentwicklungen</a></p>
+      </div>
+      <figure class="lsr__f rv">
+        <div class="frame">
+          <img src="assets/img/vo-laser-anlage.jpg" width="1400" height="788" loading="lazy" decoding="async"
+               alt="Laserschweißanlage mit Laserkopf, Mikroskop und höhenverstellbarem Schweißtisch">
+        </div>
+        <figcaption>Laserschweißanlage mit Schweißtisch</figcaption>
+      </figure>
+      <figure class="lsr__f rv">
+        <div class="frame">
+          <img src="assets/img/vo-laser-kopf.jpg" width="1400" height="788" loading="lazy" decoding="async"
+               alt="Laserkopf und Mikroskop der Laserschweißanlage über der Tischplatte">
+        </div>
+        <figcaption>Laserkopf und Mikroskop</figcaption>
+      </figure>
+    </div>
 
   </div>
 </section>
@@ -429,67 +480,74 @@
 
 <!-- ═══════════════════════ 4 · UNTERNEHMEN ═══════════════════════
      Kundenwunsch 29.09.2026: Platz fuers Team, Chronik und Leitsatz.
-     Aufbau: links das Teamfoto, rechts Ueberschrift, Leitsatz, Zitat des
-     Geschaeftsfuehrers und die Chronik. Darunter der Blick in die Halle.
+     Seit 19.11.2026 gibt es ein echtes Gruppenfoto (Termin vor Ort 18.11.,
+     Foto 0117: alle neun Personen im Bild, alle schauen her). Es ist quer und
+     steht deshalb GROSS ueber die ganze Inhaltsbreite (2:1), damit die
+     Gesichter erkennbar sind; vorher stand links ein einzelner Mitarbeiter im
+     Hochformat. Aufbau jetzt: Kopf, Teamfoto, darunter links Leitsatz und
+     Zitat, rechts die Chronik. Darunter der Blick in die Halle.
 
      Das Zitat ist ein ENTWURF in seinem Namen und muss vor Veroeffentlichung
      von Georg Fleischmann freigegeben oder ersetzt werden. Der Leitsatz ist
      der Claim aus der Fusszeile (Wortlaut der alten Webseite).
-     Angaben vom Kunden nachfordern: Gruppenfoto aller fuenf Mitarbeiter (das
-     jetzige Bild zeigt einen Mitarbeiter und steht bis dahin als Platzhalter),
-     Portraet des Geschaeftsfuehrers, weitere Jahreszahlen fuer die Chronik. -->
+     Angaben vom Kunden nachfordern: Portraet des Geschaeftsfuehrers, weitere
+     Jahreszahlen fuer die Chronik. -->
 <section class="sec sec--ceo" id="unternehmen" aria-labelledby="ceoH">
-  <div class="wrap ceo">
+  <div class="wrap">
 
-    <!-- Bildunterschriften stehen seit dem Optik-Check 29.09.2026 unter dem
-         Bild. Der Rahmen (.frame) fasst deshalb nur noch das Bild, die figure
-         darum herum traegt Bild und Unterschrift. -->
-    <figure class="ceo__img rv">
+    <div class="head rv">
+      <p class="kicker">Unternehmen</p>
+      <h2 class="h2" id="ceoH">Qualität ist bei uns Chefsache</h2>
+    </div>
+
+    <!-- nachfordern: Freigabe aller abgebildeten Personen fuer die
+         Veroeffentlichung (auf dem Foto sind auch zwei Kinder), ggf. Namen
+         fuer die Bildunterschrift. -->
+    <figure class="team rv">
       <div class="frame">
-        <img src="assets/img/team-mitarbeiter.jpg" width="1080" height="1440" loading="lazy" decoding="async"
-             alt="Mitarbeiter der Paul Walczok GmbH am Eingang des Betriebs in Essenbach">
+        <img src="assets/img/vo-team.jpg" width="2000" height="1000" loading="lazy" decoding="async"
+             alt="Gruppenfoto des Teams der Paul Walczok GmbH in der Fertigungshalle in Essenbach, mit zwei Kindern">
       </div>
       <figcaption>Unser Team in Essenbach</figcaption>
     </figure>
 
-    <div class="ceo__txt">
-      <div class="head rv">
-        <p class="kicker">Unternehmen</p>
-        <h2 class="h2" id="ceoH">Qualität ist bei uns Chefsache</h2>
+    <div class="ceo">
+      <div class="ceo__txt">
+        <div class="ceo__motto rv">
+          <p class="ceo__label">Unser Leitsatz</p>
+          <p class="ceo__mottoT">Präzision ist unsere Leidenschaft. Unser Ansporn ist es, jeden Tag aufs Neue das beste Teil zu fertigen.</p>
+        </div>
+
+        <blockquote class="ceo__quote rv">
+          <!-- Das oeffnende Zeichen haengt links vor dem Block (.ceo__qm), der
+               erste Satz steht hell (.ceo__qLead), der Rest grau. -->
+          <p><span class="ceo__qLead"><span class="ceo__qm">„</span>Jedes Teil, das unser Haus verlässt, geht vorher über meinen Tisch.</span> Nicht aus Misstrauen gegenüber meinen Leuten, sondern weil ich dem Kunden gegenüber dafür geradestehe. Wir sind mehr als ein Lohnfertiger für die schnelle Serie. Wenn eine Anforderung vom Standard abweicht, ist das für uns kein Hindernis, sondern der Grund, warum man zu uns kommt.“</p>
+          <!-- Der fruehere Schlusssatz "Und wir bleiben dran, bis das Teil passt."
+               wiederholte den Vorteil "Wir bleiben dran, bis es passt". -->
+          <footer>
+            <b>Georg Fleischmann</b>
+            <span>Geschäftsführer, führt den Betrieb seit&nbsp;2023</span>
+          </footer>
+        </blockquote>
       </div>
 
-      <div class="ceo__motto rv">
-        <p class="ceo__label">Unser Leitsatz</p>
-        <p class="ceo__mottoT">Präzision ist unsere Leidenschaft. Unser Ansporn ist es, jeden Tag aufs Neue das beste Teil zu fertigen.</p>
+      <div class="ceo__chron">
+        <h3 class="ceo__label ceo__label--facts rv">Chronik</h3>
+        <ol class="ceo__facts">
+          <li class="rv">
+            <span class="ceo__year">1984</span>
+            <p>Paul Walczok gründet den Betrieb in Essenbach. Sein Name steht bis heute für das Haus und seinen Anspruch.</p>
+          </li>
+          <li class="rv">
+            <span class="ceo__year">2023</span>
+            <p>Georg Fleischmann übernimmt die Geschäftsführung und führt den Betrieb mit fünf hochqualifizierten Mitarbeitern weiter.</p>
+          </li>
+          <li class="rv">
+            <span class="ceo__year">2026</span>
+            <p>Investition in eine Laserschweißanlage: fügen, reparieren, Material auftragen, alles im eigenen Haus.</p>
+          </li>
+        </ol>
       </div>
-
-      <blockquote class="ceo__quote rv">
-        <!-- Das oeffnende Zeichen haengt links vor dem Block (.ceo__qm), der
-             erste Satz steht hell (.ceo__qLead), der Rest grau. -->
-        <p><span class="ceo__qLead"><span class="ceo__qm">„</span>Jedes Teil, das unser Haus verlässt, geht vorher über meinen Tisch.</span> Nicht aus Misstrauen gegenüber meinen Leuten, sondern weil ich dem Kunden gegenüber dafür geradestehe. Wir sind mehr als ein Lohnfertiger für die schnelle Serie. Wenn eine Anforderung vom Standard abweicht, ist das für uns kein Hindernis, sondern der Grund, warum man zu uns kommt.“</p>
-        <!-- Der fruehere Schlusssatz "Und wir bleiben dran, bis das Teil passt."
-             wiederholte den Vorteil "Wir bleiben dran, bis es passt". -->
-        <footer>
-          <b>Georg Fleischmann</b>
-          <span>Geschäftsführer, führt den Betrieb seit&nbsp;2023</span>
-        </footer>
-      </blockquote>
-
-      <h3 class="ceo__label ceo__label--facts rv">Chronik</h3>
-      <ol class="ceo__facts">
-        <li class="rv">
-          <span class="ceo__year">1984</span>
-          <p>Paul Walczok gründet den Betrieb in Essenbach. Sein Name steht bis heute für das Haus und seinen Anspruch.</p>
-        </li>
-        <li class="rv">
-          <span class="ceo__year">2023</span>
-          <p>Georg Fleischmann übernimmt die Geschäftsführung und führt den Betrieb mit fünf hochqualifizierten Mitarbeitern weiter.</p>
-        </li>
-        <li class="rv">
-          <span class="ceo__year">2026</span>
-          <p>Investition in eine Laserschweißanlage: fügen, reparieren, Material auftragen, alles im eigenen Haus.</p>
-        </li>
-      </ol>
     </div>
 
   </div>
@@ -500,12 +558,11 @@
        deshalb traegt der Lauf die Variante own__gal--quer (4:3 statt 5:7).
        Markup und Steuerung ueber [data-gal] sonst unveraendert; js/main.js
        bindet genau ein [data-gal] im Dokument.
-       Das Motiv "Maschinenpark" (mp-halle.jpg) ist entfallen, ebenso seit
-       Pruefrunde 2 "Fertigungshalle" (cta-bg.jpg): beide zeigen dieselbe Szene
-       wie der Hintergrund der Zahlen direkt darunter. Ein Ersatzmotiv ist
-       Bildauswahl und wird mit dem Kunden abgestimmt. Solange nur drei Bilder
-       da sind, passen sie ab 981 px ohne Lauf nebeneinander; die Pfeile
-       blendet main.js dann aus. -->
+       19.11.2026: fuenf echte Fotos vom Termin vor Ort (18.11.) statt der
+       drei aelteren Bestandsbilder: 0182, 0186, 0193, 0172, 0112 (Ausschnitte
+       in tools/fotos-vor-ort/bauen.py, alle 4:3). Die weite Hallenansicht
+       0188 steht nicht hier, sondern als Hintergrund der Zahlen darunter.
+       Ab 981 px stehen drei Bilder je Ansicht, die Pfeile schieben weiter. -->
   <div class="own__gal own__gal--quer rv" data-gal>
     <div class="wrap own__galHead">
       <h3 class="own__galH">Ein Blick in unsere Halle</h3>
@@ -522,28 +579,46 @@
       <li class="own__shot">
         <figure>
           <div class="frame">
-            <img src="assets/img/halle-dreherei.jpg" width="1400" height="570" loading="lazy" decoding="async"
-                 alt="Dreherei mit CNC-Drehmaschinen">
+            <img src="assets/img/vo-halle-galerie.jpg" width="1000" height="750" loading="lazy" decoding="async"
+                 alt="Fertigungshalle von der Galerie aus gesehen, mit Dreh- und Fräsmaschinen und Schwenkkran">
           </div>
-          <figcaption>Dreherei</figcaption>
+          <figcaption>Halle von der Galerie</figcaption>
         </figure>
       </li>
       <li class="own__shot">
         <figure>
           <div class="frame">
-            <img src="assets/img/halle-fraeserei.jpg" width="1400" height="569" loading="lazy" decoding="async"
-                 alt="Fräserei mit Bearbeitungszentren">
+            <img src="assets/img/vo-halle.jpg" width="1000" height="750" loading="lazy" decoding="async"
+                 alt="Fertigungshalle mit Maschinen, Schwenkkran und Hallentor">
           </div>
-          <figcaption>Fräserei</figcaption>
+          <figcaption>Fertigungshalle</figcaption>
         </figure>
       </li>
       <li class="own__shot">
         <figure>
           <div class="frame">
-            <img src="assets/img/mp-voreinstellung.jpg" width="1400" height="1400" loading="lazy" decoding="async"
-                 alt="Mitarbeiter am Werkzeugvoreinstellgerät">
+            <img src="assets/img/vo-saegerei.jpg" width="1000" height="750" loading="lazy" decoding="async"
+                 alt="Säge vor dem Regal mit Rund- und Rohrmaterial">
+          </div>
+          <figcaption>Sägerei und Materiallager</figcaption>
+        </figure>
+      </li>
+      <li class="own__shot">
+        <figure>
+          <div class="frame">
+            <img src="assets/img/vo-voreinstellung.jpg" width="1000" height="750" loading="lazy" decoding="async"
+                 alt="Fräswerkzeug im Werkzeugvoreinstellgerät">
           </div>
           <figcaption>Werkzeugvoreinstellung</figcaption>
+        </figure>
+      </li>
+      <li class="own__shot">
+        <figure>
+          <div class="frame">
+            <img src="assets/img/vo-halle-tor.jpg" width="1000" height="750" loading="lazy" decoding="async"
+                 alt="Blick durch die Halle zum Hallentor, links Regale mit Material und Kisten">
+          </div>
+          <figcaption>Halle mit Blick zum Tor</figcaption>
         </figure>
       </li>
     </ul>
@@ -555,7 +630,8 @@
      geliefert hat, ebenso die Zertifikate. Angaben vom Kunden nachfordern. -->
 <section class="stats" aria-label="Zahlen und Kapazitäten">
   <div class="stats__bg" aria-hidden="true">
-    <img src="assets/img/mp-halle.jpg" width="1440" height="960" loading="lazy" decoding="async" alt="">
+    <!-- 19.11.2026: weite Hallenansicht vom Termin vor Ort (Foto 0188) -->
+    <img src="assets/img/vo-halle-weit.jpg" width="1920" height="1080" loading="lazy" decoding="async" alt="">
   </div>
   <div class="wrap stats__in">
     <!-- Keine Zahl wird hochgezaehlt: waehrend des Zaehlens stuenden sonst
@@ -592,6 +668,114 @@
       <p class="lead">Bauteile für Automobil, Luft- und Raumfahrt, Medizintechnik, Maschinenbau und Motorsport. Jedes davon nach Zeichnung oder Muster gefertigt, gemessen und freigegeben. Kundennamen nennen wir nicht.</p>
     </div>
 
+    <!-- Von der Maschine zum fertigen Teil (19.11.2026). Je Verfahren die
+         eigene Maschine und ein Teil vom Termin vor Ort (18.11.), Ausschnitte
+         in tools/fotos-vor-ort/bauen.py. Welches Teil auf welcher Maschine
+         lief, ist aus Reihenfolge und Form der Fotos GESCHLOSSEN, nicht vom
+         Kunden bestaetigt: deshalb an jeder Zeile ein nachfordern-Kommentar.
+         Jedes Paar besteht aus einem 16:9- und einem 4:3-Bild; die Breiten
+         teilen sich im Verhaeltnis der Formate (--ar), so sind beide Bilder
+         gleich hoch und alle vier Karten gleich gross. Der Flansch (0150), den
+         der Bauplan beim Fraesen vorsah, steht beim Kontakt: ein drittes Bild
+         haette die Karte zu klein gemacht. -->
+    <div class="vmt">
+      <h3 class="vmt__h rv">Von der Maschine zum fertigen Teil</h3>
+      <ul class="vmt__list">
+      <li class="vmt__i rv">
+        <!-- nachfordern: Zuordnung Maschine/Teil und Bezeichnung bestaetigen (Fotos 0132 und 0139) -->
+        <div class="vmt__top">
+          <h4 class="vmt__name">Drehen</h4>
+          <a class="vmt__link" href="#l-drehen">Zur Leistung</a>
+        </div>
+        <div class="vmt__pair">
+          <figure style="--ar: 1.7778">
+            <div class="frame">
+              <img src="assets/img/vo-ref-drehen.jpg" width="1100" height="619" loading="lazy" decoding="async"
+                   alt="Arbeitsraum der CNC-Drehmaschine mit Spannfutter und Werkzeugrevolver">
+            </div>
+            <figcaption>Drehmaschine</figcaption>
+          </figure>
+          <figure style="--ar: 1.3333">
+            <div class="frame">
+              <img src="assets/img/vo-ref-scheibe.jpg" width="1000" height="750" loading="lazy" decoding="async"
+                   alt="Runde Scheibe aus hellem Metall mit drei Bohrungen auf blauem Grund">
+            </div>
+            <figcaption>Scheibe mit Bohrungen</figcaption>
+          </figure>
+        </div>
+      </li>
+      <li class="vmt__i rv">
+        <!-- nachfordern: Zuordnung Maschine/Teil und Bezeichnung bestaetigen (Fotos 0124 und 0142) -->
+        <div class="vmt__top">
+          <h4 class="vmt__name">Fräsen</h4>
+          <a class="vmt__link" href="#l-fraesen">Zur Leistung</a>
+        </div>
+        <div class="vmt__pair">
+          <figure style="--ar: 1.3333">
+            <div class="frame">
+              <img src="assets/img/vo-ref-fraesen.jpg" width="1000" height="750" loading="lazy" decoding="async"
+                   alt="Arbeitsraum des Bearbeitungszentrums mit Spindel und eingespanntem Bauteil">
+            </div>
+            <figcaption>Bearbeitungszentrum</figcaption>
+          </figure>
+          <figure style="--ar: 1.7778">
+            <div class="frame">
+              <img src="assets/img/vo-ref-arm.jpg" width="1100" height="619" loading="lazy" decoding="async"
+                   alt="Langes, zweiteiliges Bauteil mit gefrästen Taschen auf blauem Grund">
+            </div>
+            <figcaption>Gefrästes Bauteil mit Taschen</figcaption>
+          </figure>
+        </div>
+      </li>
+      <li class="vmt__i rv">
+        <!-- nachfordern: Zuordnung Maschine/Teil und Bezeichnung bestaetigen (Fotos 0160 und 0154) -->
+        <div class="vmt__top">
+          <h4 class="vmt__name">Flachschleifen</h4>
+          <a class="vmt__link" href="#l-flachschleifen">Zur Leistung</a>
+        </div>
+        <div class="vmt__pair">
+          <figure style="--ar: 1.7778">
+            <div class="frame">
+              <img src="assets/img/vo-ref-flachschleifen.jpg" width="1100" height="619" loading="lazy" decoding="async"
+                   alt="Flachschleifmaschine mit Absaugung und Steuerung">
+            </div>
+            <figcaption>Flachschleifmaschine</figcaption>
+          </figure>
+          <figure style="--ar: 1.3333">
+            <div class="frame">
+              <img src="assets/img/vo-ref-magnetplatte.jpg" width="1000" height="750" loading="lazy" decoding="async"
+                   alt="Rundes Teil auf der Magnetplatte unter der Schleifscheibe">
+            </div>
+            <figcaption>Teil auf der Magnetplatte</figcaption>
+          </figure>
+        </div>
+      </li>
+      <li class="vmt__i rv">
+        <!-- nachfordern: Zuordnung Maschine/Teil und Bezeichnung bestaetigen (Fotos 0168 und 0171) -->
+        <div class="vmt__top">
+          <h4 class="vmt__name">Messen</h4>
+          <a class="vmt__link" href="#l-messen">Zur Leistung</a>
+        </div>
+        <div class="vmt__pair">
+          <figure style="--ar: 1.7778">
+            <div class="frame">
+              <img src="assets/img/vo-ref-messraum.jpg" width="1100" height="619" loading="lazy" decoding="async"
+                   alt="Messraum mit Koordinatenmessmaschine und Messtischen">
+            </div>
+            <figcaption>Messraum</figcaption>
+          </figure>
+          <figure style="--ar: 1.3333">
+            <div class="frame">
+              <img src="assets/img/vo-ref-messuhr.jpg" width="1000" height="750" loading="lazy" decoding="async"
+                   alt="Teil mit gerändelter Oberfläche neben einer digitalen Messuhr">
+            </div>
+            <figcaption>Teil an der Messuhr</figcaption>
+          </figure>
+        </div>
+      </li>
+      </ul>
+    </div>
+
     <!-- Der Lichtmaschinenhalter ist die belegte Individualitaets-Geschichte aus
          der Firmenpraesentation und steht deshalb vor dem Raster.
          Kundenhinweis 29.09.2026: Die Teile sollen komplett zu sehen sein. Die
@@ -623,20 +807,28 @@
       </div>
     </article>
 
-    <!-- Kundenhinweis "Teile komplett zeigen": Titan und Baugruppe sind im
+    <!-- Korrekturrunde 1 (19.11.2026): Riemenrad, Komplettbaugruppe und
+         Zahnrad sind entfallen, sie trugen einen starken Bildfilter (Vignette,
+         HDR, ausgewaschen). Neu ist der Flansch vom Termin vor Ort. Vier
+         Kacheln, alle quadratisch: am Desktop eine Reihe, am Handy 2 x 2.
+         Kundenhinweis "Teile komplett zeigen": Titan und Baugruppe sind im
          Original quer. Als -q.jpg liegen quadratische Kopien, oben und unten
          aus dem eigenen Fotogrund erweitert (Baugruppe seitlich etwas
          beschnitten, Teile vollstaendig). So fuellen sie die Kachel randlos wie
          die uebrigen vier. Besser waeren quadratische Aufnahmen mit Rand;
          beim Fototermin abstimmen. -->
     <ul class="ref">
+      <!-- Korrekturrunde 1: Der Bremsscheibentopf (altes Foto mit deutlicher
+           Vignette, wirkte gefiltert) ist ersetzt durch das gefraeste Bauteil
+           auf weissem Tuch vom Termin vor Ort (Foto 0147, ganzes Bauteil im
+           Quadrat; Korrekturrunde 2, vorher Ausschnitt aus 0145). nachfordern: Bezeichnung bestaetigen -->
       <li class="ref__i rv">
         <figure>
           <div class="frame">
-            <img src="assets/img/ref-bremstopf.jpg" width="420" height="420" loading="lazy" decoding="async"
-                 alt="Gefräster Bremsscheibentopf aus Aluminium">
+            <img src="assets/img/vo-ref-taschen.jpg" width="1000" height="1000" loading="lazy" decoding="async"
+                 alt="Gefrästes zweiteiliges Bauteil mit Taschen und Bohrungen auf weißem Tuch">
           </div>
-          <figcaption>Bremsscheibentopf</figcaption>
+          <figcaption>Gefrästes Bauteil mit Taschen</figcaption>
         </figure>
       </li>
       <li class="ref__i rv">
@@ -651,24 +843,6 @@
       <li class="ref__i rv">
         <figure>
           <div class="frame">
-            <img src="assets/img/ref-riemenscheibe.jpg" width="571" height="571" loading="lazy" decoding="async"
-                 alt="Zweiteiliges Riemenrad mit Rillenprofil und verzahnter Nabe">
-          </div>
-          <figcaption>Zweiteiliges Riemenrad</figcaption>
-        </figure>
-      </li>
-      <li class="ref__i rv">
-        <figure>
-          <div class="frame">
-            <img src="assets/img/ref-baugruppe-q.jpg" width="1200" height="1200" loading="lazy" decoding="async"
-                 alt="Komplettbaugruppe mit gefrästen Taschen auf dem Maschinentisch">
-          </div>
-          <figcaption>Komplettbaugruppe</figcaption>
-        </figure>
-      </li>
-      <li class="ref__i rv">
-        <figure>
-          <div class="frame">
             <!-- Frueher ref-motorsport.jpg: das war derselbe Lichtmaschinenhalter
                  wie oben. Jetzt echte Motorsportteile. -->
             <img src="assets/img/ref-motorsport-2.jpg" width="1200" height="1200" loading="lazy" decoding="async"
@@ -677,13 +851,15 @@
           <figcaption>Motorsporttechnik</figcaption>
         </figure>
       </li>
+      <!-- 19.11.2026: Flansch vom Termin vor Ort (Foto 0149, quadratisch, ganz im Bild).
+           nachfordern: Bezeichnung "Flansch mit Lochkreis" bestaetigen -->
       <li class="ref__i rv">
         <figure>
           <div class="frame">
-            <img src="assets/img/ref-zahnrad.jpg" width="1080" height="1080" loading="lazy" decoding="async"
-                 alt="Außenverzahntes Zahnrad mit großer Mittelbohrung">
+            <img src="assets/img/vo-ref-flansch.jpg" width="1000" height="1000" loading="lazy" decoding="async"
+                 alt="Flansch mit Lochkreis auf weißem Tuch">
           </div>
-          <figcaption>Zahnrad</figcaption>
+          <figcaption>Flansch mit Lochkreis</figcaption>
         </figure>
       </li>
     </ul>
@@ -692,11 +868,12 @@
 </section>
 
 <!-- ═══════════════════════ 7 · BRANCHEN ═══════════════════════
-     3D-Zylinder: 14 Ringplaetze, nur sechs sind belegt. Der Ring dreht beim
-     Scrollen von -102 auf -25 Grad. Die Ringplaetze und die Transforms setzt
-     erst js/main.js — ohne GSAP und unter 768 px bleibt es ein Raster. -->
-<!-- Branchenbilder: symbolische Szenen der jeweiligen Branche, keine Aufnahmen
-     aus eigener Fertigung und keine Bauteile des Kunden. Vom Kunden freigeben lassen. -->
+     19.11.2026: Die sechs Branchenbilder (symbolische KI-Szenen, dunkel und
+     grau) und der 3D-Ring sind entfallen. Der Kunde fand die Seite "wie mit
+     Filter, leblos", die Bilder waren dafuer der deutlichste Grund. Die
+     Branchen stehen jetzt als ruhige Reihe aus Namen, je mit einer feinen
+     Linie oben wie bei den Vorteilen (.adv__rule). Keine Beschreibungen,
+     keine Symbole, keine Nummern. -->
 <section class="sec sec--ind" id="branchen" aria-labelledby="indH">
   <div class="wrap">
     <div class="head rv">
@@ -706,49 +883,32 @@
            Ersetzt durch das, was die Sektion zeigt: die sechs Branchen. -->
       <p class="lead">Unsere Teile arbeiten in diesen sechs Branchen.</p>
     </div>
-  </div>
-
-  <div class="cyl-wrap" id="cylWrap">
-    <div class="cyl-stage" id="cylStage">
-      <ul class="cyl" id="cyl">
-        <li class="cyl__c">
-          <img class="cyl__img" src="assets/img/branche-automobil.jpg" width="1200" height="1200"
-               loading="lazy" decoding="async" alt="Rohkarosserie auf einer Montagelinie im Automobilwerk">
-          <span class="cyl__veil" aria-hidden="true"></span>
-          <span class="cyl__cap">Automobil</span>
-        </li>
-        <li class="cyl__c">
-          <img class="cyl__img" src="assets/img/branche-motorsport.jpg" width="1200" height="1200"
-               loading="lazy" decoding="async" alt="Rennwagen in einer Box der Boxengasse">
-          <span class="cyl__veil" aria-hidden="true"></span>
-          <span class="cyl__cap">Motor- und Rennsport</span>
-        </li>
-        <li class="cyl__c">
-          <img class="cyl__img" src="assets/img/branche-luftfahrt.jpg" width="1200" height="1200"
-               loading="lazy" decoding="async" alt="Verkehrsflugzeug in einer Wartungshalle">
-          <span class="cyl__veil" aria-hidden="true"></span>
-          <span class="cyl__cap">Luft- und Raumfahrt</span>
-        </li>
-        <li class="cyl__c">
-          <img class="cyl__img" src="assets/img/branche-maschinenbau.jpg" width="1200" height="1200"
-               loading="lazy" decoding="async" alt="Reihe von Bearbeitungszentren in einer Produktionshalle">
-          <span class="cyl__veil" aria-hidden="true"></span>
-          <span class="cyl__cap">Maschinenbau</span>
-        </li>
-        <li class="cyl__c">
-          <img class="cyl__img" src="assets/img/branche-pruefinstitute.jpg" width="1200" height="1200"
-               loading="lazy" decoding="async" alt="Zugprüfmaschinen in einem Werkstofflabor">
-          <span class="cyl__veil" aria-hidden="true"></span>
-          <span class="cyl__cap">Prüfinstitute</span>
-        </li>
-        <li class="cyl__c">
-          <img class="cyl__img" src="assets/img/branche-medizintechnik.jpg" width="1200" height="1200"
-               loading="lazy" decoding="async" alt="Operationssaal mit Assistenzarm über dem OP-Tisch">
-          <span class="cyl__veil" aria-hidden="true"></span>
-          <span class="cyl__cap">Medizintechnik</span>
-        </li>
-      </ul>
-    </div>
+    <ul class="ind">
+      <li class="ind__i rv">
+        <span class="ind__rule" aria-hidden="true"></span>
+        <h3 class="ind__name">Automobil</h3>
+      </li>
+      <li class="ind__i rv">
+        <span class="ind__rule" aria-hidden="true"></span>
+        <h3 class="ind__name">Motor- und Rennsport</h3>
+      </li>
+      <li class="ind__i rv">
+        <span class="ind__rule" aria-hidden="true"></span>
+        <h3 class="ind__name">Luft- und Raumfahrt</h3>
+      </li>
+      <li class="ind__i rv">
+        <span class="ind__rule" aria-hidden="true"></span>
+        <h3 class="ind__name">Maschinenbau</h3>
+      </li>
+      <li class="ind__i rv">
+        <span class="ind__rule" aria-hidden="true"></span>
+        <h3 class="ind__name">Prüfinstitute</h3>
+      </li>
+      <li class="ind__i rv">
+        <span class="ind__rule" aria-hidden="true"></span>
+        <h3 class="ind__name">Medizintechnik</h3>
+      </li>
+    </ul>
   </div>
 </section>
 
@@ -777,11 +937,14 @@
       <div class="car__l">
         <figure class="car__img rv">
           <div class="frame">
-            <img src="assets/img/mp-fraeszentrum.jpg" width="1400" height="1400" loading="lazy" decoding="async"
-                 alt="Mitarbeiter rüstet ein Bearbeitungszentrum in der Fertigung in Essenbach">
+            <!-- 19.11.2026: Standbild aus dem Film vom Termin vor Ort (Clip 0218,
+                 9,5 s), siehe tools/fotos-vor-ort/videos.sh. Ein Mitarbeiter bei
+                 der Arbeit statt eines Maschinenbilds. -->
+            <img src="assets/img/vo-laser-mitarbeiter.jpg" width="1200" height="900" loading="lazy" decoding="async"
+                 alt="Mitarbeiter am Mikroskop der Laserschweißanlage">
           </div>
           <!-- Die Schicht-Aussage steht schon im Lead und im ersten Vorteil darunter. -->
-          <figcaption>Rüsten am Bearbeitungszentrum</figcaption>
+          <figcaption>Am Mikroskop der Laserschweißanlage</figcaption>
         </figure>
 
         <ul class="car__ben">
@@ -924,9 +1087,12 @@
     </form>
 
     <div class="con__l">
+      <!-- 19.11.2026: CAD-Arbeitsplatz vom Termin vor Ort (Foto 0179), passend
+           zu "Schicken Sie uns Ihre Zeichnung". Keine Bildunterschrift (stand
+           hier auch vorher nicht). -->
       <figure class="frame con__img">
-        <img src="assets/img/mp-messtechnik.jpg" width="1400" height="1400" loading="lazy" decoding="async"
-             alt="Messtechnik im Messraum der Paul Walczok GmbH">
+        <img src="assets/img/vo-kontakt-cad.jpg" width="1400" height="875" loading="lazy" decoding="async"
+             alt="Konstruktion am CAD-Platz: Arbeitsplatz mit zwei Bildschirmen und CAD-Modell">
       </figure>
 
       <div class="con__meta rv">
@@ -955,15 +1121,17 @@
 </section>
 
 <!-- ═══════════════════════ 10 · EIGENENTWICKLUNGEN ═══════════════════════
-     Seit dem Kundenfeedback vom 29.09.2026: kurzer Kopf, die beiden Produkte
-     je mit Foto, Kartenreihe mit Pfeillisten, schmales Abschlussband. Steht
-     auf Kundenwunsch als letzter Abschnitt hinter dem Kontakt.
+     Seit dem Kundenfeedback vom 29.09.2026: kurzer Kopf, die Produkte je mit
+     Foto, Kartenreihe mit Pfeillisten, schmales Abschlussband. Steht auf
+     Kundenwunsch als letzter Abschnitt hinter dem Kontakt.
 
-     Gezeigt werden nur die beiden Geraete, die es wirklich gibt. Der in der
-     Kundencheckliste genannte Transportwagen fuer Gasflaschen existiert noch
-     nicht und taucht deshalb nirgends auf.
+     Seit 19.11.2026 DREI Geraete: Der Gasflaschen-Transportwagen aus der
+     Kundencheckliste gibt es inzwischen, er steht beim Termin vor Ort (18.11.)
+     an der Laserschweissanlage (Fotos 0203, 0220 bis 0224). Alle Fotos dieses
+     Abschnitts stammen vom Termin vor Ort; Ausschnitte in
+     tools/fotos-vor-ort/bauen.py.
 
-     Belegt ist ueber beide Produkte fast nichts ausser dem, was auf den Fotos zu
+     Belegt ist ueber die Produkte fast nichts ausser dem, was auf den Fotos zu
      sehen ist. Die Texte bleiben deshalb bei Vorgang und Sichtbarem. Ueberall,
      wo eine technische Angabe stehen muesste, steht ein Kommentar. -->
 <section class="sec sec--own" id="eigenentwicklungen" aria-labelledby="ownH">
@@ -971,25 +1139,51 @@
   <!-- 1 · Kopf. Kundenhinweis 29.09.2026: Der fruehere Kopf mit Lead,
        Knopf und grossem Foto des Schweisstisches "kann raus". Stehen bleiben
        Kicker und Ueberschrift, damit der Abschnitt einen Namen hat und der
-       Menuepunkt ein Ziel. Die Produkte darunter tragen jetzt je ein Foto. -->
+       Menuepunkt ein Ziel. -->
   <div class="wrap">
     <div class="head rv">
       <p class="kicker">Eigenentwicklungen</p>
-      <h2 class="h2" id="ownH">Zwei Geräte aus eigener Werkstatt</h2>
+      <h2 class="h2" id="ownH">Drei Geräte aus eigener Werkstatt</h2>
     </div>
   </div>
 
-  <!-- 2 · Die beiden Produkte, je mit Produktfoto (Kundenwunsch). Die Fotos
-       zeigen das ganze Geraet; die fruehere Bildergalerie mit Detailaufnahmen
-       ist entfallen. -->
+  <!-- 2 · Die drei Produkte. Je Geraet zuerst der Name, dann ein grosses
+       16:10-Feld und darunter zwei Details, dann Text und Aufbau
+       (Korrekturrunde 1: Name ueber den Fotos, 16:10 statt 4:3, damit der
+       Schweisstisch 0210 ganz von vorn im Bild ist). Der Gasflaschenwagen ist
+       hochkant: sein grosses Feld teilen sich drei schmale Hochformate in
+       voller Bildhoehe, damit der Wagen ganz zu sehen ist. Am Desktop drei
+       nebeneinander, am Tablet 2 + 1, am Handy untereinander. -->
   <div class="wrap">
     <ul class="own__prod">
       <li class="own__p rv">
-        <figure class="frame own__pImg">
-          <img src="assets/img/eigen-schweisstisch.jpg" width="1400" height="1050" loading="lazy" decoding="async"
-               alt="Höhenverstellbarer Schweißtisch aus eigener Fertigung mit Fußschalter">
-        </figure>
         <h3>Schweißtisch</h3>
+        <div class="own__media">
+          <figure class="frame own__pImg">
+            <img src="assets/img/vo-tisch.jpg" width="1200" height="750" loading="lazy" decoding="async"
+                 alt="Höhenverstellbarer Schweißtisch aus eigener Fertigung von vorn, mit gerasterter Platte und zwei Hubsäulen">
+          </figure>
+          <ul class="own__thumbs">
+            <li>
+              <figure>
+                <div class="frame">
+                  <img src="assets/img/vo-tisch-panel.jpg" width="900" height="675" loading="lazy" decoding="async"
+                       alt="Bedienpanel mit Tasten unter der Tischplatte">
+                </div>
+                <figcaption>Bedienpanel</figcaption>
+              </figure>
+            </li>
+            <li>
+              <figure>
+                <div class="frame">
+                  <img src="assets/img/vo-tisch-laser.jpg" width="900" height="675" loading="lazy" decoding="async"
+                       alt="Schweißtisch unter dem Laserkopf der Laserschweißanlage">
+                </div>
+                <figcaption>An der Laserschweißanlage</figcaption>
+              </figure>
+            </li>
+          </ul>
+        </div>
         <p>Die Platte trägt ein durchgehendes Raster aus Gewindebohrungen, darunter sitzen zwei Hubsäulen. Über das Bedienpanel fährt der Tisch auf Arbeitshöhe, die eingestellte Höhe steht in Zentimetern im Display und lässt sich auf vier Tasten ablegen. Gefahren wird zusätzlich über einen Fußschalter. Der Tisch steht bei uns an der Laserschweißanlage.</p>
         <!-- Die frueher eigene Unterspalte "Im Einsatz" trug einen einzigen Punkt
              und steht jetzt im Absatz darueber. -->
@@ -1006,11 +1200,34 @@
         </div>
       </li>
       <li class="own__p rv">
-        <figure class="frame own__pImg">
-          <img src="assets/img/eigen-schraubstock.jpg" width="1200" height="900" loading="lazy" decoding="async"
-               alt="Laborschraubstock aus eigener Fertigung auf runder Grundplatte">
-        </figure>
         <h3>Laborschraubstock</h3>
+        <div class="own__media">
+          <figure class="frame own__pImg">
+            <img src="assets/img/vo-stock.jpg" width="1200" height="750" loading="lazy" decoding="async"
+                 alt="Laborschraubstock aus eigener Fertigung auf runder Grundplatte">
+          </figure>
+          <!-- nachfordern: "Zweite Ausfuehrung" bestaetigen (Fotos 0232 bis 0237 zeigen eine andere Bauform mit Ring) -->
+          <ul class="own__thumbs">
+            <li>
+              <figure>
+                <div class="frame">
+                  <img src="assets/img/vo-stock-2.jpg" width="900" height="675" loading="lazy" decoding="async"
+                       alt="Laborschraubstock in einer zweiten Ausführung mit Ring an der Backe">
+                </div>
+                <figcaption>Zweite Ausführung</figcaption>
+              </figure>
+            </li>
+            <li>
+              <figure>
+                <div class="frame">
+                  <img src="assets/img/vo-stock-3.jpg" width="900" height="675" loading="lazy" decoding="async"
+                       alt="Laborschraubstock schräg von vorn mit Rändelschrauben">
+                </div>
+                <figcaption>Von vorn</figcaption>
+              </figure>
+            </li>
+          </ul>
+        </div>
         <p>Der kleine Schraubstock sitzt auf einer runden Grundplatte und spannt Kleinteile am Arbeitsplatz. Gespannt wird über zwei Rändelschrauben, die Backen laufen auf durchgehenden Führungsstangen. Gedreht, gefräst und montiert wurde er bei uns.</p>
         <div class="own__sub">
           <h4>Aufbau</h4>
@@ -1021,6 +1238,59 @@
           </ul>
           <!-- Angaben vom Kunden nachfordern: Spannweite, Backenbreite, Werkstoff,
                Oberflaeche, wofuer der Schraubstock urspruenglich gebaut wurde. -->
+        </div>
+      </li>
+      <!-- nachfordern: Text Gasflaschenwagen (Name, Werkstoff, Masse, wofuer
+           genau er gebaut wurde). Der Text beschreibt nur, was man sieht. -->
+      <li class="own__p rv">
+        <h3>Gasflaschen-Transportwagen</h3>
+        <div class="own__media">
+          <!-- Drei schmale Hochformate (1:2) in voller Bildhoehe: 0220, 0221, 0222
+               (Korrekturrunde 2: 0221 statt 0225, dort war die Flasche oben
+               angeschnitten) -->
+          <div class="own__pImg own__pImg--drei">
+            <div class="frame">
+              <img src="assets/img/vo-wagen.jpg" width="520" height="1040" loading="lazy" decoding="async"
+                   alt="Gasflaschen-Transportwagen aus eigener Fertigung mit einer Gasflasche, ganz im Bild">
+            </div>
+            <div class="frame">
+              <img src="assets/img/vo-wagen-2.jpg" width="520" height="1040" loading="lazy" decoding="async"
+                   alt="Gasflaschen-Transportwagen mit Gasflasche von vorn, ganz im Bild">
+            </div>
+            <div class="frame">
+              <img src="assets/img/vo-wagen-3.jpg" width="520" height="1040" loading="lazy" decoding="async"
+                   alt="Gasflaschen-Transportwagen schräg von hinten mit Rollen oben und unten">
+            </div>
+          </div>
+          <ul class="own__thumbs">
+            <li>
+              <figure>
+                <div class="frame">
+                  <img src="assets/img/vo-wagen-rollen.jpg" width="900" height="675" loading="lazy" decoding="async"
+                       alt="Rollen am oberen Ende des Gestells und Spanngurt um die Flasche">
+                </div>
+                <figcaption>Rollen am oberen Ende</figcaption>
+              </figure>
+            </li>
+            <li>
+              <figure>
+                <div class="frame">
+                  <img src="assets/img/vo-wagen-einsatz.jpg" width="900" height="675" loading="lazy" decoding="async"
+                       alt="Gasflaschen-Transportwagen mit Flaschen neben der Laserschweißanlage">
+                </div>
+                <figcaption>An der Laserschweißanlage</figcaption>
+              </figure>
+            </li>
+          </ul>
+        </div>
+        <p>Die Gasflasche steht auf der Standfläche des Gestells und wird mit zwei Spanngurten gesichert. Rollen sitzen unten und am oberen Ende. Bei uns steht der Wagen an der Laserschweißanlage.</p>
+        <div class="own__sub">
+          <h4>Aufbau</h4>
+          <ul class="arrow">
+            <li>Gestell mit Standfläche</li>
+            <li>Zwei Spanngurte</li>
+            <li>Rollen unten und oben</li>
+          </ul>
         </div>
       </li>
     </ul>
@@ -1153,6 +1423,6 @@
 <script src="js/vendor/ScrollTrigger.min.js"></script>
 <script src="js/vendor/SplitText.min.js"></script>
 <script src="js/vendor/lenis.min.js"></script>
-<script src="js/main.js?v=20261113c"></script>
+<script src="js/main.js?v=20261119"></script>
 </body>
 </html>
