@@ -4,8 +4,8 @@
      1. Hero-Intro (Zeilen der H1 aus der Maske, Rest in einer Timeline)
      2. Bildschieber: jede Bildbox oeffnet sich einmal von oben nach unten
      3. Masslinien der Vorteile ziehen sich auf
-   Dazu die Bildmarke im Kopf (der Branchen-Ring ist am 19.11.2026
-   entfallen) und der Film im Block Laserschweissen. Text,
+   Dazu die Bildmarke im Kopf, der Branchen-Ring (nur Drehung) und der Film
+   im Block Laserschweissen. Text,
    Listen, Ueberschriften und Karten stehen einfach da. Kein Pinning, kein
    Preloader. Nur transform, opacity und clip-path. Ohne GSAP bleibt die Seite
    vollstaendig sichtbar.
@@ -156,21 +156,59 @@
      DREHUNG. Die Bildmarke besteht aus Buegel und Bolzen (Vektordatei des
         Kunden). Beim Scrollen schwenkt der Buegel um die senkrechte Achse, wie
         das Bauteil in der SOLIDWORKS-Aufnahme des Kunden auf dem Drehteller;
-        der Bolzen ist ein Drehteil und bleibt stehen. Gesetzt wird nur die
-        CSS-Variable --dreh und data-vorn (welche Buegelhaelfte vor dem Bolzen
-        liegt), den Rest macht css/styles.css.
+        der Bolzen ist ein Drehteil und bleibt stehen.
+
+        Runde 3 (19.11.2026, Kunde: beim Drehen "duenn wie Papier"): Der
+        Buegel ist jetzt eine Platte mit Dicke. baueMarke() ersetzt das flache
+        Rueckfallbild durch 23 Schichten (Vorder- und Rueckseite als Bild,
+        dazwischen die Silhouette in der Kantenfarbe), je als linke und rechte
+        Haelfte, plus Bolzen und Stirnseite in einem gemeinsamen 3D-Raum. Die
+        Tiefenreihenfolge (Bolzen vor oder hinter einer Haelfte) macht der
+        Browser selbst; das fruehere data-vorn entfaellt. Aufbau im CSS.
+        Gesetzt werden nur --dreh (Winkel) und --kante (Deckkraft der
+        Stirnseite, nur nahe 90 und 270 Grad), dazu .is-ruhe bei 0 Grad.
 
         Die Drehung folgt dem Scrollweg (eine halbe Umdrehung je
         Bildschirmhoehe; abwaerts vorwaerts, aufwaerts rueckwaerts), gedaempft,
         damit nichts springt. Wird 1,2 s lang nicht gescrollt, laeuft die Marke
         in 1,5 s mit weichem Auslauf zur naechsten vollen Umdrehung zurueck: in
         Ruhe und beim Laden zeigt sie genau die Ansicht des Kunden. Bei
-        reduzierter Bewegung dreht sich nichts.
+        reduzierter Bewegung wird nichts aufgebaut, die Marke steht still.
 
         window.__markHold (Grad) friert einen Winkel ein, nur fuer
         Bildschirmfotos. */
+  function baueMarke(m) {
+    var SCHICHTEN = 22;                       /* Abstaende; 23 Lagen von 0 bis -dicke */
+    var d = m.dataset;
+    if (!d.buegel || !d.kante || !d.bolzen) return false;
+    function el(tag, cls) { var e = document.createElement(tag); e.className = cls; return e; }
+    function bild(src, cls) {
+      var i = el('img', cls); i.src = src; i.alt = ''; i.decoding = 'async';
+      i.width = 139; i.height = 90; return i;
+    }
+    var raum = el('span', 'mark__raum'), welt = el('span', 'mark__welt'), dreh = el('span', 'mark__dreh');
+    for (var i = 0; i <= SCHICHTEN; i++) {
+      var aussen = i === 0 || i === SCHICHTEN;
+      ['l', 'r'].forEach(function (seite) {
+        var s = bild(aussen ? d.buegel : d.kante, 'mark__s mark__s--' + seite + (i === 0 ? ' mark__s--vorn' : ''));
+        s.style.setProperty('--i', i);
+        dreh.appendChild(s);
+      });
+    }
+    welt.appendChild(dreh);
+    welt.appendChild(bild(d.bolzen, 'mark__z'));
+    welt.appendChild(el('span', 'mark__kante'));
+    raum.appendChild(welt);
+    var flach = m.querySelector('.mark__flach');
+    if (flach) flach.remove();
+    m.style.setProperty('--n', SCHICHTEN);
+    m.appendChild(raum);
+    m.classList.add('is-3d', 'is-ruhe');
+    return true;
+  }
+
   var mark = document.getElementById('mark');
-  if (mark && !reduce) {
+  if (mark && !reduce && baueMarke(mark)) {
     var RUHE_MS = 1200, RUECKKEHR_MS = 1500;
     var jetzt = function () { return (window.performance && performance.now) ? performance.now() : Date.now(); };
     var zielGrad = 0, grad = 0, gesetzt = null, tVor = null, letzterScroll = -1e9;
@@ -219,12 +257,17 @@
       if (g !== gesetzt) {
         gesetzt = g;
         mark.style.setProperty('--dreh', g + 'deg');
-        /* rotateY(+): die rechte Haelfte geht nach hinten. Zwischen 0 und 180
-           Grad liegt also die linke vorn, danach die rechte. Nahe 0 und 180
-           liegt der Buegel in der Bildebene, dort verdeckt nichts. */
-        var sn = Math.sin(g * Math.PI / 180);
-        var vorn = sn > 0.03 ? 'l' : (sn < -0.03 ? 'r' : '');
-        if (mark.getAttribute('data-vorn') !== vorn) mark.setAttribute('data-vorn', vorn);
+        /* Stirnseite nur nahe 90 und 270 Grad: dort sind alle Schichten
+           hauchduenn. Deckkraft faehrt mit |sin| von 0,992 (rund 83 Grad)
+           bis 0,9994 (rund 88 Grad) hoch; bei 85 Grad bilden die Schichten
+           das Band noch selbst, die Stirnseite liegt deckungsgleich darauf. */
+        var sn = Math.abs(Math.sin(g * Math.PI / 180));
+        var k = Math.max(0, Math.min(1, (sn - 0.992) / 0.0074));
+        mark.style.setProperty('--kante', k.toFixed(3));
+        mark.classList.toggle('is-ruhe', g === 0);
+        /* Bis rund 2 Grad um 90/270 nur die Stirnseite, die Schichten sind
+           dort reine Kanten (helle Haarstriche ueber dem Bolzen). */
+        mark.classList.toggle('is-seitlich', Math.abs(Math.cos(g * Math.PI / 180)) < 0.035);
       }
       if (ruht) {
         grad = zielGrad;
@@ -319,9 +362,8 @@
     });
   }
 
-  /* Masslinien der Vorteile und (seit 19.11.2026) der Branchen: ziehen sich
-     von links auf wie eine Bemassung */
-  ST.batch('.adv__rule, .ind__rule', {
+  /* Masslinien der Vorteile: ziehen sich von links auf wie eine Bemassung */
+  ST.batch('.adv__rule', {
     start: 'top 92%',
     once: true,
     onEnter: function (els) {
@@ -349,6 +391,77 @@
           }
         });
       }
+    });
+  }
+
+  /* ================================================== BRANCHEN-ZYLINDER ==
+     14 Ringplaetze, sechs davon belegt — die uebrigen bleiben leer, damit die
+     Karten einen offenen Bogen bilden statt eines geschlossenen Rads. Der Ring
+     dreht beim Scrollen, waehrend die Bilder in den Karten gegenlaeufig
+     wandern. Er faehrt NICHT mehr nach unten: die Abwaertsfahrt liess oben
+     einen leeren Block stehen. Erst ab 768 px; darunter (und ohne GSAP) bleibt
+     die Sektion ein schlichtes Raster. */
+  var cyl      = document.getElementById('cyl');
+  var cylWrap  = document.getElementById('cylWrap');
+  var cylStage = document.getElementById('cylStage');
+
+  if (cyl && cylWrap && cylStage) {
+    var TOTAL = 14;
+    for (var ci = cyl.children.length; ci < TOTAL; ci++) {
+      var slot = document.createElement('li');
+      slot.className = 'cyl__c';
+      slot.setAttribute('data-empty', '');
+      slot.setAttribute('aria-hidden', 'true');
+      cyl.appendChild(slot);
+    }
+    Array.prototype.forEach.call(cyl.children, function (card, i) {
+      card.style.setProperty('--index', i + 1);
+    });
+
+    G.matchMedia().add('(min-width: 768px)', function () {
+      root.classList.add('gsap-cyl');   /* Ringhoehe kommt aus dem CSS */
+
+      /* Der Ring laeuft jetzt mit der Seite mit. Die Drehung beginnt wie
+         frueher, wenn seine Oberkante bei 75 % der Fensterhoehe steht, und
+         endet, wenn seine Unterkante bei 25 % steht. Damit zeigt jede
+         Ringlage im Fenster dasselbe Bild wie vorher, nur ohne Abwaertsfahrt.
+         Linear statt power1.inOut: gleichmaessige Drehung ohne Spitze in der
+         Bildmitte. */
+      function weg(start, end) {
+        return { trigger: cylWrap, start: start, end: end, scrub: true, invalidateOnRefresh: true };
+      }
+      var imgs = cyl.querySelectorAll('.cyl__img');
+      var ringWeg = weg('top 75%', 'bottom 25%');
+      ringWeg.onToggle = function (self) { cyl.style.willChange = self.isActive ? 'transform' : ''; };
+
+      /* Startwinkel: Die Referenz startet mit vier belegten Ringplaetzen bei
+         -102 Grad. Wir haben sechs, also 51,4 Grad mehr Bogen (25,7 je Platz) —
+         der gleiche Bildeindruck beim Eintritt ergibt sich deshalb bei -153:
+         links stehen zweieinhalb Karten, die rechte Haelfte ist frei, dann
+         schwenken sie ein. Bis -25 wandert jede Karte genau einmal durch die
+         Bildmitte. */
+      G.fromTo(cyl, { rotateY: -153 }, {
+        rotateY: -25, ease: 'none',
+        scrollTrigger: ringWeg
+      });
+      /* Bilder wandern in den Karten gegenlaeufig: waagrecht mit der Drehung,
+         senkrecht ueber die ganze Sichtzeit. */
+      G.fromTo(imgs, { x: 100 }, {
+        x: -100, ease: 'none',
+        scrollTrigger: weg('top 75%', 'bottom 25%')
+      });
+      G.fromTo(imgs, { y: -100 }, {
+        y: 100, ease: 'none',
+        scrollTrigger: weg('top bottom', 'bottom top')
+      });
+
+      return function () {
+        root.classList.remove('gsap-cyl');
+        cylWrap.style.height = '';
+        cyl.style.willChange = '';
+        G.set(cyl, { clearProps: 'transform' });
+        G.set(imgs, { clearProps: 'transform' });
+      };
     });
   }
 

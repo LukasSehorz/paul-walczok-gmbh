@@ -31,7 +31,7 @@
 <link rel="preload" as="font" type="font/woff2" href="fonts/xn7gYHE41ni1AdIRggexSg.woff2" crossorigin>
 <link rel="stylesheet" href="fonts/fonts.css?v=20261009">
 <link rel="preload" as="image" href="assets/img/hero-poster.jpg" fetchpriority="high">
-<link rel="stylesheet" href="css/styles.css?v=20261119">
+<link rel="stylesheet" href="css/styles.css?v=20261119b">
 
 <!-- Die versteckten Startzustaende haengen an `.gsap`; die Klasse wird erst gesetzt,
      wenn der GSAP-Stack nachweislich geladen ist. Faellt eine Vendor-Datei aus,
@@ -92,16 +92,19 @@
       <a class="brand__link" href="#top" aria-label="Paul Walczok GmbH, zum Seitenanfang">
         <!-- Bildmarke aus der Vektordatei des Kunden (Patch der Arbeitskleidung,
              13.11.2026), Optik wie auf dem Patch: heller Koerper, blaue Linien.
-             Zwei Teile, damit sie sich beim Scrollen drehen kann: der Buegel
-             schwenkt um die senkrechte Achse, der Bolzen (Drehteil, sieht aus
-             jeder Richtung gleich aus) bleibt stehen. Der Buegel liegt zweimal
-             da, je eine Haelfte: die Haelfte, die gerade zum Betrachter zeigt,
-             steht vor dem Bolzen, die andere dahinter (js/main.js). Ohne
-             JavaScript steht die Marke einfach still. -->
-        <span class="mark" id="mark" aria-hidden="true">
-          <img class="mark__b mark__b--l" src="assets/img/marke-buegel.svg?v=20261113c" width="139" height="90" alt="" decoding="async">
-          <img class="mark__z" src="assets/img/marke-bolzen.svg?v=20261113c" width="139" height="90" alt="" decoding="async">
-          <img class="mark__b mark__b--r" src="assets/img/marke-buegel.svg?v=20261113c" width="139" height="90" alt="" decoding="async">
+             Runde 3 (19.11.2026): Beim Scrollen dreht sich der Buegel als
+             Platte mit echter Dicke um die senkrechte Achse, der Bolzen
+             (Drehteil, sieht aus jeder Richtung gleich aus) bleibt stehen.
+             Im HTML steht nur die ganze Marke als ein Bild (Rueckfall ohne
+             JavaScript und bei reduzierter Bewegung). js/main.js baut daraus
+             die Schichten; die Bildadressen samt Versionsnummer stehen in den
+             data-Attributen. Aufbau und Gruende: css/styles.css, "Marke und
+             Schriftzug". -->
+        <span class="mark" id="mark" aria-hidden="true"
+              data-buegel="assets/img/marke-buegel.svg?v=20261113c"
+              data-kante="assets/img/marke-buegel-kante.svg?v=20261119b"
+              data-bolzen="assets/img/marke-bolzen.svg?v=20261113c">
+          <img class="mark__flach" src="assets/img/logo-mark-vektor.svg?v=20261113c" width="139" height="90" alt="" decoding="async">
         </span>
         <!-- Rechts neben der Marke der Original-Schriftzug aus der CI des Kunden
              (Hinweise Homepage, 29.09.2026: "genau so, das gehoert zu unserer CI").
@@ -868,12 +871,15 @@
 </section>
 
 <!-- ═══════════════════════ 7 · BRANCHEN ═══════════════════════
-     19.11.2026: Die sechs Branchenbilder (symbolische KI-Szenen, dunkel und
-     grau) und der 3D-Ring sind entfallen. Der Kunde fand die Seite "wie mit
-     Filter, leblos", die Bilder waren dafuer der deutlichste Grund. Die
-     Branchen stehen jetzt als ruhige Reihe aus Namen, je mit einer feinen
-     Linie oben wie bei den Vorteilen (.adv__rule). Keine Beschreibungen,
-     keine Symbole, keine Nummern. -->
+     3D-Zylinder: 14 Ringplaetze, nur sechs sind belegt. Der Ring dreht beim
+     Scrollen von -102 auf -25 Grad. Die Ringplaetze und die Transforms setzt
+     erst js/main.js — ohne GSAP und unter 768 px bleibt es ein Raster. -->
+<!-- Branchenbilder: symbolische Szenen der jeweiligen Branche, keine Aufnahmen
+     aus eigener Fertigung und keine Bauteile des Kunden. Vom Kunden freigeben lassen.
+     19.11.2026 (Runde 3): Der Ring war kurz durch eine reine Namensliste
+     ersetzt; der Kunde will die Branchen mit Bildern behalten, deshalb steht
+     hier wieder der Stand von Commit 2644748. Die Bilder sind aus den
+     Originalen natuerlich neu eingestellt (tools/fotos-farbe/kraeftiger.py). -->
 <section class="sec sec--ind" id="branchen" aria-labelledby="indH">
   <div class="wrap">
     <div class="head rv">
@@ -883,32 +889,49 @@
            Ersetzt durch das, was die Sektion zeigt: die sechs Branchen. -->
       <p class="lead">Unsere Teile arbeiten in diesen sechs Branchen.</p>
     </div>
-    <ul class="ind">
-      <li class="ind__i rv">
-        <span class="ind__rule" aria-hidden="true"></span>
-        <h3 class="ind__name">Automobil</h3>
-      </li>
-      <li class="ind__i rv">
-        <span class="ind__rule" aria-hidden="true"></span>
-        <h3 class="ind__name">Motor- und Rennsport</h3>
-      </li>
-      <li class="ind__i rv">
-        <span class="ind__rule" aria-hidden="true"></span>
-        <h3 class="ind__name">Luft- und Raumfahrt</h3>
-      </li>
-      <li class="ind__i rv">
-        <span class="ind__rule" aria-hidden="true"></span>
-        <h3 class="ind__name">Maschinenbau</h3>
-      </li>
-      <li class="ind__i rv">
-        <span class="ind__rule" aria-hidden="true"></span>
-        <h3 class="ind__name">Prüfinstitute</h3>
-      </li>
-      <li class="ind__i rv">
-        <span class="ind__rule" aria-hidden="true"></span>
-        <h3 class="ind__name">Medizintechnik</h3>
-      </li>
-    </ul>
+  </div>
+
+  <div class="cyl-wrap" id="cylWrap">
+    <div class="cyl-stage" id="cylStage">
+      <ul class="cyl" id="cyl">
+        <li class="cyl__c">
+          <img class="cyl__img" src="assets/img/branche-automobil.jpg" width="1200" height="1200"
+               loading="lazy" decoding="async" alt="Rohkarosserie auf einer Montagelinie im Automobilwerk">
+          <span class="cyl__veil" aria-hidden="true"></span>
+          <span class="cyl__cap">Automobil</span>
+        </li>
+        <li class="cyl__c">
+          <img class="cyl__img" src="assets/img/branche-motorsport.jpg" width="1200" height="1200"
+               loading="lazy" decoding="async" alt="Rennwagen in einer Box der Boxengasse">
+          <span class="cyl__veil" aria-hidden="true"></span>
+          <span class="cyl__cap">Motor- und Rennsport</span>
+        </li>
+        <li class="cyl__c">
+          <img class="cyl__img" src="assets/img/branche-luftfahrt.jpg" width="1200" height="1200"
+               loading="lazy" decoding="async" alt="Verkehrsflugzeug in einer Wartungshalle">
+          <span class="cyl__veil" aria-hidden="true"></span>
+          <span class="cyl__cap">Luft- und Raumfahrt</span>
+        </li>
+        <li class="cyl__c">
+          <img class="cyl__img" src="assets/img/branche-maschinenbau.jpg" width="1200" height="1200"
+               loading="lazy" decoding="async" alt="Reihe von Bearbeitungszentren in einer Produktionshalle">
+          <span class="cyl__veil" aria-hidden="true"></span>
+          <span class="cyl__cap">Maschinenbau</span>
+        </li>
+        <li class="cyl__c">
+          <img class="cyl__img" src="assets/img/branche-pruefinstitute.jpg" width="1200" height="1200"
+               loading="lazy" decoding="async" alt="Zugprüfmaschinen in einem Werkstofflabor">
+          <span class="cyl__veil" aria-hidden="true"></span>
+          <span class="cyl__cap">Prüfinstitute</span>
+        </li>
+        <li class="cyl__c">
+          <img class="cyl__img" src="assets/img/branche-medizintechnik.jpg" width="1200" height="1200"
+               loading="lazy" decoding="async" alt="Operationssaal mit Assistenzarm über dem OP-Tisch">
+          <span class="cyl__veil" aria-hidden="true"></span>
+          <span class="cyl__cap">Medizintechnik</span>
+        </li>
+      </ul>
+    </div>
   </div>
 </section>
 
@@ -1095,12 +1118,15 @@
              alt="Konstruktion am CAD-Platz: Arbeitsplatz mit zwei Bildschirmen und CAD-Modell">
       </figure>
 
+      <!-- Runde 3 (19.11.2026, Kundenwunsch): Kontaktdaten deutlich hervorgehoben,
+           als Kasten wie das Formular rechts und groesser geschrieben. Inhalt
+           unveraendert; .con__tel macht die Telefonnummer am groessten. -->
       <div class="con__meta rv">
         <div>
           <h3>Direktkontakt</h3>
           <!-- Rufnummern in der Schreibweise nach DIN 5008, ueberall gleich -->
           <ul>
-            <li>Telefon <a href="tel:+49870393310">08703 9331-0</a></li>
+            <li class="con__tel">Telefon <a href="tel:+49870393310">08703 9331-0</a></li>
             <li>Fax <span class="nb">08703 9331-90</span></li>
             <li><a href="mailto:info@walczok-gmbh.de">info@walczok-gmbh.de</a></li>
           </ul>
@@ -1423,6 +1449,6 @@
 <script src="js/vendor/ScrollTrigger.min.js"></script>
 <script src="js/vendor/SplitText.min.js"></script>
 <script src="js/vendor/lenis.min.js"></script>
-<script src="js/main.js?v=20261119"></script>
+<script src="js/main.js?v=20261119b"></script>
 </body>
 </html>

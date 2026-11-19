@@ -22,6 +22,10 @@ Ablauf je Teil:
 
 Ergebnis in assets/img/:
   marke-bolzen.svg, marke-buegel.svg  (Kopfzeile, gleiche viewBox, deckungsgleich)
+  marke-buegel-kante.svg              (19.11.2026: einfarbige Silhouette des
+                                       Buegels in der Kantenfarbe, ohne Linien;
+                                       daraus schichtet js/main.js die Dicke
+                                       der Platte beim Drehen)
   logo-mark-vektor.svg                (beides zusammen: Fusszeile, Favicons)
 Braucht: numpy, scipy, pillow; node mit puppeteer-core (siehe render.js).
 """
@@ -37,6 +41,10 @@ ZIEL = os.environ.get("ZIEL_DIR") or os.path.join(HIER, "..", "..", "assets", "i
 
 LINIE = os.environ.get("LINIE", "#1F4FD8")     # Blau der Linien
 KOERPER = os.environ.get("KOERPER", "#F3F5F8") # helle Flaechen (--fg)
+# Kantenfarbe: mittleres, helles Blau zwischen Koerper und Linie. Die
+# Stirnseite der Platte soll beim Drehen als Band sichtbar sein, sich aber vom
+# hellen Koerper und von den blauen Linien abheben.
+KANTE = os.environ.get("KANTE", "#8FA3E3")
 VB = (29.04, 60.28, 139.02, 89.82)   # Umriss der Marke im Patch + 0,6 Rand
 ACHSE_X = 86.3                       # Drehachse = Mitte Bolzen = Mitte Buegelbogen
 BOHRUNGEN = [(87.4, 138.9), (110.1, 132.3), (62.9, 132.1), (45.9, 115.0), (126.6, 115.0)]
@@ -83,7 +91,12 @@ def fuellung(pfad_svg, loecher, tmp):
     bild = Image.new("RGBA", (FUELL_B, h), hexrgb(KOERPER) + (0,)); bild.putalpha(alpha)
     bild = bild.quantize(colors=16, method=Image.Quantize.FASTOCTREE)
     buf = io.BytesIO(); bild.save(buf, "PNG", optimize=True)
-    return base64.b64encode(buf.getvalue()).decode()
+    # Silhouette fuer die Kante: Koerper plus Linien, Bohrungen bleiben offen
+    sil = Image.fromarray(((fuell | (tinte > 0.5)) * 255).astype(np.uint8)).resize((FUELL_B, h), Image.LANCZOS)
+    kante = Image.new("RGBA", (FUELL_B, h), hexrgb(KANTE) + (0,)); kante.putalpha(sil)
+    kante = kante.quantize(colors=16, method=Image.Quantize.FASTOCTREE)
+    kbuf = io.BytesIO(); kante.save(kbuf, "PNG", optimize=True)
+    return base64.b64encode(buf.getvalue()).decode(), base64.b64encode(kbuf.getvalue()).decode()
 
 
 def ebene(b64, pfad_svg):
@@ -103,11 +116,16 @@ def datei(name, inhalt, hinweis):
 
 
 with tempfile.TemporaryDirectory() as tmp:
-    eb = {}
+    eb, kanten = {}, {}
     for teil, (pf, loecher) in TEILE.items():
         ps = "\n".join(pf)
-        eb[teil] = ebene(fuellung(ps, loecher, tmp), ps)
+        b64, kanten[teil] = fuellung(ps, loecher, tmp)
+        eb[teil] = ebene(b64, ps)
 datei("marke-bolzen.svg", eb["bolzen"], "nur der Bolzen")
 datei("marke-buegel.svg", eb["buegel"], "nur der Buegel")
 datei("logo-mark-vektor.svg", eb["buegel"] + "\n" + eb["bolzen"], "ganz")
+datei("marke-buegel-kante.svg",
+      f'<image x="{VB[0]}" y="{VB[1]}" width="{VB[2]}" height="{VB[3]}" preserveAspectRatio="none" '
+      f'xlink:href="data:image/png;base64,{kanten["buegel"]}"/>',
+      f"Silhouette des Buegels in der Kantenfarbe {KANTE}, ohne Linien (Dicke beim Drehen)")
 print(f"Drehachse bei {(ACHSE_X - VB[0]) / VB[2] * 100:.2f} % der Breite")

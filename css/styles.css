@@ -45,6 +45,13 @@
      eine gebrochene Kante am Werkstueck (Optik-Check 29.09.2026, vorher 16 px
      an Karten und eckig an Knoepfen und Formular). */
   --r: 3px;
+
+  /* 3D-Zylinder der Branchen-Sektion — Werte wie in der Vorlage */
+  --cyl-total:  14;
+  --cyl-angle:  calc((360 / var(--cyl-total)) * 1deg);
+  --cyl-w:      29.6875rem;                 /* 475 px Kartenbreite */
+  --cyl-radius: -1094.7px;                  /* Rueckfall, falls sin() fehlt */
+  --cyl-radius: calc((var(--cyl-w) / sin(var(--cyl-angle))) * -1);
 }
 
 /* ---------------------------------------------------------------- 2 Reset */
@@ -254,30 +261,85 @@ a[href^="mailto:"], a[href^="tel:"] { white-space: nowrap; }
   height: calc(var(--wm-h) * 1.25); aspect-ratio: 139.02 / 89.82;
 }
 img.mark { width: auto; max-width: none; }        /* Unterseiten: ein Bild */
-/* Startseite: drei deckungsgleiche Ebenen. Der Buegel dreht um die senkrechte
-   Achse durch die Bolzenmitte (41,19 % der Breite), mit etwas Perspektive. Die
-   beiden Buegelbilder zeigen je eine Haelfte und ueberlappen an der Achse um
-   einen Hauch, damit dort keine Naht steht. Welche Haelfte vorn liegt, setzt
-   js/main.js ueber data-vorn; in Ruhe (0 Grad) ist es gleichgueltig. */
-.mark > img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; max-width: none; }
-/* Die Buegelbilder sind doppelt so gross angelegt und per scale(.5) auf die
-   Marke gebracht: der Browser zeichnet gedrehte Ebenen in ihrer Layoutgroesse
-   vor; so bleiben sie auch scharf, wenn jemand die Seite vergroessert. Die
-   Verschiebungen holen die Drehachse (41,19 % der Markenbreite,
-   halbe Hoehe) in den Ursprung; Prozentwerte beziehen sich auf das doppelt so
-   grosse Bild, deshalb die halben Zahlen. */
-.mark > .mark__b {
-  z-index: 1;
-  inset: 0 auto auto 0; width: 200%; height: 200%;
-  transform-origin: 0 0;
-  transform: translate(20.595%, 25%) perspective(calc(var(--wm-h) * 11)) rotateY(var(--dreh, 0deg))
-             translate(-20.595%, -25%) scale(.5);
+/* Startseite (Runde 3, 19.11.2026, Kunde: beim Drehen "duenn wie Papier",
+   er will ein Bauteil mit Tiefe). Im HTML steht als Rueckfall nur die ganze
+   Marke als ein Bild (.mark__flach). js/main.js baut daraus beim Start ein
+   echtes 3D-Bauteil, ausser bei reduzierter Bewegung:
+
+     .mark__raum   Perspektive, Fluchtpunkt auf der Drehachse
+       .mark__welt preserve-3d: Buegel und Bolzen liegen in EINEM 3D-Raum,
+                   der Browser sortiert sie nach Tiefe
+         .mark__dreh  der Buegel, dreht um die senkrechte Achse durch die
+                      Bolzenmitte (41,19 % der Breite) und die Mitte der
+                      Plattendicke
+           .mark__s   23 Schichten von z = 0 (Vorderseite) bis -dicke
+                      (Rueckseite), je als linke und rechte Haelfte. Vorder- und
+                      Rueckseite zeigen das normale Bild, die Schichten
+                      dazwischen die einfarbige Silhouette in der Kantenfarbe
+                      (marke-buegel-kante.svg): beim Drehen ergibt das ein
+                      durchgehendes Band als Plattenkante. Abstand der
+                      Schichten unter 0,5 px.
+         .mark__z     der Bolzen, flach, in der Mitte der Plattendicke
+         .mark__kante die Platte genau seitlich (90/270 Grad), wo jede
+                      Schicht unendlich duenn ist; nur dort sichtbar.
+
+   Die Haelften (clip-path wie bisher, an der Achse um einen Hauch
+   ueberlappend) bleiben, damit die Tiefe gegen den Bolzen auch in Browsern
+   stimmt, die sich schneidende Flaechen nicht teilen. Keine Eigenschaft, die
+   preserve-3d abflacht (overflow, opacity, filter, clip-path, mask), auf
+   .mark__welt und .mark__dreh; clip-path und opacity nur auf den Blaettern.
+   In Ruhe (0 Grad) steht die Vorderseite bei z = 0 und damit exakt so gross
+   wie das flache Bild; der Bolzen liegt bei -dicke/2 und wird um genau den
+   Faktor vergroessert, den die Perspektive ihm nimmt (1 + dicke/2/p). */
+.mark {
+  --dicke: calc(var(--wm-h) * .18);
+  --p: calc(var(--wm-h) * 11);
+  /* Kantenfarbe, gleich wie in marke-buegel-kante.svg (tools/logo-vektor) */
+  --mark-kante: #8FA3E3;
 }
-.mark__b--l { clip-path: inset(0 58.5% 0 0); }
-.mark__b--r { clip-path: inset(0 0 0 40.9%); }
-.mark__z { z-index: 2; }
-.mark[data-vorn="l"] .mark__b--l,
-.mark[data-vorn="r"] .mark__b--r { z-index: 3; }
+.mark img { display: block; max-width: none; }
+.mark__flach, .mark__raum, .mark__welt, .mark__dreh, .mark__s, .mark__z {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+}
+.mark__raum { perspective: var(--p); perspective-origin: 41.19% 50%; }
+.mark__welt, .mark__dreh { transform-style: preserve-3d; }
+.mark__dreh {
+  transform-origin: 41.19% 50% calc(var(--dicke) * -.5);
+  transform: rotateY(var(--dreh, 0deg));
+}
+/* Die Schicht i sitzt bei translateZ(-dicke * i / n); --i und --n setzt
+   main.js (n = 22 Abstaende, also unter 0,5 px bei der groessten Marke: mit
+   11 Abstaenden zeigte das Band bei 85 Grad noch feine Streifen). */
+.mark__s { transform: translateZ(calc(var(--dicke) * var(--i, 0) / var(--n, 22) * -1)); }
+.mark__s--l { clip-path: inset(0 58.5% 0 0); }
+.mark__s--r { clip-path: inset(0 0 0 40.9%); }
+.mark__z {
+  transform-origin: 41.19% 50%;
+  transform: translateZ(calc(var(--dicke) * -.5)) scale(calc(1 + .5 * .18 / 11));
+}
+/* Stirnseite fuer genau seitlich (90/270 Grad): Dort sind alle Schichten
+   reine Kanten. Sichtbar ist dann der Buegel als Band, so breit wie die Platte
+   dick ist und so hoch wie der Buegel (Oberkante der Messflaechen bei 22,7 %
+   bis zum Bogen unten), an der Achse. Es liegt knapp VOR dem Bolzen: die zum
+   Betrachter gedrehte Haelfte steht vor ihm, so sieht es auch bei 85 Grad
+   aus, wo die Schichten das Band noch selbst bilden; ohne Sprung beim
+   Uebergang. Deckkraft setzt main.js aus |sin| (erst ab rund 83 Grad, voll ab
+   rund 88 Grad); sonst stuende sie bei mittleren Winkeln als Balken in der
+   Oeffnung des Buegels. */
+.mark__kante {
+  position: absolute; top: 22.7%; bottom: 0;
+  left: calc(41.19% - var(--dicke) * .5); width: var(--dicke);
+  background: var(--mark-kante);
+  border-radius: 0 0 2px 2px;
+  opacity: var(--kante, 0);
+  transform: translateZ(calc(var(--dicke) * -.5 + 1px));
+}
+/* In Ruhe nur die Vorderseite: keine Kantenfarbe am Rand der Linien. */
+.mark.is-ruhe .mark__s:not(.mark__s--vorn) { visibility: hidden; }
+/* Genau seitlich (bis rund 2 Grad um 90/270) sind alle Schichten nur noch
+   Kanten und zeichnen haarfeine helle Striche ueber den Bolzen; dort steht
+   allein die Stirnseite (.is-seitlich setzt main.js). */
+.mark.is-seitlich .mark__s { visibility: hidden; }
 
 .brand__wm { display: block; flex: none; height: var(--wm-h); width: auto; max-width: none; }
 
@@ -578,38 +640,108 @@ img.mark { width: auto; max-width: none; }        /* Unterseiten: ein Bild */
   .lsr__f:nth-of-type(2), .lsr__f:nth-of-type(3) { grid-column: 1 / -1; }
 }
 
-/* ------------------------------------------------------- 8b Branchen
-   19.11.2026: statt des 3D-Rings mit Branchenbildern eine ruhige Reihe aus
-   Namen. Je Eintrag eine feine Akzentlinie oben (wie .adv__rule, zieht sich
-   per main.js auf), darunter der Name in der Display-Schrift. 3 x 2 am
-   Desktop, 2 x 3 am Tablet und Handy, einspaltig unter 380 px. */
+/* ------------------------------------------------------- 8b Branchen (3D) */
+/* Grundzustand ist ein schlichtes Raster. Der Zylinder wird erst gebaut, wenn
+   GSAP geladen ist, die Bewegung erlaubt ist und die Breite >= 768 px liegt
+   (Klasse .gsap-cyl am <html>). Ohne das bleibt die Sektion ein Raster. */
+/* Oben und unten gleich tief: unten klebte die Trennlinie zur Karriere sonst
+   52 px unter dem Zylinder. */
 .sec--ind { padding-block: clamp(64px, 7vw, 112px); }
-.ind {
+
+.cyl-wrap { position: relative; width: 100%; perspective-origin: 50% center; transform-origin: 50% center; }
+.cyl-stage { position: relative; z-index: 1; padding-inline: var(--gut); }
+
+.cyl {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(28px, 3vw, 48px) clamp(22px, 2.6vw, 44px);
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(14px, 1.8vw, 28px);
+  max-width: var(--wrap);
+  margin-inline: auto;
 }
-.ind__i { position: relative; padding-top: 22px; }
-.ind__rule {
-  position: absolute; top: 0; left: 0; right: 0;
-  height: 1px; background: var(--accent);
-  transform-origin: left center;
+.cyl__c {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1 / 1;
+  background: var(--surface);
+  border-radius: var(--r);
 }
-.ind__name {
-  margin: 0;
+.cyl__c[data-empty] { display: none; }
+.cyl__img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; }
+/* Im Zylinder bleibt die Beschriftung auf dem Bild (darunter wuerde sie die
+   quadratischen Ringkarten brechen). Der Verlauf ist dafuer kurz und leicht,
+   ein weicher Schatten traegt die Schrift (Optik-Check 29.09.2026).
+   19.11.2026: Der Verlauf traegt nur noch die Beschriftung im unteren
+   Fuenftel, der Rest des Bildes bleibt frei. */
+.cyl__veil {
+  position: absolute; inset: 0; z-index: 2;
+  background-image: linear-gradient(rgba(6, 7, 10, 0) 78%, rgba(6, 7, 10, .45) 100%);
+}
+.cyl__cap {
+  position: absolute; left: 0; bottom: 0; z-index: 3;
+  padding: 20px clamp(18px, 1.8vw, 28px);
   font-family: var(--ff-dis);
   font-weight: 600;
-  font-size: clamp(1.35rem, 1.2vw + 1rem, 2rem);
-  line-height: 1.12;
-  letter-spacing: -.018em;
+  font-size: clamp(1.05rem, .8vw + .86rem, 1.45rem);
+  letter-spacing: .06em;
+  text-transform: uppercase;
   color: var(--fg);
-  text-wrap: balance;
+  text-shadow: 0 1px 14px rgba(6, 7, 10, .55);
 }
-@media (max-width: 980px) {
-  .ind { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+/* Als Raster (Handy, ohne GSAP, reduzierte Bewegung) steht die Beschriftung
+   wie ueberall unter dem Bild, ohne Verlauf. */
+:root:not(.gsap-cyl) .cyl__c { overflow: visible; aspect-ratio: auto; background: none; border-radius: 0; }
+:root:not(.gsap-cyl) .cyl__img {
+  position: static; height: auto; aspect-ratio: 1 / 1;
+  border-radius: var(--r); background: var(--surface);
 }
-@media (max-width: 379px) {
-  .ind { grid-template-columns: minmax(0, 1fr); }
+:root:not(.gsap-cyl) .cyl__veil { display: none; }
+:root:not(.gsap-cyl) .cyl__cap {
+  position: static; display: block;
+  padding: 12px 0 0;
+  font-size: clamp(.98rem, .5vw + .85rem, 1.15rem);
+  text-shadow: none;
+}
+
+/* --- Zylinderzustand ------------------------------------------------------ */
+/* Der Rahmen ist genau so hoch wie der Ring. Frueher war er doppelt so hoch,
+   damit der Ring nach unten fahren konnte — das liess einen leeren Block
+   stehen. Der Ring dreht jetzt nur noch. Hoehe ueber CSS, damit sie beim
+   Breitenwechsel mitgeht. */
+/* overflow-x:clip statt hidden — clip erlaubt als einziger Wert weiterhin
+   overflow-y:visible, der Ring darf also oben und unten aus dem Rahmen ragen,
+   erzeugt seitlich aber keine Scrollbreite. */
+.gsap-cyl .cyl-wrap { height: var(--cyl-w); overflow-x: clip; overflow-y: visible; }
+/* An den Fensterraendern laufen die Karten weich aus, statt die Beschriftung
+   mitten im Wort hart abzuschneiden. */
+.gsap-cyl .cyl-wrap {
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
+          mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
+}
+.gsap-cyl .cyl-stage {
+  padding-inline: 0;
+  perspective: 5000px;
+  display: flex; justify-content: center; align-items: center;
+}
+.gsap-cyl .cyl {
+  display: block;
+  position: relative;
+  width: var(--cyl-w); height: var(--cyl-w);
+  max-width: none; margin: 0;
+  transform-style: preserve-3d;
+  transform: translate3d(0, 0, var(--cyl-radius)) rotateY(-102deg);
+}
+.gsap-cyl .cyl__c {
+  position: absolute; inset: 0;
+  width: var(--cyl-w); height: var(--cyl-w);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: rotateY(calc(var(--cyl-angle) * var(--index))) translate3d(0, 0, calc(var(--cyl-radius) * -1));
+}
+.gsap-cyl .cyl__c[data-empty] { display: block; background: none; pointer-events: none; }
+/* Bild groesser als die Karte, damit die Gegenbewegung keine Kanten zeigt */
+.gsap-cyl .cyl__img {
+  inset: -100px 0 0 -100px;
+  width: calc(100% + 200px); height: calc(100% + 200px);
 }
 
 /* ------------------------------------------------ 8c Eigenentwicklungen
@@ -968,18 +1100,38 @@ img.mark { width: auto; max-width: none; }        /* Unterseiten: ein Bild */
 .con__l { grid-column: 1; grid-row: 2; }
 .con > .form { grid-column: 2; grid-row: 2; }
 .con__img { aspect-ratio: 16 / 10; }
-/* Seit 19.11.2026 ein Teil auf weissem Tuch (16:10, mittig). */
+/* Seit 19.11.2026 der CAD-Arbeitsplatz (16:10). */
+/* Kontaktdaten (Runde 3, 19.11.2026, Kundenwunsch: "hervorgehoben, in einer
+   Box und groesser"). Kasten wie das Formular rechts: Flaeche, feine Linie,
+   3 px Rundung, gleicher Innenabstand. Werte 18 px in hellem Weiss, die
+   Telefonnummer 23 px halbfett in der Display-Schrift, die E-Mail als
+   blauer Link. Kontrast auf --surface (#2F353E), gerechnet: Werte 11,3:1,
+   Etiketten 7,7:1, E-Mail-Link 5,9:1. */
 .con__meta {
-  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px;
-  margin-top: clamp(32px, 3.4vw, 48px);
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px clamp(24px, 2.6vw, 40px);
+  margin-top: clamp(28px, 3vw, 40px);
+  padding: clamp(24px, 2.6vw, 40px);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
 }
-.con__meta h3 { margin: 0 0 10px; }
+.con__meta h3 { margin: 0 0 10px; font-size: 15px; color: var(--fg-dim); }
 /* Abstand vor jedem weiteren Etikett einer Spalte (zwischen den h3 steht die
    Adresse, deshalb griff h3 + h3 nie). */
-.con__meta * + h3 { margin-top: 22px; }
-.con__meta li, .con__meta address, .con__meta p { margin: 0 0 6px; font-size: .96rem; color: var(--fg-dim); }
+.con__meta * + h3 { margin-top: 26px; }
+.con__meta li, .con__meta address, .con__meta p { margin: 0 0 8px; font-size: 1.125rem; line-height: 1.6; color: var(--fg); }
 .con__meta a { color: var(--fg); border-bottom: 1px solid var(--line-2); transition: color .25s var(--ease), border-color .25s var(--ease); }
 .con__meta a:hover { color: var(--accent-hi); border-bottom-color: var(--accent-hi); }
+/* Telefon am groessten und kraeftig; das Wort "Telefon" bleibt in Textgroesse
+   davor auf derselben Grundlinie. */
+.con__meta .con__tel { margin-bottom: 10px; }
+.con__meta .con__tel a {
+  font-family: var(--ff-dis); font-weight: 600;
+  font-size: clamp(1.32rem, .5vw + 1.15rem, 1.45rem);
+  letter-spacing: -.005em;
+}
+.con__meta a[href^="mailto:"] { color: var(--accent-hi); border-bottom-color: rgba(154, 176, 255, .5); }
+.con__meta a[href^="mailto:"]:hover { color: var(--fg); border-bottom-color: var(--fg); }
 
 /* Formular ----------------------------------------------------------------- */
 .form {
@@ -1099,20 +1251,20 @@ img.mark { width: auto; max-width: none; }        /* Unterseiten: ein Bild */
 .gsap .hero__sub,
 .gsap .hero__act { opacity: 0; }
 .gsap .hero__h1 { opacity: 0; }
-.gsap .adv__rule, .gsap .ind__rule { transform: scaleX(0); }
+.gsap .adv__rule { transform: scaleX(0); }
 /* Bildschieber: .wipe setzt main.js nur auf die Boxen, die es auch oeffnet,
    und nimmt die Klasse danach wieder ab. Das Bild darin bleibt unberuehrt. */
 .gsap .wipe { clip-path: inset(0 0 100% 0); }
 
 .no-anim .hero__kicker, .no-anim .hero__sub, .no-anim .hero__act,
 .no-anim .hero__h1 { opacity: 1 !important; }
-.no-anim .adv__rule, .no-anim .ind__rule { transform: none !important; }
+.no-anim .adv__rule { transform: none !important; }
 .no-anim .wipe { clip-path: none !important; }
 
 @media (prefers-reduced-motion: reduce) {
   .gsap .hero__kicker, .gsap .hero__sub, .gsap .hero__act,
   .gsap .hero__h1 { opacity: 1 !important; }
-  .gsap .adv__rule, .gsap .ind__rule { transform: none !important; }
+  .gsap .adv__rule { transform: none !important; }
   .gsap .wipe { clip-path: none !important; }
   * { animation-duration: .001ms !important; transition-duration: .001ms !important; }
 }
@@ -1184,6 +1336,16 @@ img.mark { width: auto; max-width: none; }        /* Unterseiten: ein Bild */
   .own__step:last-child .arrow { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(16px, 2vw, 32px); }
 }
 
+/* Auf schmalen Desktops waeren 475-px-Karten zu gross fuer den Ausschnitt —
+   der Ring wird kleiner, der Radius rechnet sich mit. Die 25-rem-Stufe reicht
+   bis 1366 px: bei 1280 passten sonst nur zweieinhalb Karten ins Bild. */
+@media (min-width: 768px) and (max-width: 1023px) {
+  :root { --cyl-w: 21rem; }
+}
+@media (min-width: 1024px) and (max-width: 1366px) {
+  :root { --cyl-w: 25rem; }
+}
+
 @media (max-width: 980px) {
   :root { --hh: 84px; }
   .brand { --wm-h: 44px; }                    /* Marke 55 px in 84-px-Kopfzeile */
@@ -1224,6 +1386,7 @@ img.mark { width: auto; max-width: none; }        /* Unterseiten: ein Bild */
 
 @media (max-width: 760px) {
   .ref { grid-template-columns: repeat(2, 1fr); }
+  .cyl { grid-template-columns: repeat(2, 1fr); }
   .con__meta { grid-template-columns: 1fr; }
   .form { grid-template-columns: minmax(0, 1fr); }
 }
@@ -1270,6 +1433,10 @@ img.mark { width: auto; max-width: none; }        /* Unterseiten: ein Bild */
   /* Die Referenzen bleiben auch auf dem Handy zweispaltig. Einspaltig waren
      sechs quadratische Kacheln allein gut 2000 px lang. */
   .ref__i figcaption { padding-top: 8px; font-size: 13px; }
+  /* Einspaltig, aber im Querformat — sonst wird die Sektion auf dem Handy
+     unverhaeltnismaessig lang (wie im Original). */
+  .cyl { grid-template-columns: minmax(0, 1fr); }
+  :root:not(.gsap-cyl) .cyl__img { aspect-ratio: 4 / 3; }
   .btn--lg { width: 100%; }
 }
 

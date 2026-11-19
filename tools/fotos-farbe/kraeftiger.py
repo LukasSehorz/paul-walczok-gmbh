@@ -7,16 +7,16 @@ Bilder sehen aus, als waere ein Filter drauf, alles wirkt leblos." Seitdem
 stehen fast ueberall echte Fotos vom Termin vor Ort (tools/fotos-vor-ort/,
 ohne Farbtrick). Die Fotos hier bleiben, weil es dafuer noch keinen Ersatz
 gibt: Lichtmaschinenhalter vorher/nachher, die sechs Referenzteile und die
-sechs Branchenbilder (Stand vor Korrekturrunde 1; seitdem bleiben nur noch
-Lichtmaschinenhalter, Titan und Motorsport). Sie werden
-jetzt zurueckhaltend und natuerlich
+sechs Branchenbilder (Riemenrad, Baugruppe, Zahnrad und Bremsscheibentopf sind
+inzwischen entfallen). Sie werden jetzt zurueckhaltend und natuerlich
 eingestellt, damit sie neben den neuen Fotos nicht kuenstlich wirken:
 Lebendigkeit hoechstens 0,6, Kontrast 1,03, keine Aufhellung per Gamma.
 
-Die Einstellung BRANCHE (Gamma und halber Farbstich-Ausgleich) war fuer die
-dunklen, blaustichigen Branchenbilder; sie sind am 19.11.2026 von der Seite
-entfallen. Die Einstellung bleibt fuer den Fall, dass wieder ein dunkles,
-farbstichiges Altfoto bearbeitet werden muss.
+Ausnahme Branchenbilder: Sie sind sehr dunkel (Mittelwert um 40 von 255) und
+deutlich blaustichig. Dort hebt ein Gamma die Mitten moderat an, und der
+Blaustich wird zur Haelfte neutralisiert (Kanalmittel von Rot und Blau halb
+an Gruen angeglichen). Schwarz bleibt schwarz, es wird keine Farbe erfunden.
+(Kurz entfallen in Korrekturrunde 1, auf Kundenwunsch am 19.11.2026 zurueck.)
 
 Methode "Lebendigkeit" statt pauschaler Saettigung: blasse Farben gewinnen,
 schon kraeftige kaum. Grauwerte bleiben grau.
@@ -38,15 +38,17 @@ QUALITAET = 86
 # Foto -> (Lebendigkeit, Kontrast, Gamma, Anteil Farbstich-Ausgleich)
 # Gamma unter 1 hebt die Mitten an; 1.0 = keine Aufhellung.
 NATUERLICH = (0.6, 1.03, 1.00, 0.0)
-BRANCHE    = (0.4, 1.03, 0.78, 0.5)
+BRANCHE    = (0.4, 1.03, 0.72, 0.5)   # Runde 3: Gamma 0,78 -> 0,72, etwas heller
 
-# Alle aelteren Fotos, die eine Seite noch zeigt (Korrekturrunde 1, 19.11.2026:
-# Branchenbilder, Riemenrad, Komplettbaugruppe, Zahnrad und Bremsscheibentopf
-# sind entfallen).
+# Alle aelteren Fotos, die eine Seite noch zeigt (Stand 19.11.2026, Runde 3:
+# die Branchenbilder sind auf Kundenwunsch zurueck; Riemenrad, Komplett-
+# baugruppe, Zahnrad und Bremsscheibentopf bleiben entfallen).
 FOTOS = {
     "ref-lima-vorher": NATUERLICH, "ref-lima-nachher": NATUERLICH,
-    "ref-titan-q": NATUERLICH,
-    "ref-motorsport-2": NATUERLICH,
+    "ref-titan-q": NATUERLICH, "ref-motorsport-2": NATUERLICH,
+    "branche-automobil": BRANCHE, "branche-motorsport": BRANCHE,
+    "branche-luftfahrt": BRANCHE, "branche-maschinenbau": BRANCHE,
+    "branche-pruefinstitute": BRANCHE, "branche-medizintechnik": BRANCHE,
 }
 
 WURZEL = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
