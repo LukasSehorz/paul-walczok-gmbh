@@ -1,0 +1,9 @@
+Photo edit (uncrop / zoom out), product photography. Image 1 is a real photo, rotated so the parts stand correctly. In its centre is the original photo; around it is a flat blue placeholder border that must be replaced.
+
+On the blue corrugated plastic surface lie two parts:
+- left: a crude black-painted welded steel prototype (a flat black plate with four holes and a welded black bracket rising upward with a hole near its top end; weld beads visible),
+- right: a machined aluminium bracket (same aluminium part as image 2 shows from another angle).
+
+Task: zoom out so that BOTH parts are completely visible with some margin of blue surface around them. Keep every visible part of the original photo exactly unchanged: same parts, same shapes, same holes, same colours, same reflections, same camera angle, same lighting. Only continue what is cut off at the image edges, consistent with the visible parts and with image 2 for the aluminium bracket. Continue the same blue corrugated plastic surface and lighting seamlessly into the border.
+
+No text, no logo, no new objects, no change to the parts' design. Photorealistic, natural colours, no filter look.

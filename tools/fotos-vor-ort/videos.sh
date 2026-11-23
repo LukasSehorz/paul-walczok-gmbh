@@ -7,11 +7,10 @@
 # abspielt. Farbe unveraendert: kein Filter, keine Saettigung (Kundenwunsch
 # "natuerlich, nicht wie mit Filter").
 #
-#   vo-hero.mp4 / vo-hero-mobile.mp4   Clip 0184, Schwenk von der Galerie ueber
-#       die Halle, 0,5 bis 9,5 s. Fuer eine Schleife ohne Sprung laeuft der
-#       Schwenk vorwaerts und danach rueckwaerts (18 s). Bei einem ruhigen
-#       Kameraschwenk faellt die Umkehr nicht auf. Ziel <= 4 MB.
-#   hero-poster.jpg                    erstes Bild davon (auch og:image).
+#   (Bis 23.11.2026 erzeugte das Skript auch einen Hero-Film aus Clip 0184.
+#   Lukas wollte wieder den urspruenglichen Film hero.mp4; die Hero-Zeilen
+#   sind deshalb entfernt, siehe Git-Verlauf d542f12. hero-poster.jpg gehoert
+#   wieder zum alten Film und darf hier nicht ueberschrieben werden.)
 #   vo-laser.mp4                       Clip 0219, 14 bis 27,8 s: Mitarbeiter am
 #       Mikroskop, Schweisslicht am Werkstueck, nahtlos geschlossen (13 s).
 #       1280x720, Ziel <= 2,5 MB.
@@ -30,16 +29,6 @@ V=$T I=$T
 src() { print -r -- "$Q"/DJI_*_${1}_D.MP4 }
 FF=(ffmpeg -v error -y)
 H264=(-c:v libx264 -preset slow -pix_fmt yuv420p -profile:v high -movflags +faststart -an)
-
-# Hero, vorwaerts + rueckwaerts. Erst verkleinern, dann umkehren (reverse puffert alle Bilder).
-hero() {   # $1 Breite, $2 CRF, $3 Ziel
-  "${FF[@]}" -ss 0.5 -t 9 -i "$(src 0184)" -filter_complex \
-    "[0:v]fps=25,scale=$1:-2:flags=lanczos,format=yuv420p,split[a][b];[b]reverse[r];[a][r]concat=n=2:v=1:a=0[v]" \
-    -map "[v]" "${H264[@]}" -crf $2 -g 50 "$3"
-}
-hero 1920 31 $V/vo-hero.mp4
-hero 1280 30 $V/vo-hero-mobile.mp4
-"${FF[@]}" -ss 0.5 -i "$(src 0184)" -frames:v 1 -vf "scale=1920:-2:flags=lanczos" -q:v 4 $I/hero-poster.jpg
 
 # Laserschweissen, nahtlose Schleife (Korrekturrunde 1): Quelle 14,0 bis
 # 27,8 s. Der Film ist 13 s lang; in den ersten 0,8 s wird das Ende der
@@ -61,10 +50,10 @@ L=13; D=0.8
 "${FF[@]}" -ss 9.5 -i "$(src 0218)" -frames:v 1 \
   -vf "crop=1440:1080:336:0,scale=1200:900:flags=lanczos,unsharp=5:5:0.4" -q:v 3 $I/vo-laser-mitarbeiter.jpg
 
-cp $T/vo-hero.mp4 $T/vo-hero-mobile.mp4 $T/vo-laser.mp4 assets/video/
-cp $T/hero-poster.jpg $T/vo-laser-poster.jpg $T/vo-laser-mitarbeiter.jpg assets/img/
+cp $T/vo-laser.mp4 assets/video/
+cp $T/vo-laser-poster.jpg $T/vo-laser-mitarbeiter.jpg assets/img/
 rm -rf $T
-for f in assets/video/vo-hero.mp4 assets/video/vo-hero-mobile.mp4 assets/video/vo-laser.mp4 \
-         assets/img/hero-poster.jpg assets/img/vo-laser-poster.jpg assets/img/vo-laser-mitarbeiter.jpg; do
+for f in assets/video/vo-laser.mp4 \
+         assets/img/vo-laser-poster.jpg assets/img/vo-laser-mitarbeiter.jpg; do
   printf '%-38s %6d kB\n' $f $(( $(stat -f %z $f) / 1024 ))
 done

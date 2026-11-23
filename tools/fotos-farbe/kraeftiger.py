@@ -43,6 +43,9 @@ BRANCHE    = (0.4, 1.03, 0.72, 0.5)   # Runde 3: Gamma 0,78 -> 0,72, etwas helle
 # Alle aelteren Fotos, die eine Seite noch zeigt (Stand 19.11.2026, Runde 3:
 # die Branchenbilder sind auf Kundenwunsch zurueck; Riemenrad, Komplett-
 # baugruppe, Zahnrad und Bremsscheibentopf bleiben entfallen).
+# 23.11.2026: ref-lima-*, ref-titan-q und ref-motorsport-2 zeigt die Seite nicht
+# mehr (ersetzt durch die KI-Fassungen ki-ref-*.jpg mit blauem Grund). Die
+# Eintraege bleiben, falls die Originale wieder gebraucht werden.
 FOTOS = {
     "ref-lima-vorher": NATUERLICH, "ref-lima-nachher": NATUERLICH,
     "ref-titan-q": NATUERLICH, "ref-motorsport-2": NATUERLICH,

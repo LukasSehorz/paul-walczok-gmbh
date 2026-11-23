@@ -151,6 +151,7 @@
   initGal();
   initJobs();
   initFilme();
+  initHintergrundfilme();
 
   /* ============================================================== LOGO ==
      DREHUNG. Die Bildmarke besteht aus Buegel und Bolzen (Vektordatei des
@@ -588,6 +589,26 @@
           beschriften();
         });
       }
+    });
+  }
+
+  /* ===================================================== HINTERGRUNDFILME ==
+     23.11.2026: Hallenschwenk hinter den Kennzahlen (video[data-bgfilm]).
+     Reine Stimmung ohne Inhalt, deshalb ohne Bedienknopf: laeuft stumm in
+     Schleife, nur solange er im Bild ist (preload="none" laedt erst dann).
+     Bei reduzierter Bewegung oder ohne IntersectionObserver startet er nie,
+     dann bleibt das Standbild (poster) stehen. */
+  function initHintergrundfilme() {
+    if (reduce || !('IntersectionObserver' in window)) return;
+    Array.prototype.forEach.call(document.querySelectorAll('video[data-bgfilm]'), function (v) {
+      new IntersectionObserver(function (eintraege) {
+        eintraege.forEach(function (e) {
+          if (e.isIntersecting) {
+            var p = v.play();
+            if (p && typeof p.catch === 'function') p.catch(function () {});
+          } else if (!v.paused) v.pause();
+        });
+      }, { threshold: 0.1 }).observe(v);
     });
   }
 

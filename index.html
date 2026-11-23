@@ -31,7 +31,7 @@
 <link rel="preload" as="font" type="font/woff2" href="fonts/xn7gYHE41ni1AdIRggexSg.woff2" crossorigin>
 <link rel="stylesheet" href="fonts/fonts.css?v=20261009">
 <link rel="preload" as="image" href="assets/img/hero-poster.jpg" fetchpriority="high">
-<link rel="stylesheet" href="css/styles.css?v=20261119b">
+<link rel="stylesheet" href="css/styles.css?v=20261123">
 
 <!-- Die versteckten Startzustaende haengen an `.gsap`; die Klasse wird erst gesetzt,
      wenn der GSAP-Stack nachweislich geladen ist. Faellt eine Vendor-Datei aus,
@@ -102,7 +102,7 @@
              Schriftzug". -->
         <span class="mark" id="mark" aria-hidden="true"
               data-buegel="assets/img/marke-buegel.svg?v=20261113c"
-              data-kante="assets/img/marke-buegel-kante.svg?v=20261119b"
+              data-kante="assets/img/marke-buegel-kante.svg?v=20261123"
               data-bolzen="assets/img/marke-bolzen.svg?v=20261113c">
           <img class="mark__flach" src="assets/img/logo-mark-vektor.svg?v=20261113c" width="139" height="90" alt="" decoding="async">
         </span>
@@ -143,15 +143,11 @@
 <!-- ═══════════════════════ 1 · HERO ═══════════════════════ -->
 <section class="hero" aria-labelledby="heroH1">
   <div class="hero__media" aria-hidden="true">
-    <!-- 19.11.2026: Der Kunde fand den bisherigen Film (Zerspanung in
-         Nahaufnahme, fast grau) leblos. Jetzt ein echter Schwenk von der
-         Galerie ueber die eigene Halle (Termin vor Ort 18.11., Clip 0184,
-         vorwaerts und rueckwaerts als nahtlose Schleife, siehe
-         tools/fotos-vor-ort/videos.sh). hero-poster.jpg ist das erste Bild
-         davon; das alte Standbild liegt als hero-poster-alt.jpg.
-         RUECKWEG mit einer Zeile: die Zeile <video ...> unten durch diese ersetzen
-         <video id="heroVideo" poster="assets/img/hero-poster-alt.jpg" autoplay muted loop playsinline preload="metadata"><source src="assets/video/hero-mobile.mp4" type="video/mp4" media="(max-width: 700px)"><source src="assets/video/hero.mp4" type="video/mp4"></video> -->
-    <video id="heroVideo" poster="assets/img/hero-poster.jpg" autoplay muted loop playsinline preload="metadata"><source src="assets/video/vo-hero-mobile.mp4" type="video/mp4" media="(max-width: 700px)"><source src="assets/video/vo-hero.mp4" type="video/mp4"></video>
+    <!-- Hero-Film: Zerspanung in Nahaufnahme (hero.mp4). Vom 19. bis 23.11.2026
+         lief hier ein Hallenschwenk vom Termin vor Ort; Lukas wollte am 23.11.
+         wieder den ursprünglichen Film. Der Schwenk steht im Git-Verlauf
+         (Commit d542f12, assets/video/vo-hero*.mp4). -->
+    <video id="heroVideo" poster="assets/img/hero-poster.jpg" autoplay muted loop playsinline preload="metadata"><source src="assets/video/hero-mobile.mp4" type="video/mp4" media="(max-width: 700px)"><source src="assets/video/hero.mp4" type="video/mp4"></video>
   </div>
   <div class="hero__veil" aria-hidden="true"></div>
 
@@ -633,8 +629,11 @@
      geliefert hat, ebenso die Zertifikate. Angaben vom Kunden nachfordern. -->
 <section class="stats" aria-label="Zahlen und Kapazitäten">
   <div class="stats__bg" aria-hidden="true">
-    <!-- 19.11.2026: weite Hallenansicht vom Termin vor Ort (Foto 0188) -->
-    <img src="assets/img/vo-halle-weit.jpg" width="1920" height="1080" loading="lazy" decoding="async" alt="">
+    <!-- 23.11.2026 (Lukas): Hallenschwenk vom Termin vor Ort, stand vom 19. bis
+         23.11. im Hero. Laeuft stumm in Schleife, nur solange er im Bild ist
+         (js/main.js, initHintergrundfilme). Bei reduzierter Bewegung bleibt das
+         Standbild stehen. Vorher stand hier das Foto 0188 (vo-halle-weit.jpg). -->
+    <video data-bgfilm poster="assets/img/vo-halle-poster.jpg" muted loop playsinline preload="none" tabindex="-1"><source src="assets/video/vo-halle-mobile.mp4" type="video/mp4" media="(max-width: 700px)"><source src="assets/video/vo-halle.mp4" type="video/mp4"></video>
   </div>
   <div class="wrap stats__in">
     <!-- Keine Zahl wird hochgezaehlt: waehrend des Zaehlens stuenden sonst
@@ -668,8 +667,52 @@
     <div class="head head--split rv">
       <p class="kicker">Referenzen</p>
       <h2 class="h2" id="refH">Aus unserer Fertigung</h2>
-      <p class="lead">Bauteile für Automobil, Luft- und Raumfahrt, Medizintechnik, Maschinenbau und Motorsport. Jedes davon nach Zeichnung oder Muster gefertigt, gemessen und freigegeben. Kundennamen nennen wir nicht.</p>
+      <p class="lead">Bauteile für Automobil, Luft- und Raumfahrt, Medizintechnik, Maschinenbau und Motorsport. Jedes davon nach Zeichnung oder Muster gefertigt, gemessen und freigegeben. Kundennamen nennen wir nur mit Freigabe.</p>
     </div>
+
+    <!-- 23.11.2026 (Lukas): Lasertargets von PPS, prominent als erste Referenz.
+         Laut Lukas hat Paul Walczok das Gehaeuse komplett konstruiert,
+         entwickelt und gebaut. Produktfotos von PPS (freigestellt, Downloads
+         "Fotos_Lasertarget"), Produktnamen aus den Dateinamen, Firmenangaben
+         von pps-muc.de. Vorher stand im Lead "Kundennamen nennen wir nicht".
+         nachfordern: Produkterklaerung von Lukas (kommt noch), Freigabe von PPS
+         fuer Namen, Logo und Fotos, Einsatzzweck und Stueckzahl in eigenen Worten. -->
+    <article class="lt rv" aria-labelledby="ltH">
+      <div class="lt__txt">
+        <p class="kicker">Referenz · Gehäusebau</p>
+        <h3 id="ltH">Lasertargets für Tunnelbohrmaschinen: das Gehäuse kommt von uns</h3>
+        <p>PPS Poltinger Precision Systems aus Feldkirchen baut Lasertargets und Steuersysteme für Tunnelbohrmaschinen. Das Gehäuse der Baureihe RED ELT haben wir komplett übernommen: von A bis Z konstruiert, entwickelt und gefertigt.</p>
+        <ul class="lt__facts" aria-label="Unser Anteil">
+          <li>Konstruktion</li>
+          <li>Entwicklung</li>
+          <li>Fertigung</li>
+        </ul>
+        <a class="lt__link" href="https://www.pps-muc.de/" target="_blank" rel="noopener">pps-muc.de</a>
+      </div>
+      <ul class="lt__imgs">
+        <li>
+          <figure>
+            <img src="assets/img/pps-red-elt.webp" width="1000" height="924" loading="lazy" decoding="async"
+                 alt="Rotes Gehäuse des Lasertargets RED ELT mit Griff und großem Sichtfenster">
+            <figcaption>RED ELT</figcaption>
+          </figure>
+        </li>
+        <li>
+          <figure>
+            <img src="assets/img/pps-red-elt-mini.webp" width="1000" height="781" loading="lazy" decoding="async"
+                 alt="Rotes Gehäuse des Lasertargets RED ELT mini mit Griff">
+            <figcaption>RED ELT mini</figcaption>
+          </figure>
+        </li>
+        <li>
+          <figure>
+            <img src="assets/img/pps-red-elt-nano.webp" width="1000" height="816" loading="lazy" decoding="async"
+                 alt="Schmales, langes rotes Gehäuse des Lasertargets RED ELT Nano">
+            <figcaption>RED ELT Nano</figcaption>
+          </figure>
+        </li>
+      </ul>
+    </article>
 
     <!-- Von der Maschine zum fertigen Teil (19.11.2026). Je Verfahren die
          eigene Maschine und ein Teil vom Termin vor Ort (18.11.), Ausschnitte
@@ -784,29 +827,60 @@
          Kundenhinweis 29.09.2026: Die Teile sollen komplett zu sehen sein. Die
          Bilder stehen deshalb im eigenen Seitenverhaeltnis (kein Zuschnitt) und
          die Unterschrift liegt unter statt auf dem Bild. Die Quellfotos selbst
-         schneiden die Teile an; Angaben vom Kunden nachfordern: vollstaendige
-         Aufnahmen von Dummy und fertigem Halter. -->
+         schneiden die Teile an.
+         23.11.2026 (Lukas): Das alte Dummy-Foto lag um 90 Grad gedreht und
+         schnitt beide Teile ab. Gedreht und mit KI (GPT Image 2.6 ueber kie.ai,
+         Prompt in tools/ki-bilder/) zum ganzen Bild erweitert; die sichtbaren
+         Teile sind unveraendert, die ergaenzten Raender am "nachher"-Foto
+         ausgerichtet. Das zweite Bild (Halter allein) entfaellt, weil beide
+         Teile jetzt ganz nebeneinander zu sehen sind. Besser bleibt ein echtes
+         Foto: beim naechsten Fototermin beide Teile ganz aufnehmen. -->
     <article class="refx refx--ganz rv">
       <div class="refx__imgs">
         <figure>
           <div class="frame">
-            <img src="assets/img/ref-lima-vorher.jpg" width="644" height="859" loading="lazy" decoding="async"
-                 alt="Geschweißter Funktionsdummy des Lichtmaschinenhalters, wie ihn der Kunde beistellte">
+            <img src="assets/img/ki-ref-lima-vorher.jpg" width="1200" height="900" loading="lazy" decoding="async"
+                 alt="Links der geschweißte Funktionsdummy des Lichtmaschinenhalters, rechts der daraus gefräste Halter">
           </div>
-          <figcaption>Beigestellter Dummy</figcaption>
-        </figure>
-        <figure>
-          <div class="frame">
-            <img src="assets/img/ref-lima-nachher.jpg" width="644" height="644" loading="lazy" decoding="async"
-                 alt="Gefräster Lichtmaschinenhalter aus eigener Fertigung">
-          </div>
-          <figcaption>Gefertigter Halter</figcaption>
+          <figcaption>Links der beigestellte Dummy, rechts der gefertigte Halter</figcaption>
         </figure>
       </div>
       <div class="refx__txt">
         <p class="kicker">Lichtmaschinenhalter</p>
         <h3>Aus einem geschweißten Dummy wurde ein gefrästes Teil</h3>
         <p>Der Kunde stellte einen geschweißten Funktionsdummy bei, mehr nicht. Wir haben ihn auf der <span class="nb">3D-Koordinaten</span>&shy;messmaschine vermessen, Form und Gewicht optimiert und den Halter anschließend aus dem Vollen gefertigt. So sieht individuelle Fertigung bei uns aus.</p>
+      </div>
+    </article>
+
+    <!-- 23.11.2026 (Lukas): Vereinzelungswalze, Fotos aus Downloads
+         "Vereinzelungswalze" (1, 3 und 4; Foto 2 fast gleich wie 1).
+         Text beschreibt nur, was auf den Fotos zu sehen ist.
+         nachfordern: Einsatzzweck, Werkstoff, Verfahren und Abmessungen. -->
+    <article class="refx refx--walze rv">
+      <div class="refx__imgs">
+        <figure class="refx__hoch">
+          <div class="frame">
+            <img src="assets/img/walze-stehend.jpg" width="900" height="1200" loading="lazy" decoding="async"
+                 alt="Vereinzelungswalze stehend, mit umlaufenden Nuten und Längsstegen">
+          </div>
+        </figure>
+        <figure>
+          <div class="frame">
+            <img src="assets/img/walze-liegend.jpg" width="1200" height="900" loading="lazy" decoding="async"
+                 alt="Vereinzelungswalze liegend in ganzer Länge">
+          </div>
+        </figure>
+        <figure>
+          <div class="frame">
+            <img src="assets/img/walze-stirnseite.jpg" width="1200" height="900" loading="lazy" decoding="async"
+                 alt="Vereinzelungswalze von der Stirnseite mit Bohrung und Stegen">
+          </div>
+        </figure>
+      </div>
+      <div class="refx__txt">
+        <p class="kicker">Vereinzelungswalze</p>
+        <h3>Umlaufende Nuten, Längsstege, durchgehende Bohrung</h3>
+        <p>Eine Walze aus eigener Fertigung, rundum bearbeitet. Die vielen gleichmäßigen Nuten zeigen, worauf es bei solchen Teilen ankommt: Maßhaltigkeit über die ganze Länge.</p>
       </div>
     </article>
 
@@ -820,6 +894,11 @@
          beschnitten, Teile vollstaendig). So fuellen sie die Kachel randlos wie
          die uebrigen vier. Besser waeren quadratische Aufnahmen mit Rand;
          beim Fototermin abstimmen. -->
+    <!-- 23.11.2026 (Lukas): Alle vier Kacheln haben denselben blauen Grund wie
+         die Fotos vom Termin vor Ort (Fotobox, Foto 0139). Nur Hintergrund und
+         Auflage sind mit KI ersetzt (GPT Image 2.6 ueber kie.ai, Prompt in
+         tools/ki-bilder/p_hintergrund.txt), die Teile selbst sind unveraendert
+         und einzeln gegen das Original geprueft. Dateien: ki-ref-*.jpg. -->
     <ul class="ref">
       <!-- Korrekturrunde 1: Der Bremsscheibentopf (altes Foto mit deutlicher
            Vignette, wirkte gefiltert) ist ersetzt durch das gefraeste Bauteil
@@ -828,8 +907,8 @@
       <li class="ref__i rv">
         <figure>
           <div class="frame">
-            <img src="assets/img/vo-ref-taschen.jpg" width="1000" height="1000" loading="lazy" decoding="async"
-                 alt="Gefrästes zweiteiliges Bauteil mit Taschen und Bohrungen auf weißem Tuch">
+            <img src="assets/img/ki-ref-taschen.jpg" width="1024" height="1024" loading="lazy" decoding="async"
+                 alt="Gefrästes zweiteiliges Bauteil mit Taschen und Bohrungen auf blauem Grund">
           </div>
           <figcaption>Gefrästes Bauteil mit Taschen</figcaption>
         </figure>
@@ -837,7 +916,7 @@
       <li class="ref__i rv">
         <figure>
           <div class="frame">
-            <img src="assets/img/ref-titan-q.jpg" width="1028" height="1028" loading="lazy" decoding="async"
+            <img src="assets/img/ki-ref-titan.jpg" width="1024" height="1024" loading="lazy" decoding="async"
                  alt="Gabelköpfe mit Gewindeschaft aus Titan Grade 5">
           </div>
           <figcaption>Titan Grade 5</figcaption>
@@ -848,7 +927,7 @@
           <div class="frame">
             <!-- Frueher ref-motorsport.jpg: das war derselbe Lichtmaschinenhalter
                  wie oben. Jetzt echte Motorsportteile. -->
-            <img src="assets/img/ref-motorsport-2.jpg" width="1200" height="1200" loading="lazy" decoding="async"
+            <img src="assets/img/ki-ref-motorsport.jpg" width="1024" height="1024" loading="lazy" decoding="async"
                  alt="Gedrehte Motorsport-Bauteile mit eingesetzten Lagern">
           </div>
           <figcaption>Motorsporttechnik</figcaption>
@@ -859,8 +938,8 @@
       <li class="ref__i rv">
         <figure>
           <div class="frame">
-            <img src="assets/img/vo-ref-flansch.jpg" width="1000" height="1000" loading="lazy" decoding="async"
-                 alt="Flansch mit Lochkreis auf weißem Tuch">
+            <img src="assets/img/ki-ref-flansch.jpg" width="1024" height="1024" loading="lazy" decoding="async"
+                 alt="Flansch mit Lochkreis auf blauem Grund">
           </div>
           <figcaption>Flansch mit Lochkreis</figcaption>
         </figure>
@@ -1449,6 +1528,6 @@
 <script src="js/vendor/ScrollTrigger.min.js"></script>
 <script src="js/vendor/SplitText.min.js"></script>
 <script src="js/vendor/lenis.min.js"></script>
-<script src="js/main.js?v=20261119b"></script>
+<script src="js/main.js?v=20261123"></script>
 </body>
 </html>

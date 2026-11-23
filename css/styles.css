@@ -1048,7 +1048,7 @@ img.mark { width: auto; max-width: none; }        /* Unterseiten: ein Bild */
   padding-block: clamp(84px, 10vw, 150px) clamp(56px, 6vw, 84px);
 }
 .stats__bg { position: absolute; inset: 0; z-index: 0; }
-.stats__bg img { width: 100%; height: 100%; object-fit: cover; }
+.stats__bg img, .stats__bg video { display: block; width: 100%; height: 100%; object-fit: cover; }
 /* Auf dem Foto stehen die Kennzahlen (weiss, unten). 19.11.2026: oben laeuft
    das Foto nur kurz aus dem Grund herein, die Mitte bleibt fast frei; dichter
    wird es erst unten hinter den Zahlen, damit sie sicher lesbar bleiben. */
@@ -1666,19 +1666,100 @@ img.mark { width: auto; max-width: none; }        /* Unterseiten: ein Bild */
 
 /* Referenz Lichtmaschinenhalter: Teile vollstaendig zeigen. Eigenes
    Seitenverhaeltnis statt 4:3-Zuschnitt, Unterschrift unter dem Bild. */
-/* Beide Fotos immer nebeneinander und gleich hoch, Breite folgt dem eigenen
-   Format: die Spalte wird im Verhaeltnis 3 : 4 geteilt (Dummy 3:4, Halter
-   1:1), die Hoehe ergibt sich aus der Breite. Vorher hatten beide eine feste
-   Hoehe und brachen zwischen 981 und 1335 px untereinander um. max-width
-   haelt die Bilder in der einspaltigen Ansicht bei rund 360 px Hoehe. */
-.refx--ganz .refx__imgs { display: flex; flex-wrap: nowrap; align-items: flex-start; max-width: 660px; }
-.refx--ganz .refx__imgs figure { min-width: 0; }
-.refx--ganz .refx__imgs figure:nth-child(1) { flex: 3 1 0; }
-.refx--ganz .refx__imgs figure:nth-child(2) { flex: 4 1 0; }
+/* 23.11.2026: nur noch ein Bild im Format 4:3 (Dummy und Halter nebeneinander,
+   gedreht und mit KI zum ganzen Bild erweitert). Es steht in voller Groesse,
+   max-width haelt es in der einspaltigen Ansicht bei rund 500 px Hoehe. */
+.refx--ganz .refx__imgs { display: block; max-width: 660px; }
 /* Der Rahmen schmiegt sich um das Bild (kein festes Format) und haelt nur die
    Rundung und den Hover-Zoom. */
 .refx--ganz .refx__imgs .frame { aspect-ratio: auto; background: transparent; }
 .refx--ganz .refx__imgs .frame > img { width: 100%; height: auto; }
+
+/* Vereinzelungswalze (23.11.2026): links das stehende Foto ueber zwei Zeilen,
+   rechts die zwei liegenden untereinander. Spalten 9 : 8, dann sind beide
+   Seiten fast gleich hoch (3:4 links gegen zweimal 4:3 rechts); den Rest
+   gleicht das stehende Bild mit object-fit aus (nur blauer Grund faellt weg). */
+.refx--walze .refx__imgs { grid-template-columns: minmax(0, 9fr) minmax(0, 8fr); }
+.refx--walze .refx__hoch { grid-row: span 2; }
+.refx--walze .refx__hoch .frame { aspect-ratio: auto; height: 100%; }
+.refx--walze figure { margin: 0; }
+
+/* ---- Lasertargets PPS (23.11.2026): erste, hervorgehobene Referenz -------
+   Eigene Flaeche mit leichtem Blaulicht, links der Text, rechts die drei
+   freigestellten Gehaeuse (WebP mit Transparenz) mit Schlagschatten. */
+.lt {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
+  gap: clamp(28px, 3.6vw, 64px);
+  align-items: center;
+  margin-bottom: clamp(36px, 4vw, 60px);
+  padding: clamp(26px, 3.6vw, 60px);
+  border: 1px solid var(--line);
+  border-radius: calc(var(--r) * 2);
+  background:
+    radial-gradient(ellipse 70% 80% at 72% 45%, rgba(46, 91, 255, .20), transparent 70%),
+    linear-gradient(160deg, rgba(255, 255, 255, .045), rgba(255, 255, 255, .01)),
+    var(--surface);
+  overflow: hidden;
+}
+.lt__txt h3 {
+  margin: 16px 0 16px;
+  font-family: var(--ff-dis);
+  font-weight: 600;
+  font-size: clamp(1.5rem, 1.7vw + .9rem, 2.4rem);
+  line-height: 1.1;
+  letter-spacing: -.022em;
+  color: var(--fg);
+  text-wrap: balance;
+}
+.lt__txt > p:not(.kicker) { margin: 0 0 22px; font-size: 1.04rem; color: var(--fg-dim); max-width: 52ch; }
+.lt__facts { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 24px; padding: 0; list-style: none; }
+.lt__facts li {
+  padding: 7px 14px;
+  border: 1px solid rgba(154, 176, 255, .45);
+  border-radius: 999px;
+  font-size: .9rem; font-weight: 600;
+  color: var(--accent-hi);
+}
+.lt__link {
+  font-size: .95rem; font-weight: 600;
+  color: var(--fg);
+  border-bottom: 1px solid rgba(154, 176, 255, .55);
+  padding-bottom: 2px;
+  transition: color .25s var(--ease), border-color .25s var(--ease);
+}
+.lt__link::after { content: ' \2197'; color: var(--accent-hi); }
+.lt__link:hover { color: var(--accent-hi); border-bottom-color: var(--accent-hi); }
+.lt__imgs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(10px, 1.6vw, 24px) clamp(14px, 2vw, 30px);
+  align-items: end;
+  margin: 0; padding: 0; list-style: none;
+}
+.lt__imgs li:first-child { grid-column: 1 / -1; justify-self: center; width: min(66%, 440px); }
+.lt__imgs figure { margin: 0; }
+.lt__imgs img {
+  display: block; width: 100%; height: auto;
+  filter: drop-shadow(0 22px 26px rgba(0, 0, 0, .42));
+  transition: transform .6s var(--ease);
+}
+.lt__imgs li:hover img { transform: translateY(-4px) scale(1.015); }
+.lt__imgs figcaption {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 13px; font-weight: 600; letter-spacing: .02em;
+  color: var(--fg-dim);
+}
+@media (max-width: 980px) {
+  .lt { grid-template-columns: minmax(0, 1fr); }
+  .lt__imgs li:first-child { width: min(86%, 520px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lt__imgs img { transition: none; }
+  .lt__imgs li:hover img { transform: none; }
+}
 
 /* ================================================= 17 Optik-Check 29.09.2026
    Bildunterschriften unter dem Bild, ruhige Hover-Zustaende, zweispaltige
@@ -1790,10 +1871,10 @@ figcaption {
   .frame { max-height: calc(100svh - var(--hh) - 32px); }
   /* Lichtmaschinenhalter: Rahmen ohne festes Format, deshalb nicht ueber die
      Hoehe begrenzen (das schnitte die Teile ab), sondern das Paar schmaler
-     stellen. Hoehe = 4/7 der Breite ohne Luecke (Dummy 3:4 und Halter 1:1 im
-     Verhaeltnis 3 : 4 nebeneinander), Luecke hier 12 px. */
+     stellen. Seit 23.11.2026 ein Bild im Format 4:3: Breite = Hoehe x 4/3. */
   .refx--ganz .refx__imgs .frame { max-height: none; }
-  .refx--ganz .refx__imgs { max-width: min(660px, calc((100svh - var(--hh) - 32px) * 1.75 + 12px)); }
+  .refx--ganz .refx__imgs { max-width: min(660px, calc((100svh - var(--hh) - 32px) * 1.3333)); }
+  .refx--walze .refx__hoch .frame { max-height: none; }
   /* Zahlenband: nicht hoeher als der sichtbare Bereich (vorher 56vw = 472 px
      bei 390 px Hoehe, darueber 268 px leerer Grund). */
   .stats { min-height: calc(100svh - var(--hh)); padding-top: var(--sp); }

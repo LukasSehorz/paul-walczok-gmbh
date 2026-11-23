@@ -58,7 +58,8 @@ BILDER = {
     "vo-saegerei":          ("0193", 0.00, 0.33, 1.00, Q43,  1000, 1.00),   # hochkant, Saege und Lager
     "vo-voreinstellung":    ("0172", 0.00, 0.40, 1.00, Q43,  1000, 1.00),   # hochkant, Werkzeug im Geraet
     "vo-halle-tor":         ("0112", 0.10, 0.00, 0.75, Q43,  1000, 1.00),
-    # Kennzahlen-Hintergrund
+    # Kennzahlen-Hintergrund. Seit 23.11.2026 laeuft dort der Hallenfilm
+    # (assets/video/vo-halle*.mp4), das Bild wird auf der Seite nicht mehr gezeigt.
     "vo-halle-weit":        ("0188", 0.00, 0.00, 1.00, Q169, 1920, 1.00),
     # Referenzen: Maschine und Teil, je Zeile ein 16:9- und ein 4:3-Bild
     "vo-ref-drehen":        ("0132", 0.00, 0.00, 1.00, Q169, 1100, 1.00),
@@ -69,6 +70,9 @@ BILDER = {
     "vo-ref-magnetplatte":  ("0154", 0.00, 0.10, 1.00, Q43,  1000, 1.00),   # hochkant
     "vo-ref-messraum":      ("0168", 0.00, 0.00, 1.00, Q169, 1100, 1.00),
     "vo-ref-messuhr":       ("0171", 0.00, 0.17, 1.00, Q43,  1000, 1.00),   # hochkant
+    # Flansch und Taschen-Bauteil: seit 23.11.2026 zeigt die Seite die KI-Fassungen
+    # mit blauem Grund (assets/img/ki-ref-*.jpg, tools/ki-bilder/). Diese beiden
+    # Ausschnitte sind nur noch die Vorlage dafuer und liegen nicht mehr in assets.
     # Referenz-Raster: Flansch auf weissem Tuch, quadratisch, ganz im Bild
     "vo-ref-flansch":       ("0149", 0.25, 0.00, 0.5625, Q11, 1000, 1.00),
     # Ersatz fuer den Bremsscheibentopf (Vignette, wirkte gefiltert). Korrekturrunde 2:

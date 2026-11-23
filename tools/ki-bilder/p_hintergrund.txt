@@ -1,0 +1,8 @@
+Photo edit, product photography. Image 1 shows a machined metal part. Image 2 only shows the backdrop style to copy.
+
+Task: keep the metal part(s) from image 1 EXACTLY as they are: same shape, same holes, same edges, same proportions, same surface finish, same metallic colour and reflections, same position, same size and same camera angle in the frame. Do not redraw, simplify, add or remove any feature of the part.
+
+Replace ONLY the background and the surface the part lies on with the bright blue photo box from image 2: a seamless bright blue corrugated plastic floor and back wall, saturated cobalt/azure blue (like image 2), soft even studio light, a soft natural contact shadow under the part. The floor should run toward a softly lit back wall in the upper part of the frame, exactly the same look as image 2.
+
+Do not copy the object from image 2. No text, no logo, no watermark, no extra objects, no white cloth, no wooden table.
+Photorealistic, sharp, natural colours, no filter look.
