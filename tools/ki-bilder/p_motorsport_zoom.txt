@@ -1,0 +1,9 @@
+Photo edit (uncrop / zoom out), product photography. Image 1 is a real photo in the centre; around it is a flat blue placeholder border that must be replaced.
+
+The photo shows six machined motorsport parts (rod ends): four standing upright (a ball head with an inserted spherical bearing on a slim waist and a wide round foot) and two lying in the front. The two upright parts at the top and the lying part at the bottom are cut off by the photo edges.
+
+Task: zoom out so that ALL SIX parts are completely visible with a generous margin of surface around them. Keep every visible part exactly unchanged: same shapes, same bearings, same colours, same reflections, same camera angle. Only complete what is cut off (the tops of the two rear ball heads, the lower lying part with its flange), consistent with the identical parts visible in the photo.
+
+Background: replace the whole surface and the border with the bright blue corrugated plastic photo box from image 2 (bright blue floor, slightly lighter blue back wall), seamless and evenly lit, matching the other product photos.
+
+No text, no logo, no new objects, no change to the parts' design. Photorealistic, natural colours, no filter look.
